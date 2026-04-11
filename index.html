@@ -26,12 +26,14 @@
             background-color: var(--yurt-dark); padding: 10px 15px;
             display: flex; justify-content: space-between; align-items: center;
             box-shadow: 0 4px 15px rgba(0,0,0,0.1); position: sticky; top: 0; z-index: 100;
+            height: 60px; overflow: hidden;
         }
         
-        .logo-container { flex-grow: 1; text-align: center; }
-        .logo { height: 60px; max-width: 100%; object-fit: contain; } 
+        /* ЖЕСТКИЙ ФИКС ЛОГОТИПА: Зум в 3.5 раза, чтобы обрезать пустые прозрачные поля файла */
+        .logo-container { flex-grow: 1; display: flex; justify-content: center; align-items: center; }
+        .logo { height: 60px; transform: scale(3.5); object-fit: contain; } 
         
-        .top-controls { position: absolute; right: 15px; }
+        .top-controls { position: absolute; right: 15px; z-index: 10;}
         .lang-switch {
             background: rgba(255,255,255,0.15); border: 1px solid var(--yurt-yellow); color: white;
             padding: 6px 12px; border-radius: 8px; font-weight: bold; cursor: pointer;
@@ -107,6 +109,11 @@
             border-radius: 12px; box-sizing: border-box; font-family: inherit; font-size: 15px; box-shadow: 0 2px 10px rgba(0,0,0,0.02);
         }
         .input-label { font-size: 12px; color: var(--text-muted); margin-bottom: 5px; display: block; font-weight: bold; }
+        
+        .geo-btn {
+            background-color: var(--yurt-blue); color: white; border: none; border-radius: 12px;
+            padding: 0 20px; cursor: pointer; font-size: 18px; box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
     </style>
 </head>
 <body>
@@ -138,14 +145,14 @@
     </div>
 
     <div id="checkout-page">
-        <h2 id="lbl-order" style="margin-top: 0;">Ваш заказ</h2>
+        <h2 id="lbl-order" style="margin-top: 0; color: var(--yurt-dark);">Ваш заказ</h2>
         <div id="cart-items"></div>
         <div style="background: white; padding: 15px; border-radius: 12px; margin-top: 15px; display: flex; justify-content: space-between; font-weight: bold; font-size: 18px;">
             <span id="lbl-total-text">Итого:</span>
             <span id="cart-total" style="color: var(--yurt-blue);">0 SAR</span>
         </div>
         
-        <h3 id="lbl-details" style="margin-top: 25px;">Детали доставки</h3>
+        <h3 id="lbl-details" style="margin-top: 25px; color: var(--yurt-dark);">Детали доставки</h3>
         
         <label class="input-label" id="lbl-name">Name / Имя</label>
         <input type="text" id="cust-name" class="input-field" placeholder="Abdullah / Абдулла">
@@ -153,8 +160,11 @@
         <label class="input-label" id="lbl-phone">WhatsApp Number / Номер телефона</label>
         <input type="tel" id="cust-phone" class="input-field" placeholder="+966 5X XXX XXXX">
         
-        <label class="input-label" id="lbl-loc">Google Maps Link / Ссылка на геолокацию (или адрес)</label>
-        <input type="text" id="cust-address" class="input-field" placeholder="https://maps.app.goo.gl/...">
+        <label class="input-label" id="lbl-loc">Address / Адрес доставки (или GPS координаты)</label>
+        <div style="display: flex; gap: 10px; margin-bottom: 15px;">
+            <input type="text" id="cust-address" class="input-field" style="margin-bottom: 0;" placeholder="Riyadh, Olaya St...">
+            <button class="geo-btn" onclick="getLocation()" id="btn-geo"><i class="fas fa-map-marker-alt"></i></button>
+        </div>
         
         <p style="font-size: 12px; color: var(--text-muted); text-align: center; margin-top: 20px;" id="lbl-pay-info">
             Оплата производится при доставке (Mada, STC Pay, Наличные)
@@ -298,6 +308,29 @@
             renderApp();
         }
 
+        // Логика получения GPS
+        function getLocation() {
+            if (navigator.geolocation) {
+                tg.HapticFeedback.impactOccurred('medium');
+                document.getElementById('cust-address').placeholder = currentLang === 'ru' ? "Определяем локацию..." : "Locating...";
+                
+                navigator.geolocation.getCurrentPosition(
+                    (position) => {
+                        const lat = position.coords.latitude;
+                        const lng = position.coords.longitude;
+                        document.getElementById('cust-address').value = `https://maps.google.com/?q=${lat},${lng}`;
+                    },
+                    (error) => {
+                        tg.showAlert(currentLang === 'ru' ? "Не удалось получить GPS. Пожалуйста, введите адрес текстом." : "Failed to get GPS. Please type your address.");
+                        document.getElementById('cust-address').placeholder = "Riyadh, Olaya St...";
+                    },
+                    { enableHighAccuracy: true, timeout: 5000, maximumAge: 0 }
+                );
+            } else {
+                tg.showAlert("Geolocation is not supported by your device.");
+            }
+        }
+
         function renderApp() {
             let navHtml = '';
             for (let key in categories) {
@@ -333,7 +366,7 @@
             document.getElementById('lbl-total-text').innerText = currentLang === 'ru' ? 'Итого:' : 'Total:';
             document.getElementById('lbl-name').innerText = currentLang === 'ru' ? 'Имя' : 'Name';
             document.getElementById('lbl-phone').innerText = currentLang === 'ru' ? 'Номер WhatsApp' : 'WhatsApp Number';
-            document.getElementById('lbl-loc').innerText = currentLang === 'ru' ? 'Ссылка на геолокацию (Google Maps)' : 'Google Maps Location Link';
+            document.getElementById('lbl-loc').innerText = currentLang === 'ru' ? 'Адрес доставки (или GPS координаты)' : 'Delivery Address (or GPS)';
             document.getElementById('lbl-pay-info').innerText = currentLang === 'ru' ? 'Оплата производится при доставке (Mada, STC Pay, Наличные)' : 'Payment upon delivery (Mada, STC Pay, Cash)';
             document.getElementById('lbl-addr').innerText = currentLang === 'ru' ? '📍 Эр-Рияд, Саудовская Аравия' : '📍 Riyadh, Saudi Arabia';
             document.getElementById('lbl-work').innerText = currentLang === 'ru' ? '🕒 12:00 - 00:00' : '🕒 12:00 PM - 12:00 AM';
@@ -416,10 +449,10 @@
                 const address = document.getElementById('cust-address').value;
                 
                 if(!name || !phone || !address) {
-                    tg.showAlert(currentLang === 'en' ? "Please fill all fields (Name, Phone, Location)!" : "Пожалуйста, заполните все поля (Имя, Телефон, Локация)!");
+                    tg.showAlert(currentLang === 'en' ? "Please fill all fields (Name, Phone, Address/GPS)!" : "Пожалуйста, заполните все поля (Имя, Телефон, Адрес/GPS)!");
                     return;
                 }
-                tg.sendData(JSON.stringify({ cart, name, phone, address }));
+                tg.sendData(JSON.stringify({ cart, name, phone, address, total: document.getElementById('cart-total').innerText }));
                 tg.close();
             }
         });
