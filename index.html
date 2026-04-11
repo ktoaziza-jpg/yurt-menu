@@ -7,215 +7,279 @@
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <style>
         :root {
-            --bg-main: #f8f9fa;
-            --yurt-blue: #3BABC5;
-            --yurt-yellow: #FFC107;
+            --bg-main: #f4f7f6;
+            --yurt-dark: #1a4a56; /* Темно-бирюзовый для премиум-вида */
+            --yurt-blue: #3BABC5; /* Фирменный бирюзовый */
+            --yurt-yellow: #FFC107; /* Фирменный желтый */
             --text-dark: #2c3e50;
-            --card-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            --text-muted: #7f8c8d;
         }
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: var(--bg-main);
-            color: var(--text-dark);
+            background-color: var(--bg-main); color: var(--text-dark);
             margin: 0; padding: 0; padding-bottom: 90px;
         }
+        
+        /* Темный хедер, чтобы желтый логотип светился */
         .header {
-            background-color: white; padding: 15px; text-align: center;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
-            position: sticky; top: 0; z-index: 100;
+            background-color: var(--yurt-dark);
+            padding: 15px; position: sticky; top: 0; z-index: 100;
+            display: flex; justify-content: space-between; align-items: center;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
         }
-        .logo { max-height: 50px; }
-        
-        .container { padding: 15px; }
-        .section-title {
-            color: var(--yurt-blue); border-left: 4px solid var(--yurt-yellow);
-            padding-left: 10px; margin: 25px 0 15px 0; font-size: 20px;
-        }
-        
-        .menu-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
-        .menu-item {
-            background: white; border-radius: 12px; padding: 12px;
-            box-shadow: var(--card-shadow); display: flex; flex-direction: column;
-            transition: transform 0.2s;
-        }
-        .item-title { font-weight: bold; font-size: 15px; margin-bottom: 4px; }
-        .item-desc { font-size: 11px; color: #7f8c8d; margin-bottom: 10px; flex-grow: 1; line-height: 1.3;}
-        .price-row { display: flex; justify-content: space-between; align-items: center; }
-        .price { font-weight: bold; color: var(--yurt-blue); font-size: 16px;}
-        .add-btn {
-            background-color: var(--yurt-yellow); border: none; border-radius: 8px;
-            width: 30px; height: 30px; font-weight: bold; font-size: 18px;
-            cursor: pointer; display: flex; align-items: center; justify-content: center;
+        .logo { height: 60px; width: auto; object-fit: contain; }
+        .lang-switch {
+            background: rgba(255,255,255,0.1); border: 1px solid var(--yurt-yellow);
+            color: white; padding: 5px 10px; border-radius: 20px; font-weight: bold; cursor: pointer;
         }
 
-        /* Экран оформления заказа (изначально скрыт) */
+        /* Навигация по категориям (Свайп вправо-влево) */
+        .cat-scroll {
+            display: flex; overflow-x: auto; padding: 15px; background: white;
+            white-space: nowrap; scroll-behavior: smooth; border-bottom: 1px solid #eee;
+        }
+        .cat-scroll::-webkit-scrollbar { display: none; }
+        .cat-pill {
+            background: #eee; padding: 8px 16px; border-radius: 20px; margin-right: 10px;
+            font-weight: 600; font-size: 14px; border: none; color: var(--text-muted); cursor: pointer;
+            transition: 0.3s;
+        }
+        .cat-pill.active { background: var(--yurt-yellow); color: #000; }
+
+        /* Сетка меню */
+        .container { padding: 15px; }
+        .menu-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+        .menu-item {
+            background: white; border-radius: 16px; padding: 15px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.03); display: flex; flex-direction: column;
+            position: relative; overflow: hidden;
+        }
+        
+        /* Бейджики */
+        .badges { display: flex; gap: 5px; margin-bottom: 8px; flex-wrap: wrap; }
+        .badge { background: #f0f4f8; font-size: 10px; padding: 3px 6px; border-radius: 6px; color: var(--yurt-dark); font-weight: bold; }
+        .best-seller { background: #ff4757; color: white; position: absolute; top: 10px; right: -25px; font-size: 10px; font-weight: bold; padding: 3px 25px; transform: rotate(45deg); box-shadow: 0 2px 4px rgba(0,0,0,0.2); }
+
+        .item-title { font-weight: 800; font-size: 15px; margin-bottom: 6px; line-height: 1.2; }
+        .item-desc { font-size: 12px; color: var(--text-muted); margin-bottom: 15px; flex-grow: 1; line-height: 1.4; }
+        
+        .price-row { display: flex; justify-content: space-between; align-items: center; margin-top: auto;}
+        .price { font-weight: 800; color: var(--yurt-blue); font-size: 16px; }
+        .add-btn {
+            background-color: var(--yurt-yellow); border: none; border-radius: 10px;
+            width: 36px; height: 36px; font-weight: bold; font-size: 20px;
+            cursor: pointer; box-shadow: 0 4px 10px rgba(255, 193, 7, 0.3); transition: 0.1s;
+        }
+        .add-btn:active { transform: scale(0.9); }
+
+        /* Экран чекаута */
         #checkout-page {
-            display: none; padding: 20px; background: white; 
-            min-height: 100vh; position: absolute; top: 0; left: 0; width: 100%; box-sizing: border-box; z-index: 200;
+            display: none; padding: 20px; background: white; min-height: 100vh;
+            position: absolute; top: 0; left: 0; width: 100%; box-sizing: border-box; z-index: 200;
         }
-        .cart-item { display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid #eee; }
+        .cart-item { display: flex; justify-content: space-between; align-items: center; padding: 15px 0; border-bottom: 1px solid #eee; }
+        .cart-controls { display: flex; align-items: center; gap: 10px; }
+        .qty-btn { background: #eee; border: none; width: 28px; height: 28px; border-radius: 50%; font-weight: bold; }
         .input-field {
-            width: 100%; padding: 12px; margin-bottom: 15px;
-            border: 1px solid #ddd; border-radius: 8px; box-sizing: border-box; font-family: inherit;
+            width: 100%; padding: 15px; margin-bottom: 15px; border: 2px solid #eee; 
+            border-radius: 12px; box-sizing: border-box; font-family: inherit; font-size: 16px; transition: 0.3s;
         }
-        .back-btn { background: none; border: none; color: var(--yurt-blue); font-size: 16px; margin-bottom: 20px; padding: 0; cursor: pointer;}
+        .input-field:focus { border-color: var(--yurt-blue); outline: none; }
     </style>
 </head>
 <body>
 
     <div id="menu-page">
         <div class="header">
-            <img src="RESTFLYER.png" alt="Yurt" class="logo" onerror="this.src='https://via.placeholder.com/150x50/3BABC5/FFC107?text=YURT'">
+            <div></div> <img src="RESTFLYER.png" alt="Yurt" class="logo">
+            <button class="lang-switch" onclick="toggleLang()" id="btn-lang">RU</button>
         </div>
+        
+        <div class="cat-scroll" id="cat-nav">
+            </div>
+
         <div class="container" id="menu-container">
             </div>
     </div>
 
     <div id="checkout-page">
-        <button class="back-btn" onclick="showMenu()">← <span id="lbl-back">Back</span></button>
-        <h2 id="lbl-your-order" style="color: var(--yurt-blue);">Your Order</h2>
+        <button style="background:none; border:none; color:var(--yurt-blue); font-size:16px; font-weight:bold; margin-bottom:20px;" onclick="showMenu()">← <span id="lbl-back">Назад</span></button>
+        <h2 id="lbl-order" style="color: var(--yurt-dark); font-weight: 800;">Ваш заказ</h2>
         <div id="cart-items"></div>
-        <h3 style="text-align: right; color: var(--yurt-yellow); margin-top: 15px;" id="cart-total">Total: 0 SAR</h3>
+        <h2 style="text-align: right; color: var(--yurt-blue); margin-top: 20px;" id="cart-total">Итого: 0 SAR</h2>
         
-        <h3 id="lbl-details" style="margin-top: 30px;">Delivery Details</h3>
-        <input type="text" id="cust-name" class="input-field" placeholder="Name / Имя">
-        <input type="text" id="cust-phone" class="input-field" placeholder="Phone / Телефон">
-        <input type="text" id="cust-address" class="input-field" placeholder="Address or Table # / Адрес или Столик">
+        <h3 id="lbl-details" style="margin-top: 30px; color: var(--yurt-dark);">Детали доставки</h3>
+        <input type="text" id="cust-name" class="input-field" placeholder="Имя / Name">
+        <input type="tel" id="cust-phone" class="input-field" placeholder="Телефон / Phone">
+        <input type="text" id="cust-address" class="input-field" placeholder="Адрес или Столик / Address or Table">
     </div>
 
     <script>
         let tg = window.Telegram.WebApp;
         tg.expand();
 
-        // 1. Читаем язык из ссылки (которую сгенерировал наш бот)
         const urlParams = new URLSearchParams(window.location.search);
-        const lang = urlParams.get('lang') || 'ru'; // По умолчанию русский
-
-        // 2. База данных нашего меню (Словари)
-        const dict = {
-            ru: {
-                cats: { salads: "Салаты", main: "Основные блюда", kebabs: "Кебабы" },
-                btnBack: "Назад", btnOrder: "Ваш заказ", btnDetails: "Детали доставки",
-                btnMainOrder: "ОФОРМИТЬ", btnMainPay: "ПОДТВЕРДИТЬ И ОТПРАВИТЬ",
-                items: [
-                    { id: 'bahor', cat: 'salads', name: "Весенний Бахор", desc: "Свежие огурцы, редис, зелень, йогурт", price: 11 },
-                    { id: 'achichuk', cat: 'salads', name: "Ачичук", desc: "Помидоры, лук, базилик, масло", price: 11 },
-                    { id: 'pilaf', cat: 'main', name: "Плов (Best Seller)", desc: "Говядина, рис, морковь, лук", price: 30 },
-                    { id: 'lagman', cat: 'main', name: "Лагман", desc: "Лапша, говядина, болгарский перец", price: 35 },
-                    { id: 'kebab_beef', cat: 'kebabs', name: "Говяжий Кебаб", desc: "Говядина крупной нарезки, гриль", price: 35 }
-                ]
-            },
-            en: {
-                cats: { salads: "Salads", main: "Main Dishes", kebabs: "Kebabs" },
-                btnBack: "Back", btnOrder: "Your Order", btnDetails: "Delivery Details",
-                btnMainOrder: "CHECKOUT", btnMainPay: "CONFIRM & SEND",
-                items: [
-                    { id: 'bahor', cat: 'salads', name: "Spring Salad", desc: "Fresh cucumbers, radishes, herbs, yogurt", price: 11 },
-                    { id: 'achichuk', cat: 'salads', name: "Achichuk", desc: "Tomatoes, onions, basil, oil", price: 11 },
-                    { id: 'pilaf', cat: 'main', name: "Pilaf (Best Seller)", desc: "Beef, rice, carrots, onions", price: 30 },
-                    { id: 'lagman', cat: 'main', name: "Lagman", desc: "Noodles, beef, bell pepper", price: 35 },
-                    { id: 'kebab_beef', cat: 'kebabs', name: "Beef Kebab", desc: "Coarsely chopped beef, grilled", price: 35 }
-                ]
-            }
+        let currentLang = urlParams.get('lang') || 'ru';
+        
+        // Полная база меню (выжимка из ваших PDF)
+        const categories = {
+            salads: { ru: "Салаты", en: "Salads" },
+            main: { ru: "Основные блюда", en: "Main Dishes" },
+            soups: { ru: "Супы", en: "Soups" },
+            snacks: { ru: "Горячие закуски", en: "Hot Snacks" },
+            kebabs: { ru: "Кебабы", en: "Kebabs" },
+            sides: { ru: "Гарниры", en: "Side Dishes" },
+            bread: { ru: "Хлеб", en: "Bread" },
+            desserts: { ru: "Десерты", en: "Desserts" },
+            drinks: { ru: "Напитки", en: "Drinks" },
+            coffee: { ru: "Кофе", en: "Coffee" }
         };
 
-        const currentData = dict[lang];
+        const menuItems = [
+            // САЛАТЫ
+            { id: 's1', cat: 'salads', price: 11, w: '150g', c: '60 kcal', best: false, ru: { n: 'Весенний Бахор', d: 'свежие огурцы, редис, зелень, йогурт' }, en: { n: 'Spring Salad', d: 'fresh cucumbers, radishes, herbs, yogurt' } },
+            { id: 's2', cat: 'salads', price: 11, w: '150g', c: '70 kcal', best: false, ru: { n: 'Ачичук', d: 'помидоры, лук, базилик, масло' }, en: { n: 'Achichuk', d: 'tomatoes, onions, basil, oil' } },
+            { id: 's3', cat: 'salads', price: 11, w: '150g', c: '100 kcal', best: false, ru: { n: 'Огурцы по-корейски', d: 'огурцы, чеснок, кинза, кунжут, специи' }, en: { n: 'Spicy Cucumbers', d: 'cucumbers, garlic, coriander, sesame, spices' } },
+            { id: 's4', cat: 'salads', price: 11, w: '150g', c: '60 kcal', best: false, ru: { n: 'Коул Слоу', d: 'капуста, морковь, йогуртовая заправка' }, en: { n: 'Cole Slow', d: 'cabbage, carrots, yogurt dressing' } },
+            
+            // ОСНОВНЫЕ
+            { id: 'm1', cat: 'main', price: 30, w: '350g', c: '570 kcal', best: true, ru: { n: 'Плов', d: 'говядина, рис, морковь, лук' }, en: { n: 'Pilaf', d: 'beef, rice, carrots, onions' } },
+            { id: 'm2', cat: 'main', price: 40, w: '650g', c: '490 kcal', best: true, ru: { n: 'Бешбармак', d: 'вареная говядина, тесто, лук' }, en: { n: 'Beshbarmak', d: 'boiled beef, dough, onion' } },
+            { id: 'm3', cat: 'main', price: 35, w: '500g', c: '290 kcal', best: false, ru: { n: 'Лагман', d: 'лапша, говядина, болгарский перец' }, en: { n: 'Lagman', d: 'noodles, beef, bell pepper' } },
+            { id: 'm4', cat: 'main', price: 25, w: '400g', c: '485 kcal', best: false, ru: { n: 'Ганфан', d: 'говядина, болгарский перец, томаты, рис' }, en: { n: 'Ganfan', d: 'beef, bell pepper, onion, tomatoes, rice' } },
+            { id: 'm5', cat: 'main', price: 25, w: '220g', c: '650 kcal', best: true, ru: { n: 'Манты', d: 'тесто на пару с начинкой из говядины' }, en: { n: 'Manti', d: 'steamed dough stuffed with minced beef' } },
+            
+            // СУПЫ И ЗАКУСКИ
+            { id: 'sp1', cat: 'soups', price: 20, w: '325g', c: '290 kcal', best: true, ru: { n: 'Мастава', d: 'суп говядина, рис, овощи' }, en: { n: 'Mastava', d: 'soup beef, rice, fried vegetables' } },
+            { id: 'sn1', cat: 'snacks', price: 20, w: '210g', c: '660 kcal', best: true, ru: { n: 'Самса с курицей', d: 'слоеное тесто, курица, моцарелла' }, en: { n: 'Samsa Chicken', d: 'puff pastry, chicken, mozzarella' } },
+            { id: 'sn2', cat: 'snacks', price: 30, w: '280g', c: '570 kcal', best: false, ru: { n: 'Долма', d: 'виноградные листья, говяжий фарш' }, en: { n: 'Dolma', d: 'grape leaves, ground beef, rice' } },
+            
+            // КЕБАБЫ
+            { id: 'k1', cat: 'kebabs', price: 30, w: '320g', c: '538 kcal', best: false, ru: { n: 'Люля Кебаб', d: 'говядина и курица мелкой нарезки' }, en: { n: 'Minced Beef & Chicken', d: 'finely chopped, grilled' } },
+            { id: 'k2', cat: 'kebabs', price: 35, w: '340g', c: '636 kcal', best: false, ru: { n: 'Говяжий Кебаб', d: 'говядина крупной нарезки' }, en: { n: 'Beef Kebab', d: 'coarsely chopped beef' } },
+            { id: 'k3', cat: 'kebabs', price: 40, w: '550g', c: '820 kcal', best: false, ru: { n: 'Казан Кебаб (Куриный)', d: 'курица, картофель, специи' }, en: { n: 'Chicken Cauldron', d: 'chicken, potatoes, spices' } },
+            
+            // ДЕСЕРТЫ И НАПИТКИ
+            { id: 'd1', cat: 'desserts', price: 25, w: '170g', c: '500 kcal', best: false, ru: { n: 'Сан-Себастьян', d: 'классический чизкейк' }, en: { n: 'San Sebastian', d: 'classic cheesecake' } },
+            { id: 'b1', cat: 'drinks', price: 6, w: '250g', c: '104 kcal', best: false, ru: { n: 'Kinza Cola', d: 'газированный напиток' }, en: { n: 'Kinza Cola', d: 'soda water' } },
+            { id: 'b2', cat: 'drinks', price: 15, w: '300g', c: '140 kcal', best: false, ru: { n: 'Фреш Апельсин', d: 'свежевыжатый сок' }, en: { n: 'Fresh Orange', d: 'fresh juice' } },
+            { id: 'c1', cat: 'coffee', price: 15, w: '', c: '', best: false, ru: { n: 'Капучино', d: '' }, en: { n: 'Cappuccino', d: '' } },
+        ];
+
         let cart = {};
+        let activeCat = 'all';
 
-        // 3. Функция отрисовки меню
-        function renderMenu() {
-            const container = document.getElementById('menu-container');
-            container.innerHTML = '';
-
-            for (const [catKey, catName] of Object.entries(currentData.cats)) {
-                // Заголовок категории
-                container.innerHTML += `<div class="section-title">${catName}</div>`;
-                
-                // Сетка блюд
-                let gridHtml = '<div class="menu-grid">';
-                const catItems = currentData.items.filter(i => i.cat === catKey);
-                
-                catItems.forEach(item => {
-                    gridHtml += `
-                        <div class="menu-item">
-                            <div class="item-title">${item.name}</div>
-                            <div class="item-desc">${item.desc}</div>
-                            <div class="price-row">
-                                <div class="price">${item.price} SAR</div>
-                                <button class="add-btn" onclick="addToCart('${item.id}')">+</button>
-                            </div>
-                        </div>
-                    `;
-                });
-                gridHtml += '</div>';
-                container.innerHTML += gridHtml;
-            }
-
-            // Перевод статичных текстов
-            document.getElementById('lbl-back').innerText = currentData.btnBack;
-            document.getElementById('lbl-your-order').innerText = currentData.btnOrder;
-            document.getElementById('lbl-details').innerText = currentData.btnDetails;
+        function toggleLang() {
+            currentLang = currentLang === 'ru' ? 'en' : 'ru';
+            document.getElementById('btn-lang').innerText = currentLang === 'ru' ? 'EN' : 'RU';
+            renderApp();
         }
 
-        // 4. Логика корзины
-        function addToCart(itemId) {
-            if (!cart[itemId]) cart[itemId] = 0;
-            cart[itemId]++;
+        function filterCat(cat) {
+            activeCat = cat;
+            renderApp();
+        }
+
+        function renderApp() {
+            // Рендер навигации
+            let navHtml = `<button class="cat-pill ${activeCat === 'all' ? 'active' : ''}" onclick="filterCat('all')">${currentLang === 'ru' ? 'Все' : 'All'}</button>`;
+            for (let key in categories) {
+                navHtml += `<button class="cat-pill ${activeCat === key ? 'active' : ''}" onclick="filterCat('${key}')">${categories[key][currentLang]}</button>`;
+            }
+            document.getElementById('cat-nav').innerHTML = navHtml;
+
+            // Рендер меню
+            let menuHtml = '';
+            const filteredItems = activeCat === 'all' ? menuItems : menuItems.filter(i => i.cat === activeCat);
+            
+            filteredItems.forEach(item => {
+                const data = item[currentLang];
+                const bestBadge = item.best ? `<div class="best-seller">TOP</div>` : '';
+                const calBadge = item.c ? `<div class="badge">🔥 ${item.c}</div>` : '';
+                const weightBadge = item.w ? `<div class="badge">⚖️ ${item.w}</div>` : '';
+
+                menuHtml += `
+                    <div class="menu-item">
+                        ${bestBadge}
+                        <div class="badges">${weightBadge}${calBadge}</div>
+                        <div class="item-title">${data.n}</div>
+                        <div class="item-desc">${data.d}</div>
+                        <div class="price-row">
+                            <div class="price">${item.price} SAR</div>
+                            <button class="add-btn" onclick="modifyCart('${item.id}', 1)">+</button>
+                        </div>
+                    </div>
+                `;
+            });
+            document.getElementById('menu-container').innerHTML = `<div class="menu-grid">${menuHtml}</div>`;
+
+            // Тексты UI
+            document.getElementById('lbl-back').innerText = currentLang === 'ru' ? 'Назад' : 'Back';
+            document.getElementById('lbl-order').innerText = currentLang === 'ru' ? 'Ваш заказ' : 'Your Order';
+            document.getElementById('lbl-details').innerText = currentLang === 'ru' ? 'Детали доставки' : 'Delivery Details';
             updateMainButton();
-            tg.HapticFeedback.impactOccurred('light'); // Вибрация при клике!
+        }
+
+        function modifyCart(id, delta) {
+            if (!cart[id]) cart[id] = 0;
+            cart[id] += delta;
+            if (cart[id] <= 0) delete cart[id];
+            
+            tg.HapticFeedback.impactOccurred('light');
+            if(onCheckout) renderCheckout();
+            updateMainButton();
         }
 
         function getTotal() {
-            let total = 0;
-            for (let id in cart) {
-                const item = currentData.items.find(i => i.id === id);
-                total += item.price * cart[id];
-            }
-            return total;
+            return Object.keys(cart).reduce((sum, id) => {
+                const item = menuItems.find(i => i.id === id);
+                return sum + (item.price * cart[id]);
+            }, 0);
         }
 
         function updateMainButton() {
             const total = getTotal();
             if (total > 0) {
-                tg.MainButton.setText(`${currentData.btnMainOrder}: ${total} SAR`);
+                const txt = currentLang === 'ru' ? `ОФОРМИТЬ: ${total} SAR` : `CHECKOUT: ${total} SAR`;
+                tg.MainButton.setText(onCheckout ? (currentLang === 'ru' ? `ПОДТВЕРДИТЬ: ${total} SAR` : `CONFIRM: ${total} SAR`) : txt);
                 tg.MainButton.show();
             } else {
                 tg.MainButton.hide();
+                if(onCheckout) showMenu();
             }
         }
 
-        // 5. Переключение экранов
         let onCheckout = false;
-
         tg.MainButton.onClick(() => {
-            if (!onCheckout) {
-                showCheckout();
-            } else {
-                sendOrder();
-            }
+            if (!onCheckout) showCheckout();
+            else sendOrder();
         });
+
+        function renderCheckout() {
+            const cartDiv = document.getElementById('cart-items');
+            cartDiv.innerHTML = '';
+            for (let id in cart) {
+                const item = menuItems.find(i => i.id === id);
+                cartDiv.innerHTML += `
+                    <div class="cart-item">
+                        <div style="font-weight:600;">${item[currentLang].n} <br><span style="color:var(--yurt-blue); font-size:14px;">${item.price} SAR</span></div>
+                        <div class="cart-controls">
+                            <button class="qty-btn" onclick="modifyCart('${id}', -1)">-</button>
+                            <span style="font-weight:bold; width:20px; text-align:center;">${cart[id]}</span>
+                            <button class="qty-btn" onclick="modifyCart('${id}', 1)">+</button>
+                        </div>
+                    </div>
+                `;
+            }
+            document.getElementById('cart-total').innerText = currentLang === 'ru' ? `Итого: ${getTotal()} SAR` : `Total: ${getTotal()} SAR`;
+        }
 
         function showCheckout() {
             onCheckout = true;
             document.getElementById('menu-page').style.display = 'none';
             document.getElementById('checkout-page').style.display = 'block';
-            
-            // Рендер корзины
-            const cartDiv = document.getElementById('cart-items');
-            cartDiv.innerHTML = '';
-            for (let id in cart) {
-                if (cart[id] > 0) {
-                    const item = currentData.items.find(i => i.id === id);
-                    cartDiv.innerHTML += `
-                        <div class="cart-item">
-                            <span><b>${cart[id]}x</b> ${item.name}</span>
-                            <span>${item.price * cart[id]} SAR</span>
-                        </div>
-                    `;
-                }
-            }
-            document.getElementById('cart-total').innerText = `Total: ${getTotal()} SAR`;
-            tg.MainButton.setText(currentData.btnMainPay);
+            renderCheckout();
+            updateMainButton();
         }
 
         function showMenu() {
@@ -225,24 +289,18 @@
             updateMainButton();
         }
 
-        // 6. Отправка данных обратно в бота
         function sendOrder() {
             const name = document.getElementById('cust-name').value;
             const phone = document.getElementById('cust-phone').value;
-            const address = document.getElementById('cust-address').value;
-
             if(!name || !phone) {
-                tg.showAlert(lang === 'en' ? "Please fill name and phone!" : "Пожалуйста, заполните имя и телефон!");
+                tg.showAlert(currentLang === 'en' ? "Please fill name and phone!" : "Пожалуйста, заполните имя и телефон!");
                 return;
             }
-
-            const orderData = { cart: cart, name, phone, address, total: getTotal() };
-            tg.sendData(JSON.stringify(orderData));
+            tg.sendData(JSON.stringify({ cart, name, phone, address: document.getElementById('cust-address').value, total: getTotal() }));
             tg.close();
         }
 
-        // Запуск
-        renderMenu();
+        renderApp();
     </script>
 </body>
 </html>
