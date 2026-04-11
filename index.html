@@ -9,7 +9,7 @@
     <style>
         :root {
             --bg-main: #f5f6fa;
-            --yurt-dark: #1e272e; 
+            --yurt-dark: #1a4a56; 
             --yurt-blue: #3BABC5; 
             --yurt-yellow: #FFC107; 
             --yurt-red: #ff4757;
@@ -19,24 +19,24 @@
         body {
             font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
             background-color: var(--bg-main); color: var(--text-dark);
-            margin: 0; padding: 0; padding-bottom: 80px; /* Отступ для нижнего меню */
+            margin: 0; padding: 0; padding-bottom: 80px;
         }
         
-        /* Увеличенный Хедер */
         .header {
-            background-color: white; padding: 10px 15px;
+            background-color: var(--yurt-dark); padding: 10px 15px;
             display: flex; justify-content: space-between; align-items: center;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.05); position: sticky; top: 0; z-index: 100;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1); position: sticky; top: 0; z-index: 100;
         }
-        .logo { height: 80px; width: auto; object-fit: contain; margin: 0 auto; } /* Логотип стал больше */
         
-        .top-controls { position: absolute; right: 15px; display: flex; gap: 10px; }
+        .logo-container { flex-grow: 1; text-align: center; }
+        .logo { height: 60px; max-width: 100%; object-fit: contain; } 
+        
+        .top-controls { position: absolute; right: 15px; }
         .lang-switch {
-            background: var(--bg-main); border: none; color: var(--text-dark);
-            padding: 8px 12px; border-radius: 8px; font-weight: bold; cursor: pointer;
+            background: rgba(255,255,255,0.15); border: 1px solid var(--yurt-yellow); color: white;
+            padding: 6px 12px; border-radius: 8px; font-weight: bold; cursor: pointer;
         }
 
-        /* Навигация (Свайп) */
         .cat-scroll {
             display: flex; overflow-x: auto; padding: 15px; background: white;
             white-space: nowrap; scroll-behavior: smooth; margin-bottom: 10px;
@@ -48,31 +48,33 @@
         }
         .cat-pill.active { background: var(--yurt-blue); color: white; }
 
-        /* Сетка блюд с ФОТО */
         .container { padding: 0 15px; }
         .menu-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
         .menu-item {
             background: white; border-radius: 16px; 
-            box-shadow: 0 4px 15px rgba(0,0,0,0.03); display: flex; flex-direction: column;
-            overflow: hidden; position: relative;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.03); display: flex; flex-direction: column; overflow: hidden;
         }
-        .item-img {
-            width: 100%; height: 120px; object-fit: cover; background: #eee;
-        }
+        .item-img { width: 100%; height: 120px; object-fit: cover; background: #eee; }
         .item-content { padding: 12px; display: flex; flex-direction: column; flex-grow: 1; }
-        
         .item-title { font-weight: 800; font-size: 14px; margin-bottom: 4px; line-height: 1.2; }
         .item-desc { font-size: 11px; color: var(--text-muted); margin-bottom: 12px; flex-grow: 1; line-height: 1.3; }
-        
         .price-row { display: flex; justify-content: space-between; align-items: center; }
         .price { font-weight: 800; color: var(--text-dark); font-size: 15px; }
         .add-btn {
             background-color: var(--yurt-red); color: white; border: none; border-radius: 8px;
-            width: 32px; height: 32px; font-weight: bold; font-size: 18px;
-            cursor: pointer; display: flex; align-items: center; justify-content: center;
+            width: 32px; height: 32px; font-weight: bold; font-size: 18px; cursor: pointer;
         }
 
-        /* Нижнее меню (Bottom Navigation) */
+        .footer {
+            margin-top: 30px; padding: 30px 15px; text-align: center;
+            background: white; color: var(--text-muted); font-size: 13px;
+            border-top: 1px solid #eee;
+        }
+        .footer h4 { margin: 0 0 10px 0; color: var(--yurt-dark); font-size: 16px; }
+        .footer p { margin: 5px 0; }
+        .social-icons { margin-top: 15px; font-size: 20px; color: var(--yurt-blue); }
+        .social-icons i { margin: 0 10px; cursor: pointer; }
+
         .bottom-nav {
             position: fixed; bottom: 0; left: 0; width: 100%;
             background: white; box-shadow: 0 -2px 10px rgba(0,0,0,0.05);
@@ -86,15 +88,12 @@
         .nav-item i { font-size: 20px; margin-bottom: 4px; }
         .nav-item.active { color: var(--yurt-red); }
 
-        /* Индикатор количества в корзине */
         .cart-badge {
             position: absolute; top: -5px; right: 25px; background: var(--yurt-yellow);
             color: black; font-size: 10px; font-weight: bold; width: 16px; height: 16px;
-            border-radius: 50%; display: flex; align-items: center; justify-content: center;
-            display: none;
+            border-radius: 50%; display: flex; align-items: center; justify-content: center; display: none;
         }
 
-        /* Экран чекаута */
         #checkout-page {
             display: none; padding: 20px; background: var(--bg-main); min-height: 100vh;
             position: absolute; top: 0; left: 0; width: 100%; box-sizing: border-box; z-index: 150;
@@ -102,25 +101,40 @@
         .cart-item { background: white; border-radius: 12px; padding: 15px; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center;}
         .cart-controls { display: flex; align-items: center; gap: 15px; }
         .qty-btn { background: #f1f2f6; border: none; width: 30px; height: 30px; border-radius: 8px; font-weight: bold; color: var(--yurt-red);}
+        
         .input-field {
             width: 100%; padding: 15px; margin-bottom: 15px; border: none; 
             border-radius: 12px; box-sizing: border-box; font-family: inherit; font-size: 15px; box-shadow: 0 2px 10px rgba(0,0,0,0.02);
         }
+        .input-label { font-size: 12px; color: var(--text-muted); margin-bottom: 5px; display: block; font-weight: bold; }
     </style>
 </head>
 <body>
 
     <div id="menu-page">
         <div class="header">
-            <img src="RESTFLYER.png" alt="Yurt" class="logo">
+            <div style="width: 50px;"></div>
+            <div class="logo-container">
+                <img src="RESTFLYER.png" alt="Yurt" class="logo">
+            </div>
             <div class="top-controls">
                 <button class="lang-switch" onclick="toggleLang()" id="btn-lang">RU</button>
             </div>
         </div>
         
         <div class="cat-scroll" id="cat-nav"></div>
-
         <div class="container" id="menu-container"></div>
+
+        <div class="footer">
+            <h4>YURT RESTAURANT | يورت</h4>
+            <p id="lbl-addr">📍 Riyadh, Saudi Arabia</p>
+            <p>📞 +966 50 000 0000</p>
+            <p id="lbl-work">🕒 12:00 PM - 12:00 AM</p>
+            <div class="social-icons">
+                <i class="fab fa-instagram"></i>
+                <i class="fab fa-whatsapp"></i>
+            </div>
+        </div>
     </div>
 
     <div id="checkout-page">
@@ -132,9 +146,19 @@
         </div>
         
         <h3 id="lbl-details" style="margin-top: 25px;">Детали доставки</h3>
-        <input type="text" id="cust-name" class="input-field" placeholder="Имя / Name">
-        <input type="tel" id="cust-phone" class="input-field" placeholder="Телефон / Phone">
-        <input type="text" id="cust-address" class="input-field" placeholder="Адрес или Столик / Address or Table">
+        
+        <label class="input-label" id="lbl-name">Name / Имя</label>
+        <input type="text" id="cust-name" class="input-field" placeholder="Abdullah / Абдулла">
+        
+        <label class="input-label" id="lbl-phone">WhatsApp Number / Номер телефона</label>
+        <input type="tel" id="cust-phone" class="input-field" placeholder="+966 5X XXX XXXX">
+        
+        <label class="input-label" id="lbl-loc">Google Maps Link / Ссылка на геолокацию (или адрес)</label>
+        <input type="text" id="cust-address" class="input-field" placeholder="https://maps.app.goo.gl/...">
+        
+        <p style="font-size: 12px; color: var(--text-muted); text-align: center; margin-top: 20px;" id="lbl-pay-info">
+            Оплата производится при доставке (Mada, STC Pay, Наличные)
+        </p>
     </div>
 
     <div class="bottom-nav">
@@ -171,10 +195,9 @@
             sauces: { ru: "Соусы", en: "Sauces" }
         };
 
-        // Заглушка для фото (пока нет реальных)
         const dummyImg = "https://placehold.co/400x300/3BABC5/FFFFFF?text=YURT";
 
-        // ПОЛНАЯ БАЗА МЕНЮ (Все позиции из PDF)
+        // ПОЛНАЯ БАЗА МЕНЮ (Все позиции)
         const menuItems = [
             // САЛАТЫ
             { id: 's1', cat: 'salads', price: 11, img: dummyImg, ru: { n: 'Весенний Бахор', d: 'свежие огурцы, редис, зелень, йогурт' }, en: { n: 'Spring Salad', d: 'fresh cucumbers, radishes, herbs, yogurt' } },
@@ -276,14 +299,12 @@
         }
 
         function renderApp() {
-            // Навигация
             let navHtml = '';
             for (let key in categories) {
                 navHtml += `<button class="cat-pill ${activeCat === key ? 'active' : ''}" onclick="filterCat('${key}')">${categories[key][currentLang]}</button>`;
             }
             document.getElementById('cat-nav').innerHTML = navHtml;
 
-            // Сетка меню с ФОТО
             let menuHtml = '';
             const filteredItems = menuItems.filter(i => i.cat === activeCat);
             
@@ -291,7 +312,7 @@
                 const data = item[currentLang];
                 menuHtml += `
                     <div class="menu-item">
-                        <img src="${item.img}" class="item-img" alt="${data.n}">
+                        <img src="${item.img}" class="item-img">
                         <div class="item-content">
                             <div class="item-title">${data.n}</div>
                             <div class="item-desc">${data.d}</div>
@@ -305,12 +326,17 @@
             });
             document.getElementById('menu-container').innerHTML = `<div class="menu-grid">${menuHtml}</div>`;
 
-            // Обновление текстов UI
             document.getElementById('lbl-order').innerText = currentLang === 'ru' ? 'Ваш заказ' : 'Your Order';
             document.getElementById('lbl-details').innerText = currentLang === 'ru' ? 'Детали доставки' : 'Delivery Details';
             document.getElementById('lbl-nav-home').innerText = currentLang === 'ru' ? 'Главная' : 'Home';
             document.getElementById('lbl-nav-cart').innerText = currentLang === 'ru' ? 'Корзина' : 'Cart';
             document.getElementById('lbl-total-text').innerText = currentLang === 'ru' ? 'Итого:' : 'Total:';
+            document.getElementById('lbl-name').innerText = currentLang === 'ru' ? 'Имя' : 'Name';
+            document.getElementById('lbl-phone').innerText = currentLang === 'ru' ? 'Номер WhatsApp' : 'WhatsApp Number';
+            document.getElementById('lbl-loc').innerText = currentLang === 'ru' ? 'Ссылка на геолокацию (Google Maps)' : 'Google Maps Location Link';
+            document.getElementById('lbl-pay-info').innerText = currentLang === 'ru' ? 'Оплата производится при доставке (Mada, STC Pay, Наличные)' : 'Payment upon delivery (Mada, STC Pay, Cash)';
+            document.getElementById('lbl-addr').innerText = currentLang === 'ru' ? '📍 Эр-Рияд, Саудовская Аравия' : '📍 Riyadh, Saudi Arabia';
+            document.getElementById('lbl-work').innerText = currentLang === 'ru' ? '🕒 12:00 - 00:00' : '🕒 12:00 PM - 12:00 AM';
             
             updateCartUI();
         }
@@ -322,33 +348,26 @@
             
             tg.HapticFeedback.impactOccurred('light');
             updateCartUI();
-            if(document.getElementById('checkout-page').style.display === 'block') {
-                renderCheckoutItems();
-            }
+            if(document.getElementById('checkout-page').style.display === 'block') renderCheckoutItems();
         }
 
         function updateCartUI() {
             let totalItems = 0;
             let totalPrice = 0;
-            
             for (let id in cart) {
                 totalItems += cart[id];
-                const item = menuItems.find(i => i.id === id);
-                totalPrice += item.price * cart[id];
+                totalPrice += menuItems.find(i => i.id === id).price * cart[id];
             }
 
             const badge = document.getElementById('cart-badge');
             if (totalItems > 0) {
-                badge.style.display = 'flex';
-                badge.innerText = totalItems;
+                badge.style.display = 'flex'; badge.innerText = totalItems;
                 tg.MainButton.setText(currentLang === 'ru' ? `ОФОРМИТЬ ЗАКАЗ` : `CHECKOUT ORDER`);
                 tg.MainButton.show();
             } else {
-                badge.style.display = 'none';
-                tg.MainButton.hide();
+                badge.style.display = 'none'; tg.MainButton.hide();
                 if(document.getElementById('checkout-page').style.display === 'block') showMenu();
             }
-            
             document.getElementById('cart-total').innerText = `${totalPrice} SAR`;
         }
 
@@ -357,11 +376,7 @@
             document.getElementById('checkout-page').style.display = 'none';
             document.getElementById('nav-home').classList.add('active');
             document.getElementById('nav-cart').classList.remove('active');
-            
-            if (Object.keys(cart).length > 0) {
-                tg.MainButton.setText(currentLang === 'ru' ? `ОФОРМИТЬ ЗАКАЗ` : `CHECKOUT ORDER`);
-                tg.MainButton.show();
-            }
+            if (Object.keys(cart).length > 0) tg.MainButton.show();
         }
 
         function showCheckout() {
@@ -370,7 +385,6 @@
             document.getElementById('checkout-page').style.display = 'block';
             document.getElementById('nav-home').classList.remove('active');
             document.getElementById('nav-cart').classList.add('active');
-            
             tg.MainButton.setText(currentLang === 'ru' ? `ПОДТВЕРДИТЬ И ОТПРАВИТЬ` : `CONFIRM AND SEND`);
             renderCheckoutItems();
         }
@@ -382,7 +396,7 @@
                 const item = menuItems.find(i => i.id === id);
                 cartDiv.innerHTML += `
                     <div class="cart-item">
-                        <div style="font-weight:600;">${item[currentLang].n} <br><span style="color:var(--yurt-muted); font-size:12px;">${item.price} SAR</span></div>
+                        <div style="font-weight:600;">${item[currentLang].n} <br><span style="color:var(--text-muted); font-size:12px;">${item.price} SAR</span></div>
                         <div class="cart-controls">
                             <button class="qty-btn" onclick="modifyCart('${id}', -1)">-</button>
                             <span style="font-weight:bold; width:20px; text-align:center;">${cart[id]}</span>
@@ -399,11 +413,13 @@
             } else {
                 const name = document.getElementById('cust-name').value;
                 const phone = document.getElementById('cust-phone').value;
-                if(!name || !phone) {
-                    tg.showAlert(currentLang === 'en' ? "Please fill name and phone!" : "Пожалуйста, заполните имя и телефон!");
+                const address = document.getElementById('cust-address').value;
+                
+                if(!name || !phone || !address) {
+                    tg.showAlert(currentLang === 'en' ? "Please fill all fields (Name, Phone, Location)!" : "Пожалуйста, заполните все поля (Имя, Телефон, Локация)!");
                     return;
                 }
-                tg.sendData(JSON.stringify({ cart, name, phone, address: document.getElementById('cust-address').value }));
+                tg.sendData(JSON.stringify({ cart, name, phone, address }));
                 tg.close();
             }
         });
