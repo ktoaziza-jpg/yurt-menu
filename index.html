@@ -33,7 +33,7 @@
         /* ── HEADER ── */
         .header {
             background: var(--dark);
-            height: 68px;
+            height: 80px;
             display: flex;
             align-items: center;
             justify-content: space-between;
@@ -47,8 +47,9 @@
             left: 50%;
             top: 50%;
             transform: translate(-50%, -50%);
-            height: 52px;
+            height: 72px;
             pointer-events: none;
+            object-fit: contain;
         }
         .lang-btn {
             position: relative;
@@ -68,7 +69,7 @@
         /* ── ORNAMENT STRIP ── */
         .ornament-strip {
             background: var(--dark);
-            padding: 0 0 10px;
+            padding: 10px 0 18px;
         }
         .orn-rule {
             height: 1px;
@@ -79,25 +80,24 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 5px;
-            padding: 6px 0;
+            gap: 6px;
+            padding: 10px 0 8px;
         }
         .gem {
-            width: 5px; height: 5px;
+            width: 6px; height: 6px;
             background: var(--blue);
             transform: rotate(45deg);
             flex-shrink: 0;
         }
         .gem.g { background: var(--gold); }
-        .gem.s { width: 3px; height: 3px; }
+        .gem.s { width: 4px; height: 4px; }
         .orn-tagline {
             text-align: center;
             font-family: 'Nunito', sans-serif;
-            font-size: 9px;
+            font-size: 10px;
             font-weight: 600;
-            letter-spacing: 3px;
+            letter-spacing: 3.5px;
             color: var(--muted);
-            padding-bottom: 2px;
         }
 
         /* ── CATEGORY PILLS ── */
@@ -706,7 +706,7 @@
     ];
 
     let cart = {};
-    let activeCat = 'kebabs';
+    let activeCat = 'salads';
 
     function toggleLang() {
         currentLang = currentLang === 'ru' ? 'en' : 'ru';
