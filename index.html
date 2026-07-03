@@ -35,10 +35,10 @@
             -webkit-font-smoothing: antialiased;
         }
 
-        /* ── HEADER ── */
+        /* ── ИДЕАЛЬНАЯ ШАПКА ── */
         .header {
             background: var(--brand-teal);
-            height: 80px;
+            height: 75px;
             display: flex;
             align-items: center;
             justify-content: space-between;
@@ -46,23 +46,26 @@
             position: sticky;
             top: 0;
             z-index: 100;
-            overflow: hidden; /* Важно, чтобы увеличенный логотип не вылезал за края */
+            overflow: hidden;
         }
-        
-        /* ИСПРАВЛЕННЫЙ ЛОГОТИП: Увеличен масштаб (scale), чтобы убрать пустые прозрачные поля */
+        .header-left, .header-right {
+            width: 80px; /* Одинаковая ширина по краям для идеального баланса */
+            display: flex;
+        }
+        .header-right {
+            justify-content: flex-end;
+        }
         .header-logo {
             position: absolute;
             left: 50%;
             top: 50%;
             transform: translate(-50%, -50%) scale(5.0); 
-            height: 52px;
+            height: 40px;
             pointer-events: none;
             object-fit: contain;
         }
         
         .lang-btn {
-            position: relative;
-            z-index: 2;
             background: transparent;
             border: 2px solid var(--brand-yellow);
             color: var(--brand-yellow);
@@ -74,16 +77,19 @@
             border-radius: 20px;
             cursor: pointer;
             transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
         .lang-btn:active {
             background: var(--brand-yellow);
             color: var(--brand-teal);
         }
 
-        /* ── ORNAMENT STRIP ── */
+        /* ── ОРНАМЕНТ (Добавлено больше воздуха) ── */
         .ornament-strip {
             background: var(--brand-teal);
-            padding: 10px 0 18px;
+            padding: 15px 0 25px; /* Увеличили отступы сверху и снизу */
         }
         .orn-rule {
             height: 1px;
@@ -94,23 +100,23 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 6px;
-            padding: 10px 0 8px;
+            gap: 12px; /* Раздвинули ромбики */
+            padding: 20px 0 16px; /* Воздух вокруг ромбиков */
         }
         .gem {
-            width: 6px; height: 6px;
+            width: 7px; height: 7px;
             background: var(--brand-white);
             transform: rotate(45deg);
             flex-shrink: 0;
         }
         .gem.g { background: var(--brand-yellow); }
-        .gem.s { width: 4px; height: 4px; opacity: 0.8; }
+        .gem.s { width: 5px; height: 5px; opacity: 0.8; }
         .orn-tagline {
             text-align: center;
             font-family: 'Montserrat', sans-serif;
             font-size: 10px;
             font-weight: 700; 
-            letter-spacing: 3.5px;
+            letter-spacing: 4px; /* Увеличили межбуквенное расстояние */
             color: var(--brand-white);
             opacity: 0.9;
         }
@@ -257,29 +263,32 @@
             color: var(--brand-blue);
         }
 
-        /* ── FOOTER ── */
+        /* ── FOOTER (Увеличен логотип) ── */
         .footer {
             margin-top: 24px;
-            padding: 32px 16px;
+            padding: 40px 16px 30px;
             background: var(--brand-teal);
             text-align: center;
             color: var(--brand-white);
             overflow: hidden;
         }
         .footer-logo { 
-            height: 45px; 
-            margin-bottom: 16px; 
+            height: 30px; /* Базовый размер */
+            margin-bottom: 35px; /* Отступ вниз */
             object-fit: contain; 
-            transform: scale(3.0); /* Увеличили логотип и в подвале */
+            transform: scale(5.0); /* Масштаб как в шапке */
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
         }
         .footer p {
             font-family: 'Montserrat', sans-serif;
             font-size: 13px;
             font-weight: 500;
             color: rgba(255, 255, 255, 0.9);
-            margin: 6px 0;
+            margin: 8px 0;
         }
-        .footer .social { margin-top: 20px; display: flex; justify-content: center; gap: 20px; }
+        .footer .social { margin-top: 25px; display: flex; justify-content: center; gap: 20px; }
         .footer .social i { font-size: 24px; color: var(--brand-yellow); }
 
         /* ── BOTTOM NAV ── */
@@ -367,7 +376,6 @@
         }
         .checkout-body { padding: 20px 16px; }
 
-        /* cart items */
         .cart-item {
             background: var(--surface);
             border-radius: 16px;
@@ -415,7 +423,6 @@
             text-align: center;
         }
 
-        /* total block */
         .total-block {
             background: var(--brand-blue);
             border-radius: 16px;
@@ -440,7 +447,6 @@
             color: var(--brand-yellow);
         }
 
-        /* divider */
         .section-divider {
             display: flex;
             align-items: center;
@@ -455,7 +461,6 @@
             color: var(--brand-blue);
         }
 
-        /* form fields */
         .field-label {
             font-size: 11px;
             font-weight: 700;
@@ -493,7 +498,36 @@
         }
         .geo-btn:active { opacity: 0.8; }
 
-        /* confirm btn */
+        /* --- НОВЫЙ БЛОК: МЕТОДЫ ОПЛАТЫ --- */
+        .payment-methods {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-bottom: 24px;
+        }
+        .pay-option input { display: none; }
+        .pay-card {
+            background: var(--surface);
+            border: 2px solid var(--border);
+            border-radius: 12px;
+            padding: 16px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--ink);
+        }
+        .pay-card i { font-size: 20px; color: var(--muted); width: 24px; text-align: center; }
+        .pay-option input:checked + .pay-card {
+            border-color: var(--brand-teal);
+            background: rgba(73, 180, 192, 0.05);
+        }
+        .pay-option input:checked + .pay-card i { color: var(--brand-teal); }
+
         .confirm-btn {
             width: 100%;
             background: var(--brand-yellow);
@@ -514,23 +548,15 @@
             transition: transform 0.15s;
         }
         .confirm-btn:active { transform: scale(0.98); }
-        .pay-note {
-            text-align: center;
-            font-size: 11px;
-            font-weight: 500;
-            color: var(--muted);
-            margin-top: 12px;
-            letter-spacing: 0.5px;
-        }
     </style>
 </head>
 <body>
 
 <div id="menu-page">
     <div class="header">
-        <div style="width:60px;"></div>
+        <div class="header-left"></div>
         <img src="logo.png" alt="Yurt" class="header-logo">
-        <div>
+        <div class="header-right">
             <button class="lang-btn" onclick="toggleLang()" id="btn-lang">EN</button>
         </div>
     </div>
@@ -611,11 +637,40 @@
             </div>
         </div>
 
+        <div class="section-divider" style="margin-top: 30px;">
+            <div class="div-line"></div>
+            <div class="div-label" id="lbl-payment-title">СПОСОБ ОПЛАТЫ</div>
+            <div class="div-line"></div>
+        </div>
+
+        <div class="payment-methods">
+            <label class="pay-option">
+                <input type="radio" name="payment" value="cash" checked>
+                <div class="pay-card">
+                    <i class="fas fa-money-bill-wave"></i>
+                    <span id="lbl-pay-cash">Наличными при получении</span>
+                </div>
+            </label>
+            <label class="pay-option">
+                <input type="radio" name="payment" value="terminal">
+                <div class="pay-card">
+                    <i class="fas fa-credit-card"></i>
+                    <span id="lbl-pay-term">Картой курьеру (Терминал)</span>
+                </div>
+            </label>
+            <label class="pay-option">
+                <input type="radio" name="payment" value="online">
+                <div class="pay-card">
+                    <i class="fas fa-globe"></i>
+                    <span id="lbl-pay-online">Онлайн (Apple Pay / Mada)</span>
+                </div>
+            </label>
+        </div>
+
         <button class="confirm-btn" onclick="submitOrder()">
             <i class="fas fa-check"></i>
             <span id="lbl-confirm">ПОДТВЕРДИТЬ ЗАКАЗ</span>
         </button>
-        <p class="pay-note" id="lbl-pay-info">Оплата при доставке · Mada · STC Pay · Наличные</p>
     </div>
 </div>
 
@@ -761,7 +816,7 @@
         document.getElementById('cust-address').placeholder = placeholder;
         navigator.geolocation.getCurrentPosition(
             pos => {
-                document.getElementById('cust-address').value = `https://maps.google.com/?q=${pos.coords.latitude},${pos.coords.longitude}`;
+                document.getElementById('cust-address').value = `http://googleusercontent.com/maps.google.com/?q=${pos.coords.latitude},${pos.coords.longitude}`;
             },
             () => {
                 tg.showAlert(currentLang === 'ru' ? "Не удалось получить GPS. Введите адрес." : "GPS failed. Please type your address.");
@@ -772,14 +827,12 @@
     }
 
     function renderApp() {
-        // Categories
         let navHtml = '';
         for (let key in categories) {
             navHtml += `<button class="cat-pill ${activeCat === key ? 'active' : ''}" onclick="filterCat('${key}')">${categories[key][currentLang]}</button>`;
         }
         document.getElementById('cat-nav').innerHTML = navHtml;
 
-        // Menu items
         const items = menuItems.filter(i => i.cat === activeCat);
         const emoji = catEmoji[activeCat] || '🍽️';
         let menuHtml = '<div class="menu-grid">';
@@ -810,7 +863,6 @@
         menuHtml += '</div>';
         document.getElementById('menu-container').innerHTML = menuHtml;
 
-        // Labels
         const ru = currentLang === 'ru';
         document.getElementById('lbl-order').innerText     = ru ? 'ВАШ ЗАКАЗ' : 'YOUR ORDER';
         document.getElementById('lbl-details').innerText   = ru ? 'ДЕТАЛИ ДОСТАВКИ' : 'DELIVERY DETAILS';
@@ -820,12 +872,17 @@
         document.getElementById('lbl-name').innerText      = ru ? 'ИМЯ' : 'NAME';
         document.getElementById('lbl-phone').innerText     = ru ? 'WHATSAPP' : 'WHATSAPP';
         document.getElementById('lbl-loc').innerText       = ru ? 'АДРЕС ДОСТАВКИ' : 'DELIVERY ADDRESS';
-        document.getElementById('lbl-pay-info').innerText  = ru ? 'Оплата при доставке · Mada · STC Pay · Наличные' : 'Payment upon delivery · Mada · STC Pay · Cash';
         document.getElementById('lbl-addr').innerText      = ru ? '📍 Эр-Рияд, Саудовская Аравия' : '📍 Riyadh, Saudi Arabia';
         document.getElementById('lbl-work').innerText      = ru ? '🕒 12:00 — 00:00' : '🕒 12:00 PM — 12:00 AM';
         document.getElementById('lbl-confirm').innerText   = ru ? 'ПОДТВЕРДИТЬ ЗАКАЗ' : 'CONFIRM ORDER';
         document.getElementById('lbl-tagline').innerText   = ru ? 'ДОБРО ПОЖАЛОВАТЬ · يورت · WELCOME' : 'WELCOME · يورت · ДОБРО ПОЖАЛОВАТЬ';
         document.getElementById('cust-name').placeholder   = ru ? 'Абдулла' : 'Abdullah';
+        
+        // Переводы новых методов оплаты
+        document.getElementById('lbl-payment-title').innerText = ru ? 'СПОСОБ ОПЛАТЫ' : 'PAYMENT METHOD';
+        document.getElementById('lbl-pay-cash').innerText      = ru ? 'Наличными при получении' : 'Cash on Delivery';
+        document.getElementById('lbl-pay-term').innerText      = ru ? 'Картой курьеру (Терминал)' : 'Card on Delivery (Terminal)';
+        document.getElementById('lbl-pay-online').innerText    = ru ? 'Онлайн (Apple Pay / Mada)' : 'Online (Apple Pay / Mada)';
 
         updateCartUI();
     }
@@ -836,7 +893,7 @@
         if (cart[id] <= 0) delete cart[id];
         tg.HapticFeedback.impactOccurred('light');
         updateCartUI();
-        // Refresh just this button
+        
         const buttons = document.querySelectorAll('.add-btn');
         const items = menuItems.filter(i => i.cat === activeCat);
         items.forEach((item, idx) => {
@@ -916,6 +973,8 @@
         const name = document.getElementById('cust-name').value.trim();
         const phone = document.getElementById('cust-phone').value.trim();
         const address = document.getElementById('cust-address').value.trim();
+        const payMethod = document.querySelector('input[name="payment"]:checked').value;
+
         if (!name || !phone || !address) {
             const msg = currentLang === 'ru'
                 ? 'Пожалуйста, заполните все поля!'
@@ -925,7 +984,11 @@
         }
         let total = 0;
         for (let id in cart) total += menuItems.find(i => i.id === id).price * cart[id];
-        tg.sendData(JSON.stringify({ cart, name, phone, address, total: total + ' SAR' }));
+        tg.sendData(JSON.stringify({ 
+            cart, name, phone, address, 
+            payment: payMethod, 
+            total: total + ' SAR' 
+        }));
         tg.close();
     }
 
