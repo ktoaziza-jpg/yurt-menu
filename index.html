@@ -414,7 +414,7 @@
         }
         .cart-controls { display: flex; align-items: center; gap: 12px; }
         .qty-btn {
-            width: 32px height: 32px;
+            width: 32px; height: 32px;
             border-radius: 10px;
             border: 2px solid var(--border);
             background: var(--bg);
@@ -707,7 +707,6 @@
     const urlParams = new URLSearchParams(window.location.search);
     let currentLang = urlParams.get('lang') || 'ru';
 
-    // АКТУАЛЬНЫЕ КАТЕГОРИИ ИЗ МЕНЮ
     const categories = {
         salads:     { ru: "Салаты",          en: "Salads" },
         main:       { ru: "Основные",         en: "Main Dishes" },
@@ -728,39 +727,32 @@
 
     const catEmoji = {
         salads: '🥗', main: '🍽️', soups: '🍲', snacks: '🥟', kebabs: '🥩', grilled: '🌯',
-        sides: ' Rice ', bread: '🫓', lemonads: '🍹', desserts: '🍮', drinks: '🥤',
+        sides: '🍚', bread: '🫓', lemonads: '🍹', desserts: '🍮', drinks: '🥤',
         juice: '🧃', coffee: '☕', tea: '🫖', sauces: '🫙'
     };
 
-    // ПОЛНОСТЬЮ ОБНОВЛЕННЫЙ СПИСОК БЛЮД И ЦЕН ИЗ ФОТОГРАФИЙ МЕНЮ
     const menuItems = [
-        // SALADS
         { id: 's1', cat: 'salads', price: 12, ru: { n: 'Соленые огурцы', d: 'хрустящие маринованные огурчики' }, en: { n: 'Pickled Cucumber', d: 'crunchy pickled cucumbers' } },
         { id: 's2', cat: 'salads', price: 12, ru: { n: 'Витаминный салат', d: 'свежие овощи и зелень' }, en: { n: 'Vitamin Salad', d: 'fresh vegetables and greens' } },
         { id: 's3', cat: 'salads', price: 12, ru: { n: 'Огурцы по-корейски', d: 'острые огурцы со специями' }, en: { n: 'Spicy Cucumbers', d: 'spicy seasoned cucumbers' } },
         { id: 's4', cat: 'salads', price: 12, ru: { n: 'Салат Бахор', d: 'традиционный весенний салат' }, en: { n: 'Bahor Salad', d: 'traditional spring salad' } },
         { id: 's5', cat: 'salads', price: 12, ru: { n: 'Салат Ачичук', d: 'помидоры, лук, тонкая нарезка' }, en: { n: 'Achichuk Salad', d: 'thinly sliced tomatoes and onions' } },
 
-        // HOT SNACKS
         { id: 'sn1', cat: 'snacks', price: 10, ru: { n: 'Ассорти самсы (Курица и Сыр / Говядина)', d: 'сочная домашняя выпечка' }, en: { n: 'Samsa Selection (Chicken & Cheese / Beef)', d: 'savory pastry filled with meat or cheese' } },
         { id: 'sn2', cat: 'snacks', price: 15, ru: { n: 'Чебурек', d: 'хрустящее тесто, сочный фарш' }, en: { n: 'Cheburek', d: 'deep-fried pastry with minced meat stuffing' } },
         { id: 'sn3', cat: 'snacks', price: 30, ru: { n: 'Долма из говядины', d: 'виноградные листья, говядина, рис' }, en: { n: 'Beef Dolma', d: 'grape leaves stuffed with minced beef and rice' } },
 
-        // KEBABS
         { id: 'k1', cat: 'kebabs', price: 30, ru: { n: 'Ассорти кебабов (2 шт)', d: 'нежное мясо на гриле' }, en: { n: 'Kebab Selection (2 Pcs)', d: 'tender grilled kebab skewers' } },
         { id: 'k2', cat: 'kebabs', price: 300, ru: { n: 'Сет ассорти кебабов (20 шт)', d: 'большой набор для компании' }, en: { n: 'Set Kebabs Selection (20 Pc)', d: 'large set of various skewers for a group' } },
 
-        // GRILLED
         { id: 'g1', cat: 'grilled', price: 35, ru: { n: 'Шаурма с говядиной на гриле', d: 'сочная говядина в лаваше с соусом' }, en: { n: 'Grilled Beef Shawarma', d: 'juicy grilled beef wrap with signature sauce' } },
         { id: 'g2', cat: 'grilled', price: 30, ru: { n: 'Шаурма с курицей на гриле', d: 'нежная курица на гриле в лаваше' }, en: { n: 'Shawarma with Grilled Chicken', d: 'tender grilled chicken wrap with garlic paste' } },
 
-        // SOUPS
         { id: 'sp1', cat: 'soups', price: 25, ru: { n: 'Шурпа', d: 'наваристый суп с мясом и крупными овощами' }, en: { n: 'Shurpa', d: 'rich traditional meat broth with large vegetables' } },
         { id: 'sp2', cat: 'soups', price: 25, ru: { n: 'Суп Пельмени', d: 'горячий суп с домашними пельменями' }, en: { n: 'Pelmeni Soup', d: 'warm soup with savory handmade dumplings' } },
         { id: 'sp3', cat: 'soups', price: 25, ru: { n: 'Мастава', d: 'густой рисовый суп с говядиной' }, en: { n: 'Mastava Soup', d: 'hearty traditional rice and beef soup' } },
         { id: 'sp4', cat: 'soups', price: 28, ru: { n: 'Окрошка с говядиной', d: 'освежающий холодный суп' }, en: { n: 'Okroshka with Beef', d: 'refreshing traditional cold soup with beef' } },
 
-        // MAIN DISHES
         { id: 'm1', cat: 'main', price: 35, badge: 'hit', ru: { n: 'Плов', d: 'фирменный праздничный плов с говядиной' }, en: { n: 'Plov', d: 'signature uzbek festive rice dish with beef' } },
         { id: 'm2', cat: 'main', price: 25, ru: { n: 'Ганфан', d: 'рис с сочным мясным соусом и овощами' }, en: { n: 'Ganfan', d: 'steamed rice topped with rich meat and vegetable stir-fry' } },
         { id: 'm3', cat: 'main', price: 25, ru: { n: 'Курица Табака', d: 'цыпленок с хрустящей корочкой и гарниром' }, en: { n: 'Tabaka Chicken', d: 'crispy pan-fried chicken served with a side dish' } },
@@ -770,16 +762,13 @@
         { id: 'm7', cat: 'main', price: 40, ru: { n: 'Казан Кебаб с курицей', d: 'обжаренная курица с золотистым картофелем' }, en: { n: 'Chicken Kebab Cauldron', d: 'fried chicken served with crispy roasted potatoes' } },
         { id: 'm8', cat: 'main', price: 40, ru: { n: 'Жареные пельмени', d: 'хрустящие мини-пельмени с говядиной' }, en: { n: 'Fried Dumplings', d: 'crispy pan-fried mini dumplings filled with beef' } },
 
-        // SIDE DISHES
         { id: 'sd1', cat: 'sides', price: 8, ru: { n: 'Рис Басмати', d: '' }, en: { n: 'Basmati Rice', d: '' } },
         { id: 'sd2', cat: 'sides', price: 8, ru: { n: 'Рис с овощами', d: '' }, en: { n: 'Rice with Veggies', d: '' } },
         { id: 'sd3', cat: 'sides', price: 12, ru: { n: 'Картофель Фри', d: '' }, en: { n: 'French Fries', d: '' } },
 
-        // BREAD
         { id: 'br1', cat: 'bread', price: 4, ru: { n: 'Лепешка Кулча', d: '' }, en: { n: 'Kulcha Bread', d: '' } },
         { id: 'br2', cat: 'bread', price: 10, ru: { n: 'Баурсак', d: '' }, en: { n: 'Baursaq', d: '' } },
 
-        // LEMONADS (Матча и Лимонады)
         { id: 'l1', cat: 'lemonads', price: 14, ru: { n: 'Розовая Матча', d: 'Pink' }, en: { n: 'Pink Matcha', d: 'Pink' } },
         { id: 'l2', cat: 'lemonads', price: 14, ru: { n: 'Голубая Матча Анчан', d: 'Anchan Blueberry' }, en: { n: 'Anchan Blueberry Matcha', d: 'Anchan Blueberry' } },
         { id: 'l3', cat: 'lemonads', price: 14, ru: { n: 'Матча Манго Кокос', d: 'Mango Coconut' }, en: { n: 'Mango Coconut Matcha', d: 'Mango Coconut' } },
@@ -787,7 +776,6 @@
         { id: 'l5', cat: 'lemonads', price: 14, ru: { n: 'Ягодный лимонад', d: 'Berry Lemonade' }, en: { n: 'Berry Lemonade', d: 'Berry Lemonade' } },
         { id: 'l6', cat: 'lemonads', price: 14, ru: { n: 'Цитрусовый лимонад', d: 'Citrus Lemonade' }, en: { n: 'Citrus Lemonade', d: 'Citrus Lemonade' } },
 
-        // DESSERTS
         { id: 'ds1', cat: 'desserts', price: 25, ru: { n: 'Сан-Себастьян Классический', d: '' }, en: { n: 'San Sebastian', d: '' } },
         { id: 'ds2', cat: 'desserts', price: 25, ru: { n: 'Сан-Себастьян с Нутеллой', d: '' }, en: { n: 'San Sebastian with Nutella', d: '' } },
         { id: 'ds3', cat: 'desserts', price: 25, ru: { n: 'Фисташковый чизкейк', d: '' }, en: { n: 'Pistachio Cheese Cake', d: '' } },
@@ -798,14 +786,12 @@
         { id: 'ds8', cat: 'desserts', price: 25, ru: { n: 'Бельгийские вафли', d: '' }, en: { n: 'Belgian Waffles', d: '' } },
         { id: 'ds9', cat: 'desserts', price: 10, ru: { n: 'Арбузная нарезка', d: '' }, en: { n: 'Watermelon', d: '' } },
 
-        // DRINKS
         { id: 'dr1', cat: 'drinks', price: 6, ru: { n: 'Coca Cola 245 ml', d: '' }, en: { n: 'Coca Cola 245 ml', d: '' } },
         { id: 'dr2', cat: 'drinks', price: 6, ru: { n: 'Pepsi 245 ml', d: '' }, en: { n: 'Pepsi 245 ml', d: '' } },
         { id: 'dr3', cat: 'drinks', price: 6, ru: { n: '7Up 250 ml', d: '' }, en: { n: '7Up 250 ml', d: '' } },
         { id: 'dr4', cat: 'drinks', price: 6, ru: { n: 'Mirinda 250 ml', d: '' }, en: { n: 'Mirinda 250 ml', d: '' } },
         { id: 'dr5', cat: 'drinks', price: 6, ru: { n: 'Kinza 250ml', d: '' }, en: { n: 'Kinza 250ml', d: '' } },
 
-        // JUICE / WATER
         { id: 'j1', cat: 'juice', price: 15, ru: { n: 'Айс-ти', d: 'Ice Tea' }, en: { n: 'Ice Tea', d: 'Ice Tea' } },
         { id: 'j2', cat: 'juice', price: 15, ru: { n: 'Свежий морковный сок', d: '' }, en: { n: 'Fresh Carrot Juice', d: '' } },
         { id: 'j3', cat: 'juice', price: 10, ru: { n: 'Айран', d: '' }, en: { n: 'Airan', d: '' } },
@@ -814,16 +800,14 @@
         { id: 'j6', cat: 'juice', price: 2, ru: { n: 'Концентрированное молоко', d: '' }, en: { n: 'Evaporated Milk', d: '' } },
         { id: 'j7', cat: 'juice', price: 2, ru: { n: 'Вода', d: '' }, en: { n: 'Water', d: '' } },
 
-        // COFFEE
         { id: 'cf1', cat: 'coffee', price: 10, ru: { n: 'Эспрессо кофе', d: '' }, en: { n: 'Espresso Coffee', d: '' } },
         { id: 'cf2', cat: 'coffee', price: 13, ru: { n: 'Эспрессо Лонг', d: '' }, en: { n: 'Espresso Long', d: '' } },
         { id: 'cf3', cat: 'coffee', price: 12, ru: { n: 'Американо кофе', d: '' }, en: { n: 'Americano Coffee', d: '' } },
         { id: 'cf4', cat: 'coffee', price: 15, ru: { n: 'Капучино кофе', d: '' }, en: { n: 'Cappuccino Coffee', d: '' } },
-        { id: 'cf5', cat: 'coffee', price: 15, ru: { n: 'Латте кофе', d: '' }, en: { n: 'Latte Coffee', d: '' } },
+        { id: 'cf5', cat: 'coffee', price: 15, ru: { n: 'Латте кофе', d: '' }, en: { n: 'Late Coffee', d: '' } },
         { id: 'cf6', cat: 'coffee', price: 20, ru: { n: 'Колд Брю', d: '' }, en: { n: 'Cold Brew', d: '' } },
         { id: 'cf7', cat: 'coffee', price: 12, ru: { n: 'Айс Американо', d: '' }, en: { n: 'Iced Americano', d: '' } },
 
-        // TEA
         { id: 't1', cat: 'tea', price: 5, ru: { n: 'Чай с мятой', d: '' }, en: { n: 'Mint Tea', d: '' } },
         { id: 't2', cat: 'tea', price: 5, ru: { n: 'Чай с лимоном', d: '' }, en: { n: 'Lemon Tea', d: '' } },
         { id: 't3', cat: 'tea', price: 10, ru: { n: 'Чай Карак', d: '' }, en: { n: 'Karak Tea', d: '' } },
@@ -835,7 +819,6 @@
         { id: 't9', cat: 'tea', price: 10, ru: { n: 'Чайник черного чая', d: '' }, en: { n: 'Tea Pot (Black)', d: '' } },
         { id: 't10', cat: 'tea', price: 10, ru: { n: 'Чайник зеленого чая', d: '' }, en: { n: 'Tea Pot (Green)', d: '' } },
 
-        // SAUCES
         { id: 'sc1', cat: 'sauces', price: 8, ru: { n: 'Соус Нутелла', d: '' }, en: { n: 'Nutella Sauce', d: '' } },
         { id: 'sc2', cat: 'sauces', price: 8, ru: { n: 'Бельгийский шоколад', d: '' }, en: { n: 'Belgian Chocolate', d: '' } },
         { id: 'sc3', cat: 'sauces', price: 8, ru: { n: 'Сгущенное молоко', d: '' }, en: { n: 'Condensed Milk', d: '' } },
@@ -856,7 +839,6 @@
     function filterCat(cat) {
         activeCat = cat;
         renderApp();
-        // ФИКС: Автоматический умный скролл наверх к началу контента при смене категории
         window.scrollTo(0, 0);
     }
 
@@ -986,7 +968,6 @@
         document.getElementById('checkout-page').style.display = 'none';
         document.getElementById('nav-home').classList.add('active');
         document.getElementById('nav-cart').classList.remove('active');
-        // ФИКС: Скролл на самый верх при возврате в меню
         window.scrollTo(0, 0);
         if (Object.keys(cart).length > 0) tg.MainButton.show();
     }
@@ -997,7 +978,6 @@
         document.getElementById('checkout-page').style.display = 'block';
         document.getElementById('nav-home').classList.remove('active');
         document.getElementById('nav-cart').classList.add('active');
-        // ФИКС: Скролл на самый верх при переходе на страницу оплаты
         window.scrollTo(0, 0);
         const btnText = currentLang === 'ru' ? 'ПОДТВЕРДИТЬ И ОТПРАВИТЬ' : 'CONFIRM AND SEND';
         tg.MainButton.setText(btnText);
@@ -1034,9 +1014,7 @@
         const payMethod = document.querySelector('input[name="payment"]:checked').value;
 
         if (!name || !phone || !address) {
-            const msg = currentLang === 'ru'
-                ? 'Пожалуйста, заполните все поля!'
-                : 'Please fill all fields!';
+            const msg = currentLang === 'ru' ? 'Пожалуйста, заполните все поля!' : 'Please fill all fields!';
             tg.showAlert(msg);
             return;
         }
