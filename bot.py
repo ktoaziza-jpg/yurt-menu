@@ -64,7 +64,7 @@ async def process_language(callback: types.CallbackQuery):
     lang_code = callback.data.split("_")[1] 
     
     # Поднимаем версию до v=16, чтобы сбросить кэш ссылки
-    webapp_url_with_lang = f"{BASE_WEBAPP_URL}?lang={lang_code}&v=16"
+    webapp_url_with_lang = f"{BASE_WEBAPP_URL}?lang={lang_code}&v=20"
     
     btn_text = "🍽 Open Menu" if lang_code == 'en' else "🍽 Открыть меню"
     keyboard = ReplyKeyboardMarkup(
