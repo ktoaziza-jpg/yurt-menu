@@ -302,6 +302,8 @@
             margin: 8px 0;
         }
         .footer .social { margin-top: 25px; display: flex; justify-content: center; gap: 20px; }
+        .footer .social a { text-decoration: none; display: inline-block; transition: transform 0.2s; }
+        .footer .social a:active { transform: scale(0.9); }
         .footer .social i { font-size: 24px; color: var(--brand-yellow); }
 
         /* ── BOTTOM NAV ── */
@@ -604,8 +606,8 @@
         <p>📞 +966 50 000 0000</p>
         <p id="lbl-work">🕒 12:00 — 00:00</p>
         <div class="social">
-            <i class="fab fa-instagram"></i>
-            <i class="fab fa-whatsapp"></i>
+            <a href="https://www.instagram.com/yurt.ksa/" target="_blank"><i class="fab fa-instagram"></i></a>
+            <a href="https://wa.me/966500000000" target="_blank"><i class="fab fa-whatsapp"></i></a>
         </div>
     </div>
 </div>
@@ -804,7 +806,7 @@
         { id: 'cf2', cat: 'coffee', price: 13, ru: { n: 'Эспрессо Лонг', d: '' }, en: { n: 'Espresso Long', d: '' } },
         { id: 'cf3', cat: 'coffee', price: 12, ru: { n: 'Американо кофе', d: '' }, en: { n: 'Americano Coffee', d: '' } },
         { id: 'cf4', cat: 'coffee', price: 15, ru: { n: 'Капучино кофе', d: '' }, en: { n: 'Cappuccino Coffee', d: '' } },
-        { id: 'cf5', cat: 'coffee', price: 15, ru: { n: 'Латте кофе', d: '' }, en: { n: 'Late Coffee', d: '' } },
+        { id: 'cf5', cat: 'coffee', price: 15, ru: { n: 'Латте кофе', d: '' }, en: { n: 'Latte Coffee', d: '' } },
         { id: 'cf6', cat: 'coffee', price: 20, ru: { n: 'Колд Брю', d: '' }, en: { n: 'Cold Brew', d: '' } },
         { id: 'cf7', cat: 'coffee', price: 12, ru: { n: 'Айс Американо', d: '' }, en: { n: 'Iced Americano', d: '' } },
 
@@ -1023,7 +1025,8 @@
         tg.sendData(JSON.stringify({ 
             cart, name, phone, address, 
             payment: payMethod, 
-            total: total + ' SAR' 
+            total: total + ' SAR',
+            lang: currentLang // Отправляем язык в бот
         }));
         tg.close();
     }
