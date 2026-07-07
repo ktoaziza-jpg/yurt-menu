@@ -120,7 +120,7 @@
             color: var(--brand-white);
             opacity: 0.9;
         }
- 
+
         /* ── CATEGORY PILLS ── */
         .cat-scroll {
             display: flex;
@@ -180,6 +180,8 @@
             height: 100%;
             object-fit: cover;
             display: block;
+            position: relative;
+            z-index: 2; /* Картинка всегда ложится ПОВЕРХ эмодзи-заглушки */
         }
         
         .item-img-placeholder {
@@ -191,7 +193,7 @@
             align-items: center;
             justify-content: center;
             font-size: 42px;
-            z-index: 1;
+            z-index: 1; /* Эмодзи на заднем плане */
         }
         .item-badge {
             position: absolute;
@@ -206,7 +208,7 @@
             padding: 4px 8px;
             border-radius: 12px;
             text-transform: uppercase;
-            z-index: 2;
+            z-index: 3;
         }
         .item-badge.new {
             background: var(--brand-pink);
@@ -268,7 +270,7 @@
             cursor: pointer;
             transition: all 0.15s;
             line-height: 1;
-            z-index: 2;
+            z-index: 3;
         }
         .add-btn:active { transform: scale(0.9); }
         .add-btn.in-cart {
@@ -878,13 +880,14 @@
             if (item.badge === 'hit') badgeHtml = `<div class="item-badge">${currentLang === 'ru' ? 'ХИТ' : 'HIT'}</div>`;
             if (item.badge === 'new') badgeHtml = `<div class="item-badge new">${currentLang === 'ru' ? 'НОВИНКА' : 'NEW'}</div>`;
             
-            const imgPath = `images/${item.id}.jpg?v=16`;
+            // ФИКС КЭША КАРТИНКИ
+            const imgPath = `images/${item.id}.jpg?v=25`;
 
             menuHtml += `
                 <div class="menu-item">
                     <div class="item-img-wrap">
                         <div class="item-img-placeholder">${emoji}</div>
-                        <img src="${imgPath}" class="item-img" onerror="this.style.opacity='0'">
+                        <img src="${imgPath}" class="item-img">
                         ${badgeHtml}
                     </div>
                     <div class="item-body">
@@ -1013,7 +1016,7 @@
         const name = document.getElementById('cust-name').value.trim();
         const phone = document.getElementById('cust-phone').value.trim();
         const address = document.getElementById('cust-address').value.trim();
-        const payMethod = document.querySelector('input[name="payment"]:checked').value;
+        const payMethod = document.querySelector('input[name=\"payment\"]:checked').value;
 
         if (!name || !phone || !address) {
             const msg = currentLang === 'ru' ? 'Пожалуйста, заполните все поля!' : 'Please fill all fields!';
@@ -1026,7 +1029,7 @@
             cart, name, phone, address, 
             payment: payMethod, 
             total: total + ' SAR',
-            lang: currentLang // Отправляем язык в бот
+            lang: currentLang
         }));
         tg.close();
     }
