@@ -22,6 +22,7 @@
             --ink: #1e3a47; 
             --muted: #6b8c9c;
             --border: #d4e3e8;
+            --error: #eb6390;
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -521,6 +522,8 @@
             margin-bottom: 6px;
         }
         .field-wrap { margin-bottom: 16px; }
+        
+        /* КРЕАТИВ: Добавлены стили для плавной подсветки ошибок */
         .input-field {
             width: 100%;
             background: var(--surface);
@@ -532,10 +535,15 @@
             font-weight: 600;
             color: var(--ink);
             outline: none;
-            transition: border-color 0.2s;
+            transition: border-color 0.25s ease-in-out, box-shadow 0.25s ease-in-out;
         }
         .input-field:focus { border-color: var(--brand-teal); }
+        .input-field.input-error {
+            border-color: var(--error);
+            box-shadow: 0 0 8px rgba(235, 99, 144, 0.2);
+        }
         .input-field::placeholder { color: #a9bec7; font-weight: 500; }
+        
         .address-row { display: flex; gap: 10px; }
         .geo-btn {
             background: var(--brand-teal);
@@ -690,18 +698,24 @@
 
         <div class="field-wrap">
             <div class="field-label" id="lbl-name">ИМЯ</div>
-            <input type="text" id="cust-name" class="input-field" placeholder="Абдулла">
+            <input type="text" id="cust-name" class="input-field" placeholder="Abdullah" oninput="this.classList.remove('input-error')">
         </div>
         <div class="field-wrap">
             <div class="field-label" id="lbl-phone">WHATSAPP</div>
-            <input type="tel" id="cust-phone" class="input-field" placeholder="+966 5X XXX XXXX">
+            <input type="tel" id="cust-phone" class="input-field" placeholder="+966 5X XXX XXXX" oninput="this.classList.remove('input-error')">
         </div>
         <div class="field-wrap">
             <div class="field-label" id="lbl-loc">АДРЕС ДОСТАВКИ</div>
             <div class="address-row">
-                <input type="text" id="cust-address" class="input-field" placeholder="Medina...">
+                <input type="text" id="cust-address" class="input-field" placeholder="Medina..." oninput="this.classList.remove('input-error')">
                 <button class="geo-btn" onclick="getLocation()" id="btn-geo"><i class="fas fa-map-marker-alt"></i></button>
             </div>
+        </div>
+        
+        <!-- КРЕАТИВ: Новое поле для комментариев к заказу -->
+        <div class="field-wrap">
+            <div class="field-label" id="lbl-comment">КОММЕНТАРИЙ К ЗАКАЗУ</div>
+            <input type="text" id="cust-comment" class="input-field" placeholder="...">
         </div>
 
         <div class="section-divider" style="margin-top: 30px;">
@@ -786,7 +800,6 @@
         juice: '🧃', coffee: '☕', tea: '🫖', sauces: '🫙'
     };
 
-    // ОБНОВЛЕННЫЕ ТЕГИ С ХИТАМИ ПО 2-3-4 НА КАТЕГОРИЮ
     const menuItems = [
         { id: 's1', cat: 'salads', price: 12, tags: [], ru: { n: 'Соленые огурцы', d: 'хрустящие маринованные огурчики' }, en: { n: 'Pickled Cucumber', d: 'crunchy pickled cucumbers' } },
         { id: 's2', cat: 'salads', price: 12, tags: [], ru: { n: 'Витаминный салат', d: 'свежие овощи и зелень' }, en: { n: 'Vitamin Salad', d: 'fresh vegetables and greens' } },
@@ -901,7 +914,6 @@
 
     function filterTag(tag) {
         activeTag = tag;
-        
         document.querySelectorAll('.tag-pill').forEach(btn => btn.classList.remove('active'));
         if (tag === 'all') document.getElementById('tag-all').classList.add('active');
         if (tag === 'hit') document.getElementById('tag-hit').classList.add('active');
@@ -917,6 +929,7 @@
         tg.HapticFeedback.impactOccurred('medium');
         const placeholder = currentLang === 'ru' ? "Определяем локацию..." : "Locating...";
         document.getElementById('cust-address').placeholder = placeholder;
+        document.getElementById('cust-address').classList.remove('input-error');
         navigator.geolocation.getCurrentPosition(
             pos => {
                 document.getElementById('cust-address').value = `https://maps.google.com/?q=${pos.coords.latitude},${pos.coords.longitude}`;
@@ -955,7 +968,7 @@
                 if (item.badge === 'hit') badgeHtml = `<div class="item-badge">${currentLang === 'ru' ? 'ХИТ' : 'HIT'}</div>`;
                 if (item.badge === 'new') badgeHtml = `<div class="item-badge new">${currentLang === 'ru' ? 'НОВИНКА' : 'NEW'}</div>`;
                 
-                const imgPath = `images/${item.id}.jpg?v=40`;
+                const imgPath = `images/${item.id}.jpg?v=50`;
 
                 menuHtml += `
                     <div class="menu-item">
@@ -984,16 +997,20 @@
         document.getElementById('lbl-order').innerText     = ru ? 'ВАШ ЗАКАЗ' : 'YOUR ORDER';
         document.getElementById('lbl-details').innerText   = ru ? 'ДЕТАЛИ ДОСТАВКИ' : 'DELIVERY DETAILS';
         document.getElementById('lbl-nav-home').innerText  = ru ? 'Меню' : 'Menu';
+        document.getElementById('nav-home').classList.toggle('active', document.getElementById('menu-page').style.display !== 'none');
         document.getElementById('lbl-nav-cart').innerText  = ru ? 'Корзина' : 'Cart';
+        document.getElementById('nav-cart').classList.toggle('active', document.getElementById('checkout-page').style.display === 'block');
         document.getElementById('lbl-total-text').innerText = ru ? 'ИТОГО' : 'TOTAL';
         document.getElementById('lbl-name').innerText      = ru ? 'ИМЯ' : 'NAME';
         document.getElementById('lbl-phone').innerText     = ru ? 'WHATSAPP' : 'WHATSAPP';
         document.getElementById('lbl-loc').innerText       = ru ? 'АДРЕС ДОСТАВКИ' : 'DELIVERY ADDRESS';
+        document.getElementById('lbl-comment').innerText   = ru ? 'КОММЕНТАРИЙ К ЗАКАЗУ' : 'ORDER COMMENT';
         document.getElementById('lbl-addr').innerText      = ru ? '📍 Медина, Саудовская Аравия' : '📍 Medina, Saudi Arabia';
         document.getElementById('lbl-work').innerText      = ru ? '🕒 12:00 — 00:00' : '🕒 12:00 PM — 12:00 AM';
         document.getElementById('lbl-confirm').innerText   = ru ? 'ПОДТВЕРДИТЬ ЗАКАЗ' : 'CONFIRM ORDER';
         document.getElementById('lbl-tagline').innerText   = ru ? 'ДОБРО ПОЖАЛОВАТЬ · يورت · WELCOME' : 'WELCOME · يورت · ДОБРО ПОЖАЛОВАТЬ';
         document.getElementById('cust-name').placeholder   = ru ? 'Абдулла' : 'Abdullah';
+        document.getElementById('cust-comment').placeholder = ru ? 'Например: без лука, поострее...' : 'E.g., no onions, extra spicy...';
         
         document.getElementById('lbl-payment-title').innerText = ru ? 'СПОСОБ ОПЛАТЫ' : 'PAYMENT METHOD';
         document.getElementById('lbl-pay-cash').innerText      = ru ? 'Наличными при получении' : 'Cash on Delivery';
@@ -1091,20 +1108,35 @@
     }
 
     function submitOrder() {
-        const name = document.getElementById('cust-name').value.trim();
-        const phone = document.getElementById('cust-phone').value.trim();
-        const address = document.getElementById('cust-address').value.trim();
+        const nameInput = document.getElementById('cust-name');
+        const phoneInput = document.getElementById('cust-phone');
+        const addressInput = document.getElementById('cust-address');
+        const comment = document.getElementById('cust-comment').value.trim();
         const payMethod = document.querySelector('input[name="payment"]:checked').value;
 
-        if (!name || !phone || !address) {
-            const msg = currentLang === 'ru' ? 'Пожалуйста, заполните все поля!' : 'Please fill all fields!';
+        const name = nameInput.value.trim();
+        const phone = phoneInput.value.trim();
+        const address = addressInput.value.trim();
+
+        // УМНАЯ КРЕАТИВНАЯ ВАЛИДАЦИЯ С ПОДСВЕТКОЙ
+        let hasError = false;
+        if (!name) { nameInput.classList.add('input-error'); hasError = true; }
+        if (!phone) { phoneInput.classList.add('input-error'); hasError = true; }
+        if (!address) { addressInput.classList.add('input-error'); hasError = true; }
+
+        if (hasError) {
+            tg.HapticFeedback.notificationOccurred('error');
+            const msg = currentLang === 'ru' ? 'Заполните подсвеченные поля!' : 'Please fill the highlighted fields!';
             tg.showAlert(msg);
             return;
         }
+
         let total = 0;
         for (let id in cart) total += menuItems.find(i => i.id === id).price * cart[id];
+        
+        // Передаем comment в JSON строку боту
         tg.sendData(JSON.stringify({ 
-            cart, name, phone, address, 
+            cart, name, phone, address, comment,
             payment: payMethod, 
             total: total + ' SAR',
             lang: currentLang
