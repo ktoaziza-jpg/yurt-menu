@@ -175,13 +175,20 @@
             background: #eee;
         }
         
+        /* КРЕАТИВ: Стили для ультра-плавной загрузки картинки (Neural Expressive) */
         .item-img {
             width: 100%;
             height: 100%;
             object-fit: cover;
             display: block;
             position: relative;
-            z-index: 2; /* Картинка всегда ложится ПОВЕРХ эмодзи-заглушки */
+            z-index: 2;
+            opacity: 0; /* Изначально скрываем */
+            transition: opacity 0.4s ease-in-out; /* Плавное проявление */
+        }
+        /* Класс, который вешается JS-кодом сразу после скачивания картинки */
+        .item-img.loaded {
+            opacity: 1;
         }
         
         .item-img-placeholder {
@@ -193,7 +200,7 @@
             align-items: center;
             justify-content: center;
             font-size: 42px;
-            z-index: 1; /* Эмодзи на заднем плане */
+            z-index: 1;
         }
         .item-badge {
             position: absolute;
@@ -853,7 +860,7 @@
         document.getElementById('cust-address').placeholder = placeholder;
         navigator.geolocation.getCurrentPosition(
             pos => {
-                document.getElementById('cust-address').value = `http://maps.google.com/?q=${pos.coords.latitude},${pos.coords.longitude}`;
+                document.getElementById('cust-address').value = `https://maps.google.com/?q=${pos.coords.latitude},${pos.coords.longitude}`;
             },
             () => {
                 tg.showAlert(currentLang === 'ru' ? "Не удалось получить GPS. Введите адрес." : "GPS failed. Please type your address.");
@@ -880,14 +887,13 @@
             if (item.badge === 'hit') badgeHtml = `<div class="item-badge">${currentLang === 'ru' ? 'ХИТ' : 'HIT'}</div>`;
             if (item.badge === 'new') badgeHtml = `<div class="item-badge new">${currentLang === 'ru' ? 'НОВИНКА' : 'NEW'}</div>`;
             
-            // ФИКС КЭША КАРТИНКИ
-            const imgPath = `images/${item.id}.jpg?v=25`;
+            const imgPath = `images/${item.id}.jpg?v=26`;
 
             menuHtml += `
                 <div class="menu-item">
                     <div class="item-img-wrap">
                         <div class="item-img-placeholder">${emoji}</div>
-                        <img src="${imgPath}" class="item-img">
+                        <img src="${imgPath}" class="item-img" onload="this.classList.add('loaded')">
                         ${badgeHtml}
                     </div>
                     <div class="item-body">
@@ -1016,7 +1022,7 @@
         const name = document.getElementById('cust-name').value.trim();
         const phone = document.getElementById('cust-phone').value.trim();
         const address = document.getElementById('cust-address').value.trim();
-        const payMethod = document.querySelector('input[name=\"payment\"]:checked').value;
+        const payMethod = document.querySelector('input[name="payment"]:checked').value;
 
         if (!name || !phone || !address) {
             const msg = currentLang === 'ru' ? 'Пожалуйста, заполните все поля!' : 'Please fill all fields!';
