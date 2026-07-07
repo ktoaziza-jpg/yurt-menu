@@ -121,11 +121,41 @@
             opacity: 0.9;
         }
 
+        /* ── ТЕГИ-ФИЛЬТРЫ (НОВОЕ) ── */
+        .tags-container {
+            display: flex;
+            gap: 6px;
+            padding: 12px 16px 4px;
+            overflow-x: auto;
+            background: var(--surface);
+        }
+        .tags-container::-webkit-scrollbar { display: none; }
+        .tag-pill {
+            padding: 6px 12px;
+            border-radius: 12px;
+            background: var(--brand-bg);
+            border: 1px solid transparent;
+            color: var(--ink);
+            font-size: 11px;
+            font-weight: 700;
+            white-space: nowrap;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+        .tag-pill.active {
+            background: var(--brand-yellow);
+            color: var(--brand-blue);
+            border-color: var(--brand-yellow);
+        }
+
         /* ── CATEGORY PILLS ── */
         .cat-scroll {
             display: flex;
             gap: 8px;
-            padding: 14px 16px;
+            padding: 10px 16px 14px;
             overflow-x: auto;
             background: var(--surface);
             border-bottom: 1px solid var(--border);
@@ -153,7 +183,7 @@
         }
 
         /* ── MENU GRID ── */
-        .menu-container { padding: 16px 14px; }
+        .menu-container { padding: 16px 14px; min-height: 300px; }
         .menu-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -175,7 +205,6 @@
             background: #eee;
         }
         
-        /* КРЕАТИВ: Стили для ультра-плавной загрузки картинки (Neural Expressive) */
         .item-img {
             width: 100%;
             height: 100%;
@@ -183,10 +212,9 @@
             display: block;
             position: relative;
             z-index: 2;
-            opacity: 0; /* Изначально скрываем */
-            transition: opacity 0.4s ease-in-out; /* Плавное проявление */
+            opacity: 0; 
+            transition: opacity 0.4s ease-in-out; 
         }
-        /* Класс, который вешается JS-кодом сразу после скачивания картинки */
         .item-img.loaded {
             opacity: 1;
         }
@@ -571,6 +599,15 @@
             transition: transform 0.15s;
         }
         .confirm-btn:active { transform: scale(0.98); }
+        
+        .no-items {
+            text-align: center;
+            padding: 40px 20px;
+            color: var(--muted);
+            font-size: 13px;
+            font-weight: 600;
+            grid-column: span 2;
+        }
     </style>
 </head>
 <body>
@@ -604,6 +641,14 @@
             <div class="gem s"></div>
         </div>
         <div class="orn-tagline" id="lbl-tagline">ДОБРО ПОЖАЛОВАТЬ · يورت · WELCOME</div>
+    </div>
+
+    <!-- КРЕАТИВ: Панель Быстрых тегов-фильтров -->
+    <div class="tags-container" id="tags-bar">
+        <button class="tag-pill active" onclick="filterTag('all')" id="tag-all">✨ Все / All</button>
+        <button class="tag-pill" onclick="filterTag('hit')" id="tag-hit">⭐ Хит / Hits</button>
+        <button class="tag-pill" onclick="filterTag('meat')" id="tag-meat">🥩 Мясо / Meat</button>
+        <button class="tag-pill" onclick="filterTag('spicy')" id="tag-spicy">🔥 Острое / Spicy</button>
     </div>
 
     <div class="cat-scroll" id="cat-nav"></div>
@@ -742,104 +787,106 @@
         juice: '🧃', coffee: '☕', tea: '🫖', sauces: '🫙'
     };
 
+    // Добавила теги: tags: ['meat', 'spicy', 'hit'] для нужных позиций
     const menuItems = [
-        { id: 's1', cat: 'salads', price: 12, ru: { n: 'Соленые огурцы', d: 'хрустящие маринованные огурчики' }, en: { n: 'Pickled Cucumber', d: 'crunchy pickled cucumbers' } },
-        { id: 's2', cat: 'salads', price: 12, ru: { n: 'Витаминный салат', d: 'свежие овощи и зелень' }, en: { n: 'Vitamin Salad', d: 'fresh vegetables and greens' } },
-        { id: 's3', cat: 'salads', price: 12, ru: { n: 'Огурцы по-корейски', d: 'острые огурцы со специями' }, en: { n: 'Spicy Cucumbers', d: 'spicy seasoned cucumbers' } },
-        { id: 's4', cat: 'salads', price: 12, ru: { n: 'Салат Бахор', d: 'традиционный весенний салат' }, en: { n: 'Bahor Salad', d: 'traditional spring salad' } },
-        { id: 's5', cat: 'salads', price: 12, ru: { n: 'Салат Ачичук', d: 'помидоры, лук, тонкая нарезка' }, en: { n: 'Achichuk Salad', d: 'thinly sliced tomatoes and onions' } },
+        { id: 's1', cat: 'salads', price: 12, tags: [], ru: { n: 'Соленые огурцы', d: 'хрустящие маринованные огурчики' }, en: { n: 'Pickled Cucumber', d: 'crunchy pickled cucumbers' } },
+        { id: 's2', cat: 'salads', price: 12, tags: [], ru: { n: 'Витаминный салат', d: 'свежие овощи и зелень' }, en: { n: 'Vitamin Salad', d: 'fresh vegetables and greens' } },
+        { id: 's3', cat: 'salads', price: 12, tags: ['spicy'], ru: { n: 'Огурцы по-корейски', d: 'острые огурцы со специями' }, en: { n: 'Spicy Cucumbers', d: 'spicy seasoned cucumbers' } },
+        { id: 's4', cat: 'salads', price: 12, tags: [], ru: { n: 'Салат Бахор', d: 'традиционный весенний салат' }, en: { n: 'Bahor Salad', d: 'traditional spring salad' } },
+        { id: 's5', cat: 'salads', price: 12, tags: [], ru: { n: 'Салат Ачичук', d: 'помидоры, лук, тонкая нарезка' }, en: { n: 'Achichuk Salad', d: 'thinly sliced tomatoes and onions' } },
 
-        { id: 'sn1', cat: 'snacks', price: 10, ru: { n: 'Ассорти самсы (Курица и Сыр / Говядина)', d: 'сочная домашняя выпечка' }, en: { n: 'Samsa Selection (Chicken & Cheese / Beef)', d: 'savory pastry filled with meat or cheese' } },
-        { id: 'sn2', cat: 'snacks', price: 15, ru: { n: 'Чебурек', d: 'хрустящее тесто, сочный фарш' }, en: { n: 'Cheburek', d: 'deep-fried pastry with minced meat stuffing' } },
-        { id: 'sn3', cat: 'snacks', price: 30, ru: { n: 'Долма из говядины', d: 'виноградные листья, говядина, рис' }, en: { n: 'Beef Dolma', d: 'grape leaves stuffed with minced beef and rice' } },
+        { id: 'sn1', cat: 'snacks', price: 10, tags: ['meat'], ru: { n: 'Ассорти самсы (Курица и Сыр / Говядина)', d: 'сочная домашняя выпечка' }, en: { n: 'Samsa Selection (Chicken & Cheese / Beef)', d: 'savory pastry filled with meat or cheese' } },
+        { id: 'sn2', cat: 'snacks', price: 15, tags: ['meat'], ru: { n: 'Чебурек', d: 'хрустящее тесто, сочный фарш' }, en: { n: 'Cheburek', d: 'deep-fried pastry with minced meat stuffing' } },
+        { id: 'sn3', cat: 'snacks', price: 30, tags: ['meat'], ru: { n: 'Долма из говядины', d: 'виноградные листья, говядина, рис' }, en: { n: 'Beef Dolma', d: 'grape leaves stuffed with minced beef and rice' } },
 
-        { id: 'k1', cat: 'kebabs', price: 30, ru: { n: 'Ассорти кебабов (2 шт)', d: 'нежное мясо на гриле' }, en: { n: 'Kebab Selection (2 Pcs)', d: 'tender grilled kebab skewers' } },
-        { id: 'k2', cat: 'kebabs', price: 300, ru: { n: 'Сет ассорти кебабов (20 шт)', d: 'большой набор для компании' }, en: { n: 'Set Kebabs Selection (20 Pc)', d: 'large set of various skewers for a group' } },
+        { id: 'k1', cat: 'kebabs', price: 30, tags: ['meat'], ru: { n: 'Ассорти кебабов (2 шт)', d: 'нежное мясо на гриле' }, en: { n: 'Kebab Selection (2 Pcs)', d: 'tender grilled kebab skewers' } },
+        { id: 'k2', cat: 'kebabs', price: 300, tags: ['meat', 'hit'], ru: { n: 'Сет ассорти кебабов (20 шт)', d: 'большой набор для компании' }, en: { n: 'Set Kebabs Selection (20 Pc)', d: 'large set of various skewers for a group' } },
 
-        { id: 'g1', cat: 'grilled', price: 35, ru: { n: 'Шаурма с говядиной на гриле', d: 'сочная говядина в лаваше с соусом' }, en: { n: 'Grilled Beef Shawarma', d: 'juicy grilled beef wrap with signature sauce' } },
-        { id: 'g2', cat: 'grilled', price: 30, ru: { n: 'Шаурма с курицей на гриле', d: 'нежная курица на гриле в лаваше' }, en: { n: 'Shawarma with Grilled Chicken', d: 'tender grilled chicken wrap with garlic paste' } },
+        { id: 'g1', cat: 'grilled', price: 35, tags: ['meat', 'spicy'], ru: { n: 'Шаурма с говядиной на гриле', d: 'сочная говядина в лаваше с соусом' }, en: { n: 'Grilled Beef Shawarma', d: 'juicy grilled beef wrap with signature sauce' } },
+        { id: 'g2', cat: 'grilled', price: 30, tags: ['meat'], ru: { n: 'Шаурма с курицей на гриле', d: 'нежная курица на гриле в лаваше' }, en: { n: 'Shawarma with Grilled Chicken', d: 'tender grilled chicken wrap with garlic paste' } },
 
-        { id: 'sp1', cat: 'soups', price: 25, ru: { n: 'Шурпа', d: 'наваристый суп с мясом и крупными овощами' }, en: { n: 'Shurpa', d: 'rich traditional meat broth with large vegetables' } },
-        { id: 'sp2', cat: 'soups', price: 25, ru: { n: 'Суп Пельмени', d: 'горячий суп с домашними пельменями' }, en: { n: 'Pelmeni Soup', d: 'warm soup with savory handmade dumplings' } },
-        { id: 'sp3', cat: 'soups', price: 25, ru: { n: 'Мастава', d: 'густой рисовый суп с говядиной' }, en: { n: 'Mastava Soup', d: 'hearty traditional rice and beef soup' } },
-        { id: 'sp4', cat: 'soups', price: 28, ru: { n: 'Окрошка с говядиной', d: 'освежающий холодный суп' }, en: { n: 'Okroshka with Beef', d: 'refreshing traditional cold soup with beef' } },
+        { id: 'sp1', cat: 'soups', price: 25, tags: ['meat'], ru: { n: 'Шурпа', d: 'наваристый суп с мясом и крупными овощами' }, en: { n: 'Shurpa', d: 'rich traditional meat broth with large vegetables' } },
+        { id: 'sp2', cat: 'soups', price: 25, tags: [], ru: { n: 'Суп Пельмени', d: 'горячий суп с домашними пельменями' }, en: { n: 'Pelmeni Soup', d: 'warm soup with savory handmade dumplings' } },
+        { id: 'sp3', cat: 'soups', price: 25, tags: ['meat'], ru: { n: 'Мастава', d: 'густой рисовый суп с говядиной' }, en: { n: 'Mastava Soup', d: 'hearty traditional rice and beef soup' } },
+        { id: 'sp4', cat: 'soups', price: 28, tags: ['meat'], ru: { n: 'Окрошка с говядиной', d: 'освежающий холодный суп' }, en: { n: 'Okroshka with Beef', d: 'refreshing traditional cold soup with beef' } },
 
-        { id: 'm1', cat: 'main', price: 35, badge: 'hit', ru: { n: 'Плов', d: 'фирменный праздничный плов с говядиной' }, en: { n: 'Plov', d: 'signature uzbek festive rice dish with beef' } },
-        { id: 'm2', cat: 'main', price: 25, ru: { n: 'Ганфан', d: 'рис с сочным мясным соусом и овощами' }, en: { n: 'Ganfan', d: 'steamed rice topped with rich meat and vegetable stir-fry' } },
-        { id: 'm3', cat: 'main', price: 25, ru: { n: 'Курица Табака', d: 'цыпленок с хрустящей корочкой и гарниром' }, en: { n: 'Tabaka Chicken', d: 'crispy pan-fried chicken served with a side dish' } },
-        { id: 'm4', cat: 'main', price: 40, ru: { n: 'Бешбармак', d: 'домашнее тесто с отварной говядиной и луком' }, en: { n: 'Beshbarmak', d: 'handmade dough layers with tender boiled beef and onions' } },
-        { id: 'm5', cat: 'main', price: 30, ru: { n: 'Манты (4 шт)', d: 'тонкое тесто на пару с начинкой из говядины' }, en: { n: 'Mantu 4 Pcs', d: 'steamed thin dough wrappers with juicy minced beef' } },
-        { id: 'm6', cat: 'main', price: 35, ru: { n: 'Лагман', d: 'Тянутая лапша с мясом и подливом' }, en: { n: 'Lagman', d: 'hand-pulled noodles with rich meat and vegetable broth' } },
-        { id: 'm7', cat: 'main', price: 40, ru: { n: 'Казан Кебаб с курицей', d: 'обжаренная курица с золотистым картофелем' }, en: { n: 'Chicken Kebab Cauldron', d: 'fried chicken served with crispy roasted potatoes' } },
-        { id: 'm8', cat: 'main', price: 40, ru: { n: 'Жареные пельмени', d: 'хрустящие мини-пельмени с говядиной' }, en: { n: 'Fried Dumplings', d: 'crispy pan-fried mini dumplings filled with beef' } },
+        { id: 'm1', cat: 'main', price: 35, badge: 'hit', tags: ['meat', 'hit'], ru: { n: 'Плов', d: 'фирменный праздничный плов с говядиной' }, en: { n: 'Plov', d: 'signature uzbek festive rice dish with beef' } },
+        { id: 'm2', cat: 'main', price: 25, tags: ['meat'], ru: { n: 'Ганфан', d: 'рис с сочным мясным соусом и овощами' }, en: { n: 'Ganfan', d: 'steamed rice topped with rich meat and vegetable stir-fry' } },
+        { id: 'm3', cat: 'main', price: 25, tags: ['meat'], ru: { n: 'Курица Табака', d: 'цыпленок с хрустящей корочкой и гарниром' }, en: { n: 'Tabaka Chicken', d: 'crispy pan-fried chicken served with a side dish' } },
+        { id: 'm4', cat: 'main', price: 40, tags: ['meat'], ru: { n: 'Бешбармак', d: 'домашнее тесто с отварной говядиной и луком' }, en: { n: 'Beshbarmak', d: 'handmade dough layers with tender boiled beef and onions' } },
+        { id: 'm5', cat: 'main', price: 30, tags: ['meat'], ru: { n: 'Манты (4 шт)', d: 'тонкое тесто на пару с начинкой из говядины' }, en: { n: 'Mantu 4 Pcs', d: 'stamed thin dough wrappers with juicy minced beef' } },
+        { id: 'm6', cat: 'main', price: 35, tags: ['meat'], ru: { n: 'Лагман', d: 'Тянутая лапша с мясом и подливом' }, en: { n: 'Lagman', d: 'hand-pulled noodles with rich meat and vegetable broth' } },
+        { id: 'm7', cat: 'main', price: 40, tags: ['meat'], ru: { n: 'Казан Кебаб с курицей', d: 'обжаренная курица с золотистым картофелем' }, en: { n: 'Chicken Kebab Cauldron', d: 'fried chicken served with crispy roasted potatoes' } },
+        { id: 'm8', cat: 'main', price: 40, tags: ['meat'], ru: { n: 'Жареные пельмени', d: 'хрустящие мини-пельмени с говядиной' }, en: { n: 'Fried Dumplings', d: 'crispy pan-fried mini dumplings filled with beef' } },
 
-        { id: 'sd1', cat: 'sides', price: 8, ru: { n: 'Рис Басмати', d: '' }, en: { n: 'Basmati Rice', d: '' } },
-        { id: 'sd2', cat: 'sides', price: 8, ru: { n: 'Рис с овощами', d: '' }, en: { n: 'Rice with Veggies', d: '' } },
-        { id: 'sd3', cat: 'sides', price: 12, ru: { n: 'Картофель Фри', d: '' }, en: { n: 'French Fries', d: '' } },
+        { id: 'sd1', cat: 'sides', price: 8, tags: [], ru: { n: 'Рис Басмати', d: '' }, en: { n: 'Basmati Rice', d: '' } },
+        { id: 'sd2', cat: 'sides', price: 8, tags: [], ru: { n: 'Рис с овощами', d: '' }, en: { n: 'Rice with Veggies', d: '' } },
+        { id: 'sd3', cat: 'sides', price: 12, tags: [], ru: { n: 'Картофель Фри', d: '' }, en: { n: 'French Fries', d: '' } },
 
-        { id: 'br1', cat: 'bread', price: 4, ru: { n: 'Лепешка Кулча', d: '' }, en: { n: 'Kulcha Bread', d: '' } },
-        { id: 'br2', cat: 'bread', price: 10, ru: { n: 'Баурсак', d: '' }, en: { n: 'Baursaq', d: '' } },
+        { id: 'br1', cat: 'bread', price: 4, tags: [], ru: { n: 'Лепешка Кулча', d: '' }, en: { n: 'Kulcha Bread', d: '' } },
+        { id: 'br2', cat: 'bread', price: 10, tags: [], ru: { n: 'Баурсак', d: '' }, en: { n: 'Baursaq', d: '' } },
 
-        { id: 'l1', cat: 'lemonads', price: 14, ru: { n: 'Розовая Матча', d: 'Pink' }, en: { n: 'Pink Matcha', d: 'Pink' } },
-        { id: 'l2', cat: 'lemonads', price: 14, ru: { n: 'Голубая Матча Анчан', d: 'Anchan Blueberry' }, en: { n: 'Anchan Blueberry Matcha', d: 'Anchan Blueberry' } },
-        { id: 'l3', cat: 'lemonads', price: 14, ru: { n: 'Матча Манго Кокос', d: 'Mango Coconut' }, en: { n: 'Mango Coconut Matcha', d: 'Mango Coconut' } },
-        { id: 'l4', cat: 'lemonads', price: 14, ru: { n: 'Свежий Апельсин', d: 'Fresh Orange' }, en: { n: 'Fresh Orange Juice', d: 'Fresh Orange' } },
-        { id: 'l5', cat: 'lemonads', price: 14, ru: { n: 'Ягодный лимонад', d: 'Berry Lemonade' }, en: { n: 'Berry Lemonade', d: 'Berry Lemonade' } },
-        { id: 'l6', cat: 'lemonads', price: 14, ru: { n: 'Цитрусовый лимонад', d: 'Citrus Lemonade' }, en: { n: 'Citrus Lemonade', d: 'Citrus Lemonade' } },
+        { id: 'l1', cat: 'lemonads', price: 14, tags: [], ru: { n: 'Розовая Матча', d: 'Pink' }, en: { n: 'Pink Matcha', d: 'Pink' } },
+        { id: 'l2', cat: 'lemonads', price: 14, tags: [], ru: { n: 'Голубая Матча Анчан', d: 'Anchan Blueberry' }, en: { n: 'Anchan Blueberry Matcha', d: 'Anchan Blueberry' } },
+        { id: 'l3', cat: 'lemonads', price: 14, tags: [], ru: { n: 'Матча Манго Кокос', d: 'Mango Coconut' }, en: { n: 'Mango Coconut Matcha', d: 'Mango Coconut' } },
+        { id: 'l4', cat: 'lemonads', price: 14, tags: ['hit'], ru: { n: 'Свежий Апельсин', d: 'Fresh Orange' }, en: { n: 'Fresh Orange Juice', d: 'Fresh Orange' } },
+        { id: 'l5', cat: 'lemonads', price: 14, tags: [], ru: { n: 'Ягодный лимонад', d: 'Berry Lemonade' }, en: { n: 'Berry Lemonade', d: 'Berry Lemonade' } },
+        { id: 'l6', cat: 'lemonads', price: 14, tags: [], ru: { n: 'Цитрусовый лимонад', d: 'Citrus Lemonade' }, en: { n: 'Citrus Lemonade', d: 'Citrus Lemonade' } },
 
-        { id: 'ds1', cat: 'desserts', price: 25, ru: { n: 'Сан-Себастьян Классический', d: '' }, en: { n: 'San Sebastian', d: '' } },
-        { id: 'ds2', cat: 'desserts', price: 25, ru: { n: 'Сан-Себастьян с Нутеллой', d: '' }, en: { n: 'San Sebastian with Nutella', d: '' } },
-        { id: 'ds3', cat: 'desserts', price: 25, ru: { n: 'Фисташковый чизкейк', d: '' }, en: { n: 'Pistachio Cheese Cake', d: '' } },
-        { id: 'ds4', cat: 'desserts', price: 15, ru: { n: 'Баурсак в шоколаде', d: '' }, en: { n: 'Baursaq Chocolate', d: '' } },
-        { id: 'ds5', cat: 'desserts', price: 15, ru: { n: 'Баурсак фисташковый', d: '' }, en: { n: 'Baursaq Pistachio', d: '' } },
-        { id: 'ds6', cat: 'desserts', price: 15, ru: { n: 'Баурсак со сгущенкой', d: '' }, en: { n: 'Baursaq with Condensed Milk', d: '' } },
-        { id: 'ds7', cat: 'desserts', price: 15, ru: { n: 'Шоколад Казахстан', d: '100 грамм' }, en: { n: 'Chocolate Kazakhstan', d: '100g' } },
-        { id: 'ds8', cat: 'desserts', price: 25, ru: { n: 'Бельгийские вафли', d: '' }, en: { n: 'Belgian Waffles', d: '' } },
-        { id: 'ds9', cat: 'desserts', price: 10, ru: { n: 'Арбузная нарезка', d: '' }, en: { n: 'Watermelon', d: '' } },
+        { id: 'ds1', cat: 'desserts', price: 25, tags: ['hit'], ru: { n: 'Сан-Себастьян Классический', d: '' }, en: { n: 'San Sebastian', d: '' } },
+        { id: 'ds2', cat: 'desserts', price: 25, tags: [], ru: { n: 'Сан-Себастьян с Нутеллой', d: '' }, en: { n: 'San Sebastian with Nutella', d: '' } },
+        { id: 'ds3', cat: 'desserts', price: 25, tags: [], ru: { n: 'Фисташковый чизкейк', d: '' }, en: { n: 'Pistachio Cheese Cake', d: '' } },
+        { id: 'ds4', cat: 'desserts', price: 15, tags: [], ru: { n: 'Баурсак в шоколаде', d: '' }, en: { n: 'Baursaq Chocolate', d: '' } },
+        { id: 'ds5', cat: 'desserts', price: 15, tags: [], ru: { n: 'Баурсак фисташковый', d: '' }, en: { n: 'Baursaq Pistachio', d: '' } },
+        { id: 'ds6', cat: 'desserts', price: 15, tags: [], ru: { n: 'Баурсак со сгущенкой', d: '' }, en: { n: 'Baursaq with Condensed Milk', d: '' } },
+        { id: 'ds7', cat: 'desserts', price: 15, tags: [], ru: { n: 'Шоколад Казахстан', d: '100 грамм' }, en: { n: 'Chocolate Kazakhstan', d: '100g' } },
+        { id: 'ds8', cat: 'desserts', price: 25, tags: [], ru: { n: 'Бельгийские вафли', d: '' }, en: { n: 'Belgian Waffles', d: '' } },
+        { id: 'ds9', cat: 'desserts', price: 10, tags: [], ru: { n: 'Арбузная нарезка', d: '' }, en: { n: 'Watermelon', d: '' } },
 
-        { id: 'dr1', cat: 'drinks', price: 6, ru: { n: 'Coca Cola 245 ml', d: '' }, en: { n: 'Coca Cola 245 ml', d: '' } },
-        { id: 'dr2', cat: 'drinks', price: 6, ru: { n: 'Pepsi 245 ml', d: '' }, en: { n: 'Pepsi 245 ml', d: '' } },
-        { id: 'dr3', cat: 'drinks', price: 6, ru: { n: '7Up 250 ml', d: '' }, en: { n: '7Up 250 ml', d: '' } },
-        { id: 'dr4', cat: 'drinks', price: 6, ru: { n: 'Mirinda 250 ml', d: '' }, en: { n: 'Mirinda 250 ml', d: '' } },
-        { id: 'dr5', cat: 'drinks', price: 6, ru: { n: 'Kinza 250ml', d: '' }, en: { n: 'Kinza 250ml', d: '' } },
+        { id: 'dr1', cat: 'drinks', price: 6, tags: [], ru: { n: 'Coca Cola 245 ml', d: '' }, en: { n: 'Coca Cola 245 ml', d: '' } },
+        { id: 'dr2', cat: 'drinks', price: 6, tags: [], ru: { n: 'Pepsi 245 ml', d: '' }, en: { n: 'Pepsi 245 ml', d: '' } },
+        { id: 'dr3', cat: 'drinks', price: 6, tags: [], ru: { n: '7Up 250 ml', d: '' }, en: { n: '7Up 250 ml', d: '' } },
+        { id: 'dr4', cat: 'drinks', price: 6, tags: [], ru: { n: 'Mirinda 250 ml', d: '' }, en: { n: 'Mirinda 250 ml', d: '' } },
+        { id: 'dr5', cat: 'drinks', price: 6, tags: [], ru: { n: 'Kinza 250ml', d: '' }, en: { n: 'Kinza 250ml', d: '' } },
 
-        { id: 'j1', cat: 'juice', price: 15, ru: { n: 'Айс-ти', d: 'Ice Tea' }, en: { n: 'Ice Tea', d: 'Ice Tea' } },
-        { id: 'j2', cat: 'juice', price: 15, ru: { n: 'Свежий морковный сок', d: '' }, en: { n: 'Fresh Carrot Juice', d: '' } },
-        { id: 'j3', cat: 'juice', price: 10, ru: { n: 'Айран', d: '' }, en: { n: 'Airan', d: '' } },
-        { id: 'j4', cat: 'juice', price: 15, ru: { n: 'Апельсиновый сок', d: '' }, en: { n: 'Orange Juice', d: '' } },
-        { id: 'j5', cat: 'juice', price: 15, ru: { n: 'Свежий яблочный сок', d: '' }, en: { n: 'Fresh Apple Juice', d: '' } },
-        { id: 'j6', cat: 'juice', price: 2, ru: { n: 'Концентрированное молоко', d: '' }, en: { n: 'Evaporated Milk', d: '' } },
-        { id: 'j7', cat: 'juice', price: 2, ru: { n: 'Вода', d: '' }, en: { n: 'Water', d: '' } },
+        { id: 'j1', cat: 'juice', price: 15, tags: [], ru: { n: 'Айс-ти', d: 'Ice Tea' }, en: { n: 'Ice Tea', d: 'Ice Tea' } },
+        { id: 'j2', cat: 'juice', price: 15, tags: [], ru: { n: 'Свежий морковный сок', d: '' }, en: { n: 'Fresh Carrot Juice', d: '' } },
+        { id: 'j3', cat: 'juice', price: 10, tags: [], ru: { n: 'Айран', d: '' }, en: { n: 'Airan', d: '' } },
+        { id: 'j4', cat: 'juice', price: 15, tags: [], ru: { n: 'Апельсиновый сок', d: '' }, en: { n: 'Orange Juice', d: '' } },
+        { id: 'j5', cat: 'juice', price: 15, tags: [], ru: { n: 'Свежий яблочный сок', d: '' }, en: { n: 'Fresh Apple Juice', d: '' } },
+        { id: 'j6', cat: 'juice', price: 2, tags: [], ru: { n: 'Концентрированное молоко', d: '' }, en: { n: 'Evaporated Milk', d: '' } },
+        { id: 'j7', cat: 'juice', price: 2, tags: [], ru: { n: 'Вода', d: '' }, en: { n: 'Water', d: '' } },
 
-        { id: 'cf1', cat: 'coffee', price: 10, ru: { n: 'Эспрессо кофе', d: '' }, en: { n: 'Espresso Coffee', d: '' } },
-        { id: 'cf2', cat: 'coffee', price: 13, ru: { n: 'Эспрессо Лонг', d: '' }, en: { n: 'Espresso Long', d: '' } },
-        { id: 'cf3', cat: 'coffee', price: 12, ru: { n: 'Американо кофе', d: '' }, en: { n: 'Americano Coffee', d: '' } },
-        { id: 'cf4', cat: 'coffee', price: 15, ru: { n: 'Капучино кофе', d: '' }, en: { n: 'Cappuccino Coffee', d: '' } },
-        { id: 'cf5', cat: 'coffee', price: 15, ru: { n: 'Латте кофе', d: '' }, en: { n: 'Latte Coffee', d: '' } },
-        { id: 'cf6', cat: 'coffee', price: 20, ru: { n: 'Колд Брю', d: '' }, en: { n: 'Cold Brew', d: '' } },
-        { id: 'cf7', cat: 'coffee', price: 12, ru: { n: 'Айс Американо', d: '' }, en: { n: 'Iced Americano', d: '' } },
+        { id: 'cf1', cat: 'coffee', price: 10, tags: [], ru: { n: 'Эспрессо кофе', d: '' }, en: { n: 'Espresso Coffee', d: '' } },
+        { id: 'cf2', cat: 'coffee', price: 13, tags: [], ru: { n: 'Эспрессо Лонг', d: '' }, en: { n: 'Espresso Long', d: '' } },
+        { id: 'cf3', cat: 'coffee', price: 12, tags: [], ru: { n: 'Американо кофе', d: '' }, en: { n: 'Americano Coffee', d: '' } },
+        { id: 'cf4', cat: 'coffee', price: 15, tags: [], ru: { n: 'Капучино кофе', d: '' }, en: { n: 'Cappuccino Coffee', d: '' } },
+        { id: 'cf5', cat: 'coffee', price: 15, tags: [], ru: { n: 'Латте кофе', d: '' }, en: { n: 'Latte Coffee', d: '' } },
+        { id: 'cf6', cat: 'coffee', price: 20, tags: [], ru: { n: 'Колд Брю', d: '' }, en: { n: 'Cold Brew', d: '' } },
+        { id: 'cf7', cat: 'coffee', price: 12, tags: [], ru: { n: 'Айс Американо', d: '' }, en: { n: 'Iced Americano', d: '' } },
 
-        { id: 't1', cat: 'tea', price: 5, ru: { n: 'Чай с мятой', d: '' }, en: { n: 'Mint Tea', d: '' } },
-        { id: 't2', cat: 'tea', price: 5, ru: { n: 'Чай с лимоном', d: '' }, en: { n: 'Lemon Tea', d: '' } },
-        { id: 't3', cat: 'tea', price: 10, ru: { n: 'Чай Карак', d: '' }, en: { n: 'Karak Tea', d: '' } },
-        { id: 't4', cat: 'tea', price: 10, ru: { n: 'Ташкентский чай', d: '' }, en: { n: 'Tashkent Tea', d: '' } },
-        { id: 't5', cat: 'tea', price: 10, ru: { n: 'Марокканский чай', d: '' }, en: { n: 'Moroccan Tea', d: '' } },
-        { id: 't6', cat: 'tea', price: 10, ru: { n: 'Молочный Оолонго', d: '' }, en: { n: 'Milk Oolong', d: '' } },
-        { id: 't7', cat: 'tea', price: 10, ru: { n: 'Имбирный чай', d: '' }, en: { n: 'Ginger Tea', d: '' } },
-        { id: 't8', cat: 'tea', price: 10, ru: { n: 'Малиновый чай', d: '' }, en: { n: 'Raspberry Tea', d: '' } },
-        { id: 't9', cat: 'tea', price: 10, ru: { n: 'Чайник черного чая', d: '' }, en: { n: 'Tea Pot (Black)', d: '' } },
-        { id: 't10', cat: 'tea', price: 10, ru: { n: 'Чайник зеленого чая', d: '' }, en: { n: 'Tea Pot (Green)', d: '' } },
+        { id: 't1', cat: 'tea', price: 5, tags: [], ru: { n: 'Чай с мятой', d: '' }, en: { n: 'Mint Tea', d: '' } },
+        { id: 't2', cat: 'tea', price: 5, tags: [], ru: { n: 'Чай с лимоном', d: '' }, en: { n: 'Lemon Tea', d: '' } },
+        { id: 't3', cat: 'tea', price: 10, tags: [], ru: { n: 'Чай Карак', d: '' }, en: { n: 'Karak Tea', d: '' } },
+        { id: 't4', cat: 'tea', price: 10, tags: ['hit'], ru: { n: 'Ташкентский чай', d: '' }, en: { n: 'Tashkent Tea', d: '' } },
+        { id: 't5', cat: 'tea', price: 10, tags: [], ru: { n: 'Марокканский чай', d: '' }, en: { n: 'Moroccan Tea', d: '' } },
+        { id: 't6', cat: 'tea', price: 10, tags: [], ru: { n: 'Молочный Оолонго', d: '' }, en: { n: 'Milk Oolong', d: '' } },
+        { id: 't7', cat: 'tea', price: 10, tags: [], ru: { n: 'Имбирный чай', d: '' }, en: { n: 'Ginger Tea', d: '' } },
+        { id: 't8', cat: 'tea', price: 10, tags: [], ru: { n: 'Малиновый чай', d: '' }, en: { n: 'Raspberry Tea', d: '' } },
+        { id: 't9', cat: 'tea', price: 10, tags: [], ru: { n: 'Чайник черного чая', d: '' }, en: { n: 'Tea Pot (Black)', d: '' } },
+        { id: 't10', cat: 'tea', price: 10, tags: [], ru: { n: 'Чайник зеленого чая', d: '' }, en: { n: 'Tea Pot (Green)', d: '' } },
 
-        { id: 'sc1', cat: 'sauces', price: 8, ru: { n: 'Соус Нутелла', d: '' }, en: { n: 'Nutella Sauce', d: '' } },
-        { id: 'sc2', cat: 'sauces', price: 8, ru: { n: 'Бельгийский шоколад', d: '' }, en: { n: 'Belgian Chocolate', d: '' } },
-        { id: 'sc3', cat: 'sauces', price: 8, ru: { n: 'Сгущенное молоко', d: '' }, en: { n: 'Condensed Milk', d: '' } },
-        { id: 'sc4', cat: 'sauces', price: 2, ru: { n: 'Чесночный соус', d: '' }, en: { n: 'Garlic Sauce', d: '' } },
-        { id: 'sc5', cat: 'sauces', price: 3, ru: { n: 'Йогурт', d: '' }, en: { n: 'Yogurt', d: '' } },
-        { id: 'sc6', cat: 'sauces', price: 3, ru: { n: 'Томатный соус', d: '' }, en: { n: 'Tomato Sauce', d: '' } }
+        { id: 'sc1', cat: 'sauces', price: 8, tags: [], ru: { n: 'Соус Нутелла', d: '' }, en: { n: 'Nutella Sauce', d: '' } },
+        { id: 'sc2', cat: 'sauces', price: 8, tags: [], ru: { n: 'Бельгийский шоколад', d: '' }, en: { n: 'Belgian Chocolate', d: '' } },
+        { id: 'sc3', cat: 'sauces', price: 8, tags: [], ru: { n: 'Сгущенное молоко', d: '' }, en: { n: 'Condensed Milk', d: '' } },
+        { id: 'sc4', cat: 'sauces', price: 2, tags: [], ru: { n: 'Чесночный соус', d: '' }, en: { n: 'Garlic Sauce', d: '' } },
+        { id: 'sc5', cat: 'sauces', price: 3, tags: [], ru: { n: 'Йогурт', d: '' }, en: { n: 'Yogurt', d: '' } },
+        { id: 'sc6', cat: 'sauces', price: 3, tags: [], ru: { n: 'Томатный соус', d: '' }, en: { n: 'Tomato Sauce', d: '' } }
     ];
 
     let cart = {};
     let activeCat = 'salads';
+    let activeTag = 'all'; // Храним активный тег
 
     function toggleLang() {
         currentLang = currentLang === 'ru' ? 'en' : 'ru';
@@ -851,6 +898,21 @@
         activeCat = cat;
         renderApp();
         window.scrollTo(0, 0);
+    }
+
+    // НОВОЕ: Обработчик клика по тегам
+    function filterTag(tag) {
+        activeTag = tag;
+        
+        // Переключаем визуальный класс активности у тегов
+        document.querySelectorAll('.tag-pill').forEach(btn => btn.classList.remove('active'));
+        if (tag === 'all') document.getElementById('tag-all').classList.add('active');
+        if (tag === 'hit') document.getElementById('tag-hit').classList.add('active');
+        if (tag === 'meat') document.getElementById('tag-meat').classList.add('active');
+        if (tag === 'spicy') document.getElementById('tag-spicy').classList.add('active');
+        
+        tg.HapticFeedback.impactOccurred('light');
+        renderApp();
     }
 
     function getLocation() {
@@ -877,37 +939,48 @@
         }
         document.getElementById('cat-nav').innerHTML = navHtml;
 
-        const items = menuItems.filter(i => i.cat === activeCat);
+        // Фильтруем сначала по категории, а затем по тегу (если выбран конкретный тег)
+        let items = menuItems.filter(i => i.cat === activeCat);
+        if (activeTag !== 'all') {
+            items = items.filter(i => i.tags && i.tags.includes(activeTag));
+        }
+
         const emoji = catEmoji[activeCat] || '🍽️';
         let menuHtml = '<div class="menu-grid">';
-        items.forEach(item => {
-            const d = item[currentLang];
-            const inCart = cart[item.id] > 0;
-            let badgeHtml = '';
-            if (item.badge === 'hit') badgeHtml = `<div class="item-badge">${currentLang === 'ru' ? 'ХИТ' : 'HIT'}</div>`;
-            if (item.badge === 'new') badgeHtml = `<div class="item-badge new">${currentLang === 'ru' ? 'НОВИНКА' : 'NEW'}</div>`;
-            
-            const imgPath = `images/${item.id}.jpg?v=26`;
+        
+        if (items.length === 0) {
+            const noItemsText = currentLang === 'ru' ? 'В этой категории пока нет таких блюд' : 'No items match this filter in this category';
+            menuHtml += `<div class="no-items">${noItemsText}</div>`;
+        } else {
+            items.forEach(item => {
+                const d = item[currentLang];
+                const inCart = cart[item.id] > 0;
+                let badgeHtml = '';
+                if (item.badge === 'hit') badgeHtml = `<div class="item-badge">${currentLang === 'ru' ? 'ХИТ' : 'HIT'}</div>`;
+                if (item.badge === 'new') badgeHtml = `<div class="item-badge new">${currentLang === 'ru' ? 'НОВИНКА' : 'NEW'}</div>`;
+                
+                const imgPath = `images/${item.id}.jpg?v=35`;
 
-            menuHtml += `
-                <div class="menu-item">
-                    <div class="item-img-wrap">
-                        <div class="item-img-placeholder">${emoji}</div>
-                        <img src="${imgPath}" class="item-img" onload="this.classList.add('loaded')">
-                        ${badgeHtml}
-                    </div>
-                    <div class="item-body">
-                        <div class="item-name">${d.n}</div>
-                        ${d.d ? `<div class="item-desc">${d.d}</div>` : '<div class="item-desc"></div>'}
-                        <div class="price-row">
-                            <div class="price">${item.price}<span class="price-sar"> SAR</span></div>
-                            <button class="add-btn ${inCart ? 'in-cart' : ''}" onclick="modifyCart('${item.id}', 1)">
-                                ${inCart ? cart[item.id] : '+'}
-                            </button>
+                menuHtml += `
+                    <div class="menu-item">
+                        <div class="item-img-wrap">
+                            <div class="item-img-placeholder">${emoji}</div>
+                            <img src="${imgPath}" class="item-img" onload="this.classList.add('loaded')">
+                            ${badgeHtml}
                         </div>
-                    </div>
-                </div>`;
-        });
+                        <div class="item-body">
+                            <div class="item-name">${d.n}</div>
+                            ${d.d ? `<div class="item-desc">${d.d}</div>` : '<div class="item-desc"></div>'}
+                            <div class="price-row">
+                                <div class="price">${item.price}<span class="price-sar"> SAR</span></div>
+                                <button class="add-btn ${inCart ? 'in-cart' : ''}" onclick="modifyCart('${item.id}', 1)">
+                                    ${inCart ? cart[item.id] : '+'}
+                                </button>
+                            </div>
+                        </div>
+                    </div>`;
+            });
+        }
         menuHtml += '</div>';
         document.getElementById('menu-container').innerHTML = menuHtml;
 
@@ -942,7 +1015,10 @@
         updateCartUI();
         
         const buttons = document.querySelectorAll('.add-btn');
-        const items = menuItems.filter(i => i.cat === activeCat);
+        let items = menuItems.filter(i => i.cat === activeCat);
+        if (activeTag !== 'all') {
+            items = items.filter(i => i.tags && i.tags.includes(activeTag));
+        }
         items.forEach((item, idx) => {
             if (buttons[idx]) {
                 const inCart = cart[item.id] > 0;
