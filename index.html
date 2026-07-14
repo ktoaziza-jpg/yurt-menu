@@ -330,12 +330,13 @@
             <div class="div-line"></div>
         </div>
 
+        <!-- УБРАНА ОНЛАЙН-ОПЛАТА. ОСТАЛОСЬ ТОЛЬКО ДВА СПОСОБА (С ДИНАМИЧЕСКИМ ТЕКСТОМ) -->
         <div class="payment-methods">
             <label class="pay-option">
                 <input type="radio" name="payment" value="cash" checked>
                 <div class="pay-card">
                     <i class="fas fa-money-bill-wave"></i>
-                    <span id="lbl-pay-cash">Наличными при получении</span>
+                    <span id="lbl-pay-cash">Наличными курьеру</span>
                 </div>
             </label>
             <label class="pay-option">
@@ -343,13 +344,6 @@
                 <div class="pay-card">
                     <i class="fas fa-credit-card"></i>
                     <span id="lbl-pay-term">Картой курьеру (Терминал)</span>
-                </div>
-            </label>
-            <label class="pay-option">
-                <input type="radio" name="payment" value="online">
-                <div class="pay-card">
-                    <i class="fas fa-globe"></i>
-                    <span id="lbl-pay-online">Онлайн (Apple Pay / Mada)</span>
                 </div>
             </label>
         </div>
@@ -432,7 +426,7 @@
         { id: 'm5', cat: 'main', price: 30, tags: ['meat', 'hit'], badge: 'hit', ru: { n: 'Манты (4 шт)', d: 'тонкое тесто на пару с начинкой из говядины' }, en: { n: 'Mantu 4 Pcs', d: 'steamed thin dough wrappers with juicy minced beef' } },
         { id: 'm6', cat: 'main', price: 35, tags: ['meat'], ru: { n: 'Лагман', d: 'Тянутая лапша с мясом и подливом' }, en: { n: 'Lagman', d: 'hand-pulled noodles with rich meat and vegetable broth' } },
         { id: 'm7', cat: 'main', price: 40, tags: ['meat'], ru: { n: 'Казан Кебаб с курицей', d: 'обжаренная курица с золотистым картофелем' }, en: { n: 'Chicken Kebab Cauldron', d: 'fried chicken served with crispy roasted potatoes' } },
-        { id: 'm8', cat: 'main', price: 40, tags: ['meat'], ru: { n: 'Жареные пельмени', d: 'хрустящие мини-пельмени с говядиной' }, en: { n: 'Fried Dumplings', d: 'crispy pan-fried mini dumplings filled with beef' } },
+        { id: 'm8', cat: 'main', price: 40, tags: ['meat'], ru: { n: 'Жареные пельмени', d: 'хрустящие mini-пельмени с говядиной' }, en: { n: 'Fried Dumplings', d: 'crispy pan-fried mini dumplings filled with beef' } },
         { id: 'sd1', cat: 'sides', price: 8, tags: [], ru: { n: 'Рис Басмати', d: '' }, en: { n: 'Basmati Rice', d: '' } },
         { id: 'sd2', cat: 'sides', price: 8, tags: [], ru: { n: 'Рис с овощами', d: '' }, en: { n: 'Rice with Veggies', d: '' } },
         { id: 'sd3', cat: 'sides', price: 12, tags: ['hit'], badge: 'hit', ru: { n: 'Картофель Фри', d: '' }, en: { n: 'French Fries', d: '' } },
@@ -517,17 +511,28 @@
         renderApp();
     }
 
+    // НОВОЕ: Способы оплаты теперь меняются на лету при клике на Свитчер Доставка/Самовывоз
     function setFulfillment(type) {
         fulfillmentType = type;
         document.getElementById('tab-delivery').classList.toggle('active', type === 'delivery');
         document.getElementById('tab-pickup').classList.toggle('active', type === 'pickup');
         
-        // Управление видимостью полей
         document.getElementById('wrap-address').style.display = type === 'delivery' ? 'block' : 'none';
         document.getElementById('wrap-pickup-time').style.display = type === 'pickup' ? 'block' : 'none';
         document.getElementById('row-delivery-price').style.display = type === 'delivery' ? 'flex' : 'none';
         
         tg.HapticFeedback.impactOccurred('medium');
+        
+        // Меняем тексты способов оплаты динамически
+        const ru = currentLang === 'ru';
+        if (type === 'pickup') {
+            document.getElementById('lbl-pay-cash').innerText = ru ? 'Наличными на кассе' : 'Cash on Counter';
+            document.getElementById('lbl-pay-term').innerText = ru ? 'Картой на кассе (Терминал)' : 'Card on Counter (Terminal)';
+        } else {
+            document.getElementById('lbl-pay-cash').innerText = ru ? 'Наличными курьеру' : 'Cash on Delivery';
+            document.getElementById('lbl-pay-term').innerText = ru ? 'Картой курьеру (Терминал)' : 'Card on Delivery (Terminal)';
+        }
+        
         updateCartUI();
     }
 
@@ -583,7 +588,7 @@
                 if (item.badge === 'hit') badgeHtml = `<div class="item-badge">${currentLang === 'ru' ? 'ХИТ' : 'HIT'}</div>`;
                 if (item.badge === 'new') badgeHtml = `<div class="item-badge new">${currentLang === 'ru' ? 'НОВИНКА' : 'NEW'}</div>`;
                 
-                const imgPath = `images/${item.id}.jpg?v=60`;
+                const imgPath = `images/${item.id}.jpg?v=65`;
 
                 menuHtml += `
                     <div class="menu-item">
@@ -633,14 +638,20 @@
         document.getElementById('lbl-addr').innerText      = ru ? '📍 Медина, Саудовская Аравия' : '📍 Medina, Saudi Arabia';
         document.getElementById('lbl-work').innerText      = ru ? '🕒 11:00 — 23:00' : '🕒 11:00 AM — 23:00 PM';
         document.getElementById('lbl-confirm').innerText   = ru ? 'ПОДТВЕРДИТЬ ЗАКАЗ' : 'CONFIRM ORDER';
-        document.getElementById('lbl-tagline').innerText   = ru ? 'ДОБРО ПОЖАЛОВАТЬ · يورت · WELCOME' : 'WELCOME · يورت · ДОБРО ПОЖАЛОВАТЬ';
+        document.getElementById('lbl-tagline').innerText   = ru ? 'ДОБРО ПОЖАЛОВЬ · يورت · WELCOME' : 'WELCOME · يورت · ДОБРО ПОЖАЛОВЬ';
         document.getElementById('cust-name').placeholder   = ru ? 'Абдулла' : 'Abdullah';
         document.getElementById('cust-comment').placeholder = ru ? 'Например: без лука, поострее...' : 'E.g., no onions, extra spicy...';
         
         document.getElementById('lbl-payment-title').innerText = ru ? 'СПОСОБ ОПЛАТЫ' : 'PAYMENT METHOD';
-        document.getElementById('lbl-pay-cash').innerText      = ru ? 'Наличными при получении' : 'Cash on Delivery';
-        document.getElementById('lbl-pay-term').innerText      = ru ? 'Картой курьеру (Терминал)' : 'Card on Delivery (Terminal)';
-        document.getElementById('lbl-pay-online').innerText    = ru ? 'Онлайн (Apple Pay / Mada)' : 'Online (Apple Pay / Mada)';
+        
+        // Рендерим стартовые тексты оплаты при первом открытии
+        if (fulfillmentType === 'pickup') {
+            document.getElementById('lbl-pay-cash').innerText = ru ? 'Наличными на кассе' : 'Cash on Counter';
+            document.getElementById('lbl-pay-term').innerText = ru ? 'Картой на кассе (Терминал)' : 'Card on Counter (Terminal)';
+        } else {
+            document.getElementById('lbl-pay-cash').innerText = ru ? 'Наличными курьеру' : 'Cash on Delivery';
+            document.getElementById('lbl-pay-term').innerText = ru ? 'Картой курьеру (Терминал)' : 'Card on Delivery (Terminal)';
+        }
 
         updateCartUI();
     }
@@ -685,17 +696,15 @@
             badge.style.display = 'none';
         }
 
-        // КРЕАТИВ: Кнопка внизу экрана теперь активна ВСЕГДА при наличии товаров
         if (totalItems > 0) {
             const btnText = currentLang === 'ru' ? `ОФОРМИТЬ · ${finalTotal} SAR` : `CHECKOUT · ${finalTotal} SAR`;
             tg.MainButton.setText(btnText);
             tg.MainButton.show();
         } else {
-            // Если мы на странице меню, скрываем кнопку Главную. Если в корзине - Главная кнопка превращается в отправку пустого заказа/или скрывается.
             if (document.getElementById('menu-page').style.display !== 'none') {
                 tg.MainButton.hide();
             } else {
-                tg.MainButton.hide(); // На странице пустой корзины встроенная кнопка подтверждения скроется
+                tg.MainButton.hide();
             }
         }
 
@@ -742,7 +751,6 @@
         let totalItems = 0;
         for (let id in cart) totalItems += cart[id];
 
-        // КРЕАТИВ: Если корзина пуста, рисуем заглушку без полей
         if (totalItems === 0) {
             const emRu = currentLang === 'ru';
             document.getElementById('cart-items').innerHTML = `
@@ -796,13 +804,11 @@
         if (!name) { nameInput.classList.add('input-error'); hasError = true; }
         if (!phone) { phoneInput.classList.add('input-error'); hasError = true; }
         
-        // Валидация адреса только при доставке
         if (fulfillmentType === 'delivery' && !address) { 
             addressInput.classList.add('input-error'); 
             hasError = true; 
         }
         
-        // Валидация кастомного времени при самовывозе
         if (fulfillmentType === 'pickup' && pickupTimeType === 'scheduled' && !customTime) {
             timeInput.classList.add('input-error');
             hasError = true;
