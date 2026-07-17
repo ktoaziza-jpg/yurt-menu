@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Yurt Restaurant</title>
-    <!-- Официальный скрипт Telegram для считывания имени профиля -->
+    <!-- Подключаем Telegram WebApp API для вывода реального имени -->
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;600;700;800&display=swap" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
@@ -33,7 +33,7 @@
             -webkit-font-smoothing: antialiased;
         }
 
-        /* ── КРАСИВАЯ СЖИМАЮЩАЯСЯ ШАПКА ПРИ СКРОЛЛЕ ── */
+        /* ── ШАПКА ПРИЛИПАЮЩАЯ С АНИМАЦИЕЙ СЖАТИЯ ── */
         .header {
             background: var(--brand-teal);
             height: 100px;
@@ -88,7 +88,7 @@
             transition: all 0.2s;
         }
 
-        /* Счётчик баллов в шапке */
+        /* Кнопка баллов в шапке */
         .header-points {
             display: flex;
             align-items: center;
@@ -101,21 +101,16 @@
             font-weight: 700;
             cursor: pointer;
             border: 1px solid rgba(255,255,255,0.3);
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
         }
         .header-points i { color: var(--brand-yellow); }
 
-        /* Эффект сжатия шапки */
+        /* Класс сжатия шапки */
         .header.shrink { height: 65px; }
         .header.shrink .header-logo { transform: scale(2.8); margin-top: 0; }
         .header.shrink .header-top-row { top: 10px; }
 
         /* ── ОРНАМЕНТ С РОМБИКАМИ ── */
-        .ornament-strip { 
-            background: var(--brand-teal); 
-            padding: 5px 0 10px; 
-            transition: all 0.3s ease;
-        }
+        .ornament-strip { background: var(--brand-teal); padding: 5px 0 10px; }
         .orn-rule {
             height: 1px;
             background: linear-gradient(90deg, transparent 0%, var(--brand-yellow) 30%, var(--brand-yellow) 70%, transparent 100%);
@@ -126,16 +121,7 @@
         .gem.g { background: var(--brand-yellow); }
         .gem.s { width: 4px; height: 4px; opacity: 0.8; }
         
-        .orn-tagline {
-            text-align: center; 
-            font-family: 'Montserrat', sans-serif; 
-            font-size: 9px; 
-            font-weight: 700; 
-            letter-spacing: 3px; 
-            color: var(--brand-white); 
-            opacity: 0.9;
-            margin-top: 4px;
-        }
+        .orn-tagline { text-align: center; font-family: 'Montserrat', sans-serif; font-size: 9px; font-weight: 700; letter-spacing: 3px; color: var(--brand-white); opacity: 0.9; margin-top: 4px; }
 
         /* ── ТЕГИ-ФИЛЬТРЫ ── */
         .tags-container { display: flex; gap: 6px; padding: 12px 16px 4px; overflow-x: auto; background: var(--brand-white); }
@@ -147,46 +133,20 @@
         .tag-pill.active { background: var(--brand-yellow); color: var(--brand-blue); border-color: var(--brand-yellow); }
 
         /* ── КАТЕГОРИИ ── */
-        .cat-scroll { 
-            display: flex; 
-            gap: 8px; 
-            padding: 10px 16px 14px; 
-            overflow-x: auto; 
-            background: var(--brand-white); 
-            border-bottom: 1px solid var(--border);
-        }
+        .cat-scroll { display: flex; gap: 8px; padding: 10px 16px 14px; overflow-x: auto; background: var(--brand-white); border-bottom: 1px solid var(--border); }
         .cat-scroll::-webkit-scrollbar { display: none; }
-        .cat-pill {
-            padding: 8px 18px; 
-            border-radius: 20px; 
-            border: 2px solid var(--border); 
-            background: transparent;
-            color: var(--muted); 
-            font-family: 'Montserrat', sans-serif; 
-            font-size: 13px; 
-            font-weight: 700; 
-            white-space: nowrap; 
-            flex-shrink: 0; 
-            cursor: pointer;
-            transition: all 0.2s;
-        }
+        .cat-pill { padding: 8px 18px; border-radius: 20px; border: 2px solid var(--border); background: transparent; color: var(--muted); font-family: 'Montserrat', sans-serif; font-size: 13px; font-weight: 700; white-space: nowrap; flex-shrink: 0; cursor: pointer; transition: all 0.2s; }
         .cat-pill.active { background: var(--brand-blue); border-color: var(--brand-blue); color: var(--brand-white); }
 
-        /* ── СЕТКА МЕНЮ ── */
+        /* ── СЕТКА С КАРТИНКАМИ ── */
         .menu-container { padding: 20px 16px; }
         .menu-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
-        .menu-item { 
-            background: var(--brand-white); 
-            border-radius: 16px; 
-            border: 1px solid var(--border); 
-            overflow: hidden; 
-            display: flex; 
-            flex-direction: column; 
-            box-shadow: 0 4px 12px rgba(73, 180, 192, 0.05); 
-        }
+        .menu-item { background: var(--brand-white); border-radius: 16px; border: 1px solid var(--border); overflow: hidden; display: flex; flex-direction: column; box-shadow: 0 4px 12px rgba(73, 180, 192, 0.05); }
+        
         .item-img-wrap { position: relative; height: 120px; overflow: hidden; background: #eee; }
-        .item-img-placeholder { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(135deg, var(--brand-teal) 0%, var(--brand-teal-light) 100%); display: flex; align-items: center; justify-content: center; font-size: 42px; color: white; z-index: 1; }
-        .item-img { width: 100%; height: 100%; object-fit: cover; display: block; position: relative; z-index: 2; }
+        .item-img { width: 100%; height: 100%; object-fit: cover; display: block; opacity: 0; transition: opacity 0.3s ease-in; }
+        .item-img.loaded { opacity: 1; }
+        .item-img-placeholder { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(135deg, var(--brand-teal) 0%, var(--brand-teal-light) 100%); display: flex; align-items: center; justify-content: center; font-size: 42px; color: white; }
         
         .item-body { padding: 12px; display: flex; flex-direction: column; flex: 1; justify-content: space-between; }
         .item-name { font-family: 'Montserrat', sans-serif; font-size: 14px; font-weight: 700; color: var(--brand-blue); line-height: 1.3; margin-bottom: 4px; }
@@ -200,7 +160,12 @@
         .add-btn:active { transform: scale(0.9); }
         .add-btn.in-cart { background: var(--brand-yellow); color: var(--brand-blue); }
 
-        /* ── PAGES ── */
+        /* ВЫБОР ТИПА ЗАКАЗА */
+        .order-type-tabs { display: flex; background: var(--brand-white); border: 2px solid var(--border); border-radius: 14px; padding: 4px; margin-bottom: 20px; }
+        .type-tab { flex: 1; text-align: center; padding: 12px; border-radius: 10px; border: none; background: transparent; font-family: 'Montserrat', sans-serif; font-size: 12px; font-weight: 700; color: var(--muted); cursor: pointer; transition: all 0.2s; }
+        .type-tab.active { background: var(--brand-blue); color: var(--brand-white); }
+
+        /* ── СТРАНИЦЫ КОРЗИНЫ И ПРОФИЛЯ ── */
         #checkout-page, #profile-page { display: none; position: absolute; top: 0; left: 0; width: 100%; min-height: 100vh; background: var(--brand-bg); z-index: 150; padding-bottom: 100px; }
         .checkout-header { background: var(--brand-teal); padding: 16px; display: flex; align-items: center; position: sticky; top: 0; z-index: 10; }
         .checkout-back { background: transparent; border: none; color: var(--brand-yellow); font-size: 20px; cursor: pointer; padding: 4px; margin-right: 12px; }
@@ -229,17 +194,8 @@
         .input-field:focus { border-color: var(--brand-teal); }
         .input-field.input-error { border-color: var(--error); }
         
-        .confirm-btn { width: 100%; background: #25D366; border: none; border-radius: 14px; padding: 18px; font-family: 'Montserrat', sans-serif; font-size: 14px; font-weight: 800; letter-spacing: 1px; color: #ffffff; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px; margin-top: 10px; text-decoration: none; }
+        .confirm-btn { width: 100%; background: var(--brand-yellow); border: none; border-radius: 14px; padding: 18px; font-family: 'Montserrat', sans-serif; font-size: 14px; font-weight: 800; letter-spacing: 1px; color: var(--brand-blue); cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px; margin-top: 10px; }
         .confirm-btn:active { transform: scale(0.98); }
-
-        /* ── ИСТОРИЯ БОНУСОВ ── */
-        .history-card { background: var(--brand-white); border-radius: 12px; padding: 14px; border: 1px solid var(--border); margin-bottom: 8px; display: flex; justify-content: space-between; align-items: center; }
-        .history-info { display: flex; flex-direction: column; gap: 4px; }
-        .history-title { font-size: 13px; font-weight: 700; color: var(--ink); }
-        .history-date { font-size: 11px; color: var(--muted); }
-        .history-amount { font-size: 15px; font-weight: 800; }
-        .history-amount.plus { color: #25D366; }
-        .history-amount.minus { color: var(--error); }
 
         /* ── BOTTOM NAV ── */
         .bottom-nav { position: fixed; bottom: 0; left: 0; width: 100%; background: var(--brand-white); border-top: 1px solid var(--border); display: flex; justify-content: space-around; padding: 12px 0 calc(12px + env(safe-area-inset-bottom, 0px)); z-index: 200; box-shadow: 0 -4px 15px rgba(0,0,0,0.03); }
@@ -256,22 +212,19 @@
         .footer { padding: 40px 16px; background: var(--brand-teal); text-align: center; color: var(--brand-white); margin-top: 40px; }
         .footer-logo { height: 30px; margin-bottom: 30px; object-fit: contain; transform: scale(5.0); display: block; margin-left: auto; margin-right: auto; }
         .footer p { font-size: 13px; font-weight: 600; color: rgba(255, 255, 255, 0.9); margin: 6px 0; }
-        .footer .social { margin-top: 20px; display: flex; justify-content: center; gap: 20px; }
-        .footer .social a { text-decoration: none; color: var(--brand-yellow); font-size: 24px; }
         
         .no-items { text-align: center; padding: 40px 20px; color: var(--muted); font-size: 13px; font-weight: 600; grid-column: span 2; }
     </style>
 </head>
 <body>
 
-    <!-- ШАПКА С ЭФФЕКТОМ СКРОЛЛА -->
+    <!-- ШАПКА -->
     <div class="header" id="main-header">
         <div class="header-top-row">
             <div class="header-left">
                 <button class="lang-btn" onclick="toggleLang()" id="btn-lang">EN</button>
             </div>
             <div class="header-right">
-                <!-- Счётчик баллов в шапке -->
                 <div class="header-points" id="header-points-display" onclick="showProfile()">
                     <i class="fas fa-star"></i> <span id="header-points-val">10</span> SAR
                 </div>
@@ -280,7 +233,7 @@
         <img src="logo.png" alt="Yurt" class="header-logo">
     </div>
 
-    <!-- ФИРМЕННЫЙ ОРНАМЕНТ С РОМБИКАМИ И ПРИВЕТСТВИЕМ -->
+    <!-- ОРНАМЕНТ С РОМБИКАМИ -->
     <div class="ornament-strip">
         <div class="orn-rule"></div>
         <div class="orn-gems">
@@ -289,9 +242,8 @@
         <div class="orn-tagline" id="lbl-tagline">ДОБРО ПОЖАЛОВАТЬ · يورت · WELCOME</div>
     </div>
 
-    <!-- ГЛАВНАЯ СТРАНИЦА (МЕНЮ) -->
+    <!-- МЕНЮ -->
     <div id="menu-page">
-        <!-- ТЕГИ-ФИЛЬТРЫ -->
         <div class="tags-container" id="tags-bar">
             <button class="tag-pill active" onclick="filterTag('all')" id="tag-all">✨ Все / All</button>
             <button class="tag-pill" onclick="filterTag('hit')" id="tag-hit">⭐ Хит / Hits</button>
@@ -309,14 +261,10 @@
             <p>📍 As Safiyyah Museum and Park, 4th floor</p>
             <p>📞 +966 50 000 0000</p>
             <p id="lbl-work">🕒 11:00 AM — 11:00 PM</p>
-            <div class="social">
-                <a href="https://www.instagram.com/yurt.ksa/" target="_blank"><i class="fab fa-instagram"></i></a>
-                <a href="https://wa.me/966500000000" target="_blank"><i class="fab fa-whatsapp"></i></a>
-            </div>
         </div>
     </div>
 
-    <!-- КОРЗИНА И ОФОРМЛЕНИЕ -->
+    <!-- КОРЗИНА -->
     <div id="checkout-page">
         <div class="checkout-header">
             <button class="checkout-back" onclick="showMenu()"><i class="fas fa-arrow-left"></i></button>
@@ -325,15 +273,20 @@
         </div>
         <div class="checkout-body">
             
+            <!-- Доставка / Самовывоз переключатель -->
+            <div class="order-type-tabs">
+                <button class="type-tab active" id="tab-delivery" onclick="setOrderType('delivery')">ДОСТАВКА / DELIVERY</button>
+                <button class="type-tab" id="tab-pickup" onclick="setOrderType('pickup')">САМОВЫВОЗ / PICKUP</button>
+            </div>
+
             <div id="cart-items"></div>
 
-            <!-- Списание бонусов -->
             <div class="cart-item" id="bonus-spend-row" style="display: flex; justify-content: space-between; align-items: center; border: 2px dashed var(--brand-teal); margin-top: 15px;">
                 <div>
-                    <div class="cart-item-name" id="lbl-use-bonuses" style="color: var(--brand-blue);">Списать бонусы</div>
+                    <div class="cart-item-name" id="lbl-use-bonuses">Списать бонусы</div>
                     <div class="cart-item-price"><span id="lbl-avail-points">Доступно:</span> <span id="checkout-avail-points">10</span> SAR</div>
                 </div>
-                <input type="checkbox" id="use-bonus-checkbox" onchange="updateCartUI()" style="transform: scale(1.6); margin-right: 10px; accent-color: var(--brand-teal); cursor: pointer;">
+                <input type="checkbox" id="use-bonus-checkbox" onchange="updateCartUI()" style="transform: scale(1.6); margin-right: 10px; accent-color: var(--brand-teal);">
             </div>
 
             <div class="total-block">
@@ -359,7 +312,7 @@
 
             <div class="field-wrap">
                 <div class="field-label" id="lbl-name">ИМЯ КЛИЕНТА</div>
-                <input type="text" id="cust-name" class="input-field" placeholder="Abdullah" oninput="this.classList.remove('input-error')">
+                <input type="text" id="cust-name" class="input-field" placeholder="Name" oninput="this.classList.remove('input-error')">
             </div>
 
             <div class="field-wrap">
@@ -367,24 +320,29 @@
                 <input type="tel" id="cust-phone" class="input-field" placeholder="+966 50 000 0000" oninput="this.classList.remove('input-error')">
             </div>
 
-            <div class="field-wrap">
+            <!-- ТОЛЬКО ЧИСТАЯ ЛОКАЦИЯ И ВРЕМЯ -->
+            <div class="field-wrap" id="wrap-location">
                 <div class="field-label" id="lbl-location">ЛОКАЦИЯ / АДРЕС</div>
-                <input type="text" id="cust-location" class="input-field" placeholder="E.g., Hotel name, Room, Table or Park area" oninput="this.classList.remove('input-error')">
+                <input type="text" id="cust-location" class="input-field" placeholder="Location or address" oninput="this.classList.remove('input-error')">
             </div>
             
+            <div class="field-wrap" id="wrap-time" style="display: none;">
+                <div class="field-label" id="lbl-time">ВРЕМЯ САМОВЫВОЗА</div>
+                <input type="text" id="cust-time" class="input-field" placeholder="E.g., 18:30" oninput="this.classList.remove('input-error')">
+            </div>
+
             <div class="field-wrap">
                 <div class="field-label" id="lbl-comment">КОММЕНТАРИЙ</div>
                 <input type="text" id="cust-comment" class="input-field" placeholder="...">
             </div>
 
-            <button class="confirm-btn" id="btn-submit-order-page" onclick="submitOrderViaWhatsApp()">
-                <i class="fab fa-whatsapp"></i>
-                <span id="lbl-confirm">ОТПРАВИТЬ ЗАКАЗ В WHATSAPP</span>
+            <button class="confirm-btn" id="btn-submit-order-page" onclick="submitOrderToBot()">
+                <span id="lbl-confirm">ПОДТВЕРДИТЬ ЗАКАЗ</span>
             </button>
         </div>
     </div>
 
-    <!-- ЛИЧНЫЙ КАБИНЕТ (ПРОФИЛЬ) -->
+    <!-- КАБИНЕТ -->
     <div id="profile-page">
         <div class="checkout-header">
             <button class="checkout-back" onclick="showMenu()"><i class="fas fa-arrow-left"></i></button>
@@ -392,35 +350,20 @@
             <div style="width:34px;"></div>
         </div>
         <div class="checkout-body">
-            
-            <!-- Профиль автономного пользователя (сразу авторизован!) -->
-            <div id="profile-auth">
-                <div class="total-block" style="background: var(--brand-teal); text-align: center;">
-                    <div style="font-size: 14px; opacity: 0.9; margin-bottom: 5px;" id="lbl-welcome-back">Добро пожаловать,</div>
-                    <div style="font-size: 22px; font-weight: 800; margin-bottom: 15px;" id="user-display-name">Abdullah</div>
-                    <div style="height: 1px; background: rgba(255,255,255,0.2); margin-bottom: 15px;"></div>
-                    <div style="font-size: 12px; opacity: 0.9;" id="lbl-your-balance">Ваш баланс бонусов:</div>
-                    <div style="font-size: 36px; font-weight: 900; color: var(--brand-yellow); margin-top: 5px;">
-                        <span id="user-points-val">10</span> <span style="font-size: 18px;">SAR</span>
-                    </div>
-                    <div style="font-size: 11px; opacity: 0.8; margin-top: 10px;" id="lbl-cashback-level">Статус лояльности: 5% кэшбэк с заказов</div>
+            <div class="total-block" style="background: var(--brand-teal); text-align: center;">
+                <div style="font-size: 14px; opacity: 0.9; margin-bottom: 5px;" id="lbl-welcome-back">Добро пожаловать,</div>
+                <div style="font-size: 22px; font-weight: 800; margin-bottom: 15px;" id="user-display-name">Abdullah</div>
+                <div style="height: 1px; background: rgba(255,255,255,0.2); margin-bottom: 15px;"></div>
+                <div style="font-size: 12px; opacity: 0.9;" id="lbl-your-balance">Ваш баланс бонусов:</div>
+                <div style="font-size: 36px; font-weight: 900; color: var(--brand-yellow); margin-top: 5px;">
+                    <span id="user-points-val">10</span> <span style="font-size: 18px;">SAR</span>
                 </div>
-
-                <div class="section-divider">
-                    <div class="div-line"></div>
-                    <div class="div-label" id="lbl-history">ИСТОРИЯ НАЧИСЛЕНИЙ</div>
-                    <div class="div-line"></div>
-                </div>
-                
-                <div id="bonus-history-list">
-                    <!-- Заполняется динамически -->
-                </div>
+                <div style="font-size: 11px; opacity: 0.8; margin-top: 10px;" id="lbl-cashback-level">Статус лояльности: 5% кэшбэк с заказов</div>
             </div>
-
         </div>
     </div>
 
-    <!-- НИЖНЕЕ МЕНЮ -->
+    <!-- BOTTOM NAV -->
     <div class="bottom-nav">
         <button class="nav-item active" onclick="showMenu()" id="nav-home">
             <i class="fas fa-utensils"></i>
@@ -441,12 +384,11 @@
 
 <script>
     let currentLang = 'ru';
-    let userPoints = 10; // Ровно 10 SAR приветственного бонуса!
+    let userPoints = 10; 
     let userName = "Abdullah";
     let activeCat = 'salads';
     let activeTag = 'all';
-
-    const phoneWhatsAppManager = "+966500000000"; 
+    let orderType = 'delivery';
 
     const categories = {
         salads:     { ru: "Салаты",          en: "Salads" },
@@ -554,7 +496,8 @@
         { id: 'sc6', cat: 'sauces', price: 3, tags: [], ru: { n: 'Томатный соус', d: '' }, en: { n: 'Tomato Sauce', d: '' } }
     ];
 
-    // СКРОЛЛ-АНИМАЦИЯ ДЛЯ СЖАТИЯ ШАПКИ ПРИ СКРОЛЛЕ
+    let cart = {};
+
     window.addEventListener('scroll', () => {
         const header = document.getElementById('main-header');
         if (window.scrollY > 20) {
@@ -585,19 +528,31 @@
         renderApp();
     }
 
-    // Автономное считывание аккаунта из Telegram Web App
+    // Переключение типа заказа
+    function setOrderType(type) {
+        orderType = type;
+        document.querySelectorAll('.type-tab').forEach(btn => btn.classList.remove('active'));
+        
+        if (type === 'delivery') {
+            document.getElementById('tab-delivery').classList.add('active');
+            document.getElementById('wrap-location').style.display = 'block';
+            document.getElementById('wrap-time').style.display = 'none';
+        } else {
+            document.getElementById('tab-pickup').classList.add('active');
+            document.getElementById('wrap-location').style.display = 'none';
+            document.getElementById('wrap-time').style.display = 'block';
+        }
+    }
+
     function initTelegramUser() {
         const tg = window.Telegram?.WebApp;
         if (tg) {
             tg.ready();
-            tg.expand(); // Раскрыть во весь экран
+            tg.expand();
             if (tg.initDataUnsafe && tg.initDataUnsafe.user) {
-                // Подтягиваем РЕАЛЬНОЕ имя из ТГ профиля!
                 userName = tg.initDataUnsafe.user.first_name || "User";
             }
         }
-        
-        // Обновляем отображение баллов на старте
         document.getElementById('header-points-val').innerText = userPoints;
         document.getElementById('checkout-avail-points').innerText = userPoints;
         document.getElementById('user-display-name').innerText = userName;
@@ -605,14 +560,12 @@
     }
 
     function renderApp() {
-        // Навигация по категориям
         let navHtml = '';
         for (let key in categories) {
             navHtml += `<button class="cat-pill ${activeCat === key ? 'active' : ''}" onclick="filterCat('${key}')">${categories[key][currentLang]}</button>`;
         }
         document.getElementById('cat-nav').innerHTML = navHtml;
 
-        // Фильтрация блюд по категории и тегам
         let items = menuItems.filter(i => i.cat === activeCat);
         if (activeTag !== 'all') {
             items = items.filter(i => i.tags && i.tags.includes(activeTag));
@@ -634,7 +587,7 @@
                     <div class="menu-item">
                         <div class="item-img-wrap">
                             <div class="item-img-placeholder">${emoji}</div>
-                            <img src="${imgPath}" class="item-img" onerror="this.style.opacity=0" onload="this.style.opacity=1">
+                            <img src="${imgPath}" class="item-img" onerror="this.style.opacity=0" onload="this.classList.add('loaded')">
                         </div>
                         <div class="item-body">
                             <div>
@@ -654,41 +607,42 @@
 
         document.getElementById('menu-grid').innerHTML = menuHtml;
 
-        // Перевод интерфейса
         const ru = currentLang === 'ru';
         document.getElementById('lbl-order').innerText     = ru ? 'ВАШ ЗАКАЗ' : 'YOUR ORDER';
         document.getElementById('lbl-details').innerText   = ru ? 'ДЕТАЛИ ЗАКАЗА' : 'ORDER DETAILS';
         document.getElementById('lbl-nav-home').innerText  = ru ? 'Меню' : 'Menu';
         document.getElementById('lbl-nav-cart').innerText  = ru ? 'Корзина' : 'Cart';
         document.getElementById('lbl-nav-profile').innerText = ru ? 'Кабинет' : 'Profile';
-        
         document.getElementById('lbl-break-items').innerText = ru ? 'Блюда:' : 'Items:';
         document.getElementById('lbl-total-text').innerText = ru ? 'ИТОГО:' : 'TOTAL:';
-        
         document.getElementById('lbl-name').innerText      = ru ? 'ИМЯ КЛИЕНТА' : 'YOUR NAME';
         document.getElementById('lbl-phone').innerText     = ru ? 'НОМЕР ТЕЛЕФОНА' : 'PHONE NUMBER';
         document.getElementById('lbl-location').innerText  = ru ? 'ЛОКАЦИЯ / АДРЕС' : 'LOCATION / ADDRESS';
+        
+        if (document.getElementById('lbl-time')) {
+            document.getElementById('lbl-time').innerText  = ru ? 'ВРЕМЯ САМОВЫВОЗА' : 'PICKUP TIME';
+        }
+        
         document.getElementById('lbl-comment').innerText   = ru ? 'КОММЕНТАРИЙ' : 'COMMENT';
-        document.getElementById('lbl-confirm').innerText   = ru ? 'ОТПРАВИТЬ ЗАКАЗ В WHATSAPP' : 'SEND ORDER VIA WHATSAPP';
+        document.getElementById('lbl-confirm').innerText   = ru ? 'ПОДТВЕРДИТЬ ЗАКАЗ' : 'CONFIRM ORDER';
         document.getElementById('lbl-work').innerText      = ru ? '🕒 11:00 — 23:00' : '🕒 11:00 AM — 11:00 PM';
         document.getElementById('lbl-tagline').innerText   = ru ? 'ДОБРО ПОЖАЛОВЬ · يورت · WELCOME' : 'WELCOME · يورت · ДОБРО ПОЖАЛОВЬ';
-
-        // Тексты кабинета
         document.getElementById('lbl-profile-title').innerText = ru ? 'ЛИЧНЫЙ КАБИНЕТ' : 'PERSONAL PROFILE';
         document.getElementById('lbl-welcome-back').innerText = ru ? 'Добро пожаловать,' : 'Welcome back,';
         document.getElementById('lbl-your-balance').innerText = ru ? 'Ваш баланс бонусов:' : 'Your bonus balance:';
         document.getElementById('lbl-cashback-level').innerText = ru ? 'Статус лояльности: 5% кэшбэк с заказов' : 'Loyalty level: 5% cashback on orders';
-        document.getElementById('lbl-history').innerText = ru ? 'ИСТОРИЯ НАЧИСЛЕНИЙ' : 'BONUS HISTORY';
-
-        // Тексты корзины
         document.getElementById('lbl-use-bonuses').innerText = ru ? 'Списать бонусы' : 'Redeem Bonuses';
         document.getElementById('lbl-avail-points').innerText = ru ? 'Доступно:' : 'Available:';
         document.getElementById('lbl-break-discount').innerText = ru ? 'Скидка бонусами:' : 'Bonus Discount:';
 
         document.getElementById('cust-name').placeholder   = ru ? 'Имя' : 'Name';
         document.getElementById('cust-phone').placeholder  = "+966 50 000 0000";
-        document.getElementById('cust-location').placeholder = ru ? 'Отель, комната, стол или парковая зона' : 'Hotel name, room, table, park zone';
+        document.getElementById('cust-location').placeholder = ru ? 'Локация или адрес' : 'Location or address';
         document.getElementById('cust-comment').placeholder = ru ? 'Комментарий к блюдам...' : 'Cooking notes...';
+
+        if (document.getElementById('cust-time')) {
+            document.getElementById('cust-time').placeholder = ru ? 'Например, 18:30' : 'E.g., 18:30';
+        }
 
         updateCartUI();
     }
@@ -773,7 +727,6 @@
 
         document.getElementById('user-display-name').innerText = userName;
         document.getElementById('user-points-val').innerText = userPoints;
-        renderBonusHistory();
     }
 
     function setNavActive(id) {
@@ -821,66 +774,48 @@
         updateCartUI();
     }
 
-    function renderBonusHistory() {
-        const ru = currentLang === 'ru';
-        const historyList = [
-            { desc_ru: "Приветственный бонус", desc_en: "Welcome Bonus", date: "Сегодня", amt: 10, type: "plus" }
-        ];
-
-        let html = '';
-        historyList.forEach(item => {
-            html += `
-                <div class="history-card">
-                    <div class="history-info">
-                        <span class="history-title">${ru ? item.desc_ru : item.desc_en}</span>
-                        <span class="history-date">${item.date}</span>
-                    </div>
-                    <div class="history-amount ${item.type}">
-                        +${item.amt} SAR
-                    </div>
-                </div>`;
-        });
-        document.getElementById('bonus-history-list').innerHTML = html;
-    }
-
-    function submitOrderViaWhatsApp() {
+    // ОТПРАВКА СТРОГО В ТЕЛЕГРАМ БОТ
+    function submitOrderToBot() {
         const nameInput = document.getElementById('cust-name');
         const phoneInput = document.getElementById('cust-phone');
         const locationInput = document.getElementById('cust-location');
+        const timeInput = document.getElementById('cust-time');
         const commentInput = document.getElementById('cust-comment');
 
         const name = nameInput.value.trim();
         const phone = phoneInput.value.trim();
-        const location = locationInput.value.trim();
         const comment = commentInput.value.trim();
+        
+        let location = '';
+        let time = '';
 
         let hasError = false;
         if (!name) { nameInput.classList.add('input-error'); hasError = true; }
         if (!phone) { phoneInput.classList.add('input-error'); hasError = true; }
-        if (!location) { locationInput.classList.add('input-error'); hasError = true; }
+        
+        if (orderType === 'delivery') {
+            location = locationInput.value.trim();
+            if (!location) { locationInput.classList.add('input-error'); hasError = true; }
+        } else {
+            time = timeInput.value.trim();
+            if (!time) { timeInput.classList.add('input-error'); hasError = true; }
+        }
 
         if (hasError) {
             alert(currentLang === 'ru' ? 'Пожалуйста, заполните обязательные поля!' : 'Please fill out required fields!');
             return;
         }
 
-        let text = `🟢 *NEW ORDER - YURT RESTAURANT*\n\n`;
-        text += `👤 *Customer Name:* ${name}\n`;
-        text += `📞 *Phone Number:* ${phone}\n`;
-        text += `📍 *Location / Address:* ${location}\n`;
-
-        if (comment) {
-            text += `💬 *Comment:* ${comment}\n`;
-        }
-
-        text += `\n📋 *Order Details:*\n`;
+        let orderDetails = [];
         let subtotal = 0;
         for (let id in cart) {
             const item = menuItems.find(i => i.id === id);
-            const qty = cart[id];
-            const priceSum = item.price * qty;
-            subtotal += priceSum;
-            text += `• ${item[currentLang].n} x ${qty} = ${priceSum} SAR\n`;
+            orderDetails.push({
+                name: item[currentLang].n,
+                qty: cart[id],
+                price: item.price
+            });
+            subtotal += item.price * cart[id];
         }
 
         let bonusDiscount = 0;
@@ -891,27 +826,28 @@
 
         let total = subtotal - bonusDiscount;
 
-        text += `\n───────────────\n`;
-        text += `💰 *Subtotal:* ${subtotal} SAR\n`;
-        if (bonusDiscount > 0) {
-            text += `🔥 *Paid with Bonuses:* -${bonusDiscount} SAR\n`;
+        const dataToSend = {
+            order_type: orderType,
+            customer_name: name,
+            phone_number: phone,
+            location: orderType === 'delivery' ? location : null,
+            pickup_time: orderType === 'pickup' ? time : null,
+            comment: comment,
+            items: orderDetails,
+            subtotal: subtotal,
+            bonus_spent: bonusDiscount,
+            total_pay: total
+        };
+
+        const tg = window.Telegram?.WebApp;
+        if (tg) {
+            tg.sendData(JSON.stringify(dataToSend));
+            tg.close();
+        } else {
+            alert('Заказ сформирован! Сумма: ' + total + ' SAR');
         }
-        text += `💸 *TOTAL TO PAY:* *${total} SAR*\n`;
-
-        // Локальный автономный пересчет бонусов после отправки заказа
-        const earnedBonus = Math.round(total * 0.05);
-        text += `🎁 *Pending Cashback (5%):* +${earnedBonus} SAR\n`;
-
-        // Автономно обновляем баланс, чтобы гость видел изменения
-        userPoints = userPoints - bonusDiscount + earnedBonus;
-        document.getElementById('header-points-val').innerText = userPoints;
-
-        const encodedText = encodeURIComponent(text);
-        const url = `https://wa.me/${phoneWhatsAppManager}?text=${encodedText}`;
-        window.open(url, '_blank');
     }
 
-    // Запуск инициализации при старте
     window.addEventListener('DOMContentLoaded', () => {
         initTelegramUser();
         renderApp();
