@@ -33,7 +33,7 @@
             -webkit-font-smoothing: antialiased;
         }
 
-        /* ── ШАПКА ПРИЛИПАЮЩАЯ С АНИМАЦИЕЙ СЖАТИЯ ── */
+        /* ── ШАПКА С ИДЕАЛЬНЫМ ЦЕНТРИРОВАНИЕМ ЛОГОТИПА ── */
         .header {
             background: var(--brand-teal);
             height: 110px;
@@ -59,20 +59,20 @@
             left: 0;
             padding: 0 16px;
             z-index: 102;
-            transition: all 0.3s ease;
         }
 
         .header-left { display: flex; justify-content: flex-start; }
         .header-right { display: flex; justify-content: flex-end; align-items: center; }
         
         .header-logo {
-            height: 45px;
-            transition: all 0.3s ease;
-            transform: scale(4.0);
-            pointer-events: none;
+            height: 75px;
+            width: auto;
+            max-width: 220px;
             object-fit: contain;
-            margin-top: -5px;
+            transition: all 0.3s ease;
+            pointer-events: none;
             z-index: 101;
+            margin-top: 15px;
         }
         
         .lang-btn {
@@ -103,31 +103,24 @@
         }
         .header-points i { color: var(--brand-yellow); }
 
+        /* Плавное уменьшение строго по центру */
         .header.shrink { height: 75px; }
-        .header.shrink .header-logo { transform: scale(2.8); margin-top: 5px; }
-        .header.shrink .header-top-row { top: 12px; }
+        .header.shrink .header-logo { height: 45px; margin-top: 20px; }
 
-        /* ── ИДЕАЛЬНОЕ ПОЛОЖЕНИЕ ЛИНИИ И РОМБОВ ── */
-        .ornament-container {
-            background: var(--brand-teal);
-            padding-bottom: 12px;
-        }
-        .orn-rule {
-            height: 1px;
-            background: linear-gradient(90deg, transparent 0%, var(--brand-yellow) 30%, var(--brand-yellow) 70%, transparent 100%);
-            opacity: 0.6;
-            margin: 0 auto 6px auto;
+        /* Разделительная линия под шапкой */
+        .header-bottom-line {
+            height: 2px;
+            background: var(--brand-yellow);
             width: 100%;
+            position: sticky;
+            top: 110px;
+            z-index: 99;
+            transition: top 0.3s ease;
         }
-        .orn-gems { display: flex; align-items: center; justify-content: center; gap: 12px; padding: 4px 0; }
-        .gem { width: 6px; height: 6px; background: var(--brand-white); transform: rotate(45deg); flex-shrink: 0; }
-        .gem.g { background: var(--brand-yellow); }
-        .gem.s { width: 4px; height: 4px; opacity: 0.8; }
-        
-        .orn-tagline { text-align: center; font-family: 'Montserrat', sans-serif; font-size: 9px; font-weight: 700; letter-spacing: 3px; color: var(--brand-white); opacity: 0.9; margin-top: 6px; }
+        .header.shrink + .header-bottom-line { top: 75px; }
 
         /* ── ТЕГИ-ФИЛЬТРЫ ── */
-        .tags-container { display: flex; gap: 6px; padding: 12px 16px 4px; overflow-x: auto; background: var(--brand-white); }
+        .tags-container { display: flex; gap: 6px; padding: 16px 16px 4px; overflow-x: auto; background: var(--brand-white); }
         .tags-container::-webkit-scrollbar { display: none; }
         .tag-pill {
             padding: 6px 12px; border-radius: 12px; background: var(--brand-bg); border: 1px solid transparent;
@@ -141,7 +134,7 @@
         .cat-pill { padding: 8px 18px; border-radius: 20px; border: 2px solid var(--border); background: transparent; color: var(--muted); font-family: 'Montserrat', sans-serif; font-size: 13px; font-weight: 700; white-space: nowrap; flex-shrink: 0; cursor: pointer; transition: all 0.2s; }
         .cat-pill.active { background: var(--brand-blue); border-color: var(--brand-blue); color: var(--brand-white); }
 
-        /* ── СЕТКА МЕНЮ (ЧИСТАЯ СТАБИЛЬНАЯ ЗАГРУЗКА КАРТИНОК) ── */
+        /* ── СЕТКА МЕНЮ С ЧИСТЫМИ КАРТИНКАМИ ── */
         .menu-container { padding: 20px 16px; }
         .menu-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
         .menu-item { background: var(--brand-white); border-radius: 16px; border: 1px solid var(--border); overflow: hidden; display: flex; flex-direction: column; box-shadow: 0 4px 12px rgba(73, 180, 192, 0.05); }
@@ -161,10 +154,15 @@
         .add-btn:active { transform: scale(0.9); }
         .add-btn.in-cart { background: var(--brand-yellow); color: var(--brand-blue); }
 
-        /* ВЫБОР ТИПА ЗАКАЗА ГАРМОНИЧНЫЙ С ДИНАМИЧЕСКИМ ПЕРЕВОДОМ */
+        /* ВЫБОР ТИПА ЗАКАЗА ГАРМОНИЧНЫЙ */
         .order-type-tabs { display: flex; background: var(--brand-white); border: 2px solid var(--border); border-radius: 14px; padding: 4px; margin-bottom: 20px; }
         .type-tab { flex: 1; text-align: center; padding: 12px; border-radius: 10px; border: none; background: transparent; font-family: 'Montserrat', sans-serif; font-size: 12px; font-weight: 800; color: var(--muted); cursor: pointer; transition: all 0.2s; text-transform: uppercase; letter-spacing: 0.5px;}
         .type-tab.active { background: var(--brand-blue); color: var(--brand-white); }
+
+        /* Поле локации с кнопкой GPS */
+        .location-field-container { display: flex; gap: 8px; }
+        .gps-btn { background: var(--brand-blue); border: none; border-radius: 12px; width: 50px; color: white; font-size: 18px; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: background 0.2s; }
+        .gps-btn:active { background: var(--brand-teal); }
 
         /* ── СТРАНИЦЫ ── */
         #checkout-page, #profile-page { display: none; position: absolute; top: 0; left: 0; width: 100%; min-height: 100vh; background: var(--brand-bg); z-index: 150; padding-bottom: 100px; }
@@ -195,13 +193,7 @@
         .input-field:focus { border-color: var(--brand-teal); }
         .input-field.input-error { border-color: var(--error); }
         
-        /* Стилизация нативного выбора времени */
-        input[type="time"] {
-            -webkit-appearance: none;
-            -moz-appearance: none;
-            appearance: none;
-            min-height: 50px;
-        }
+        input[type="time"] { -webkit-appearance: none; -moz-appearance: none; appearance: none; min-height: 50px; }
 
         .confirm-btn { width: 100%; background: var(--brand-yellow); border: none; border-radius: 14px; padding: 18px; font-family: 'Montserrat', sans-serif; font-size: 14px; font-weight: 800; letter-spacing: 1px; color: var(--brand-blue); cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px; margin-top: 10px; }
         .confirm-btn:active { transform: scale(0.98); }
@@ -241,15 +233,9 @@
         </div>
         <img src="logo.png" alt="Yurt" class="header-logo">
     </div>
-
-    <!-- УПАКОВАННЫЙ ОРНАМЕНТ С ИДЕАЛЬНЫМИ ОТСТУПАМИ -->
-    <div class="ornament-container">
-        <div class="orn-rule"></div>
-        <div class="orn-gems">
-            <div class="gem s"></div><div class="gem g"></div><div class="gem s"></div><div class="gem"></div><div class="gem g s"></div><div class="gem s"></div><div class="gem g"></div><div class="gem s"></div>
-        </div>
-        <div class="orn-tagline" id="lbl-tagline">ДОБРО ПОЖАЛОВАТЬ · يورت · WELCOME</div>
-    </div>
+    
+    <!-- Линия разграничения -->
+    <div class="header-bottom-line"></div>
 
     <!-- МЕНЮ -->
     <div id="menu-page">
@@ -329,12 +315,16 @@
                 <input type="tel" id="cust-phone" class="input-field" placeholder="+966 50 000 0000" oninput="this.classList.remove('input-error')">
             </div>
 
+            <!-- ЛОКАЦИЯ С КНОПКОЙ GPS -->
             <div class="field-wrap" id="wrap-location">
                 <div class="field-label" id="lbl-location">ЛОКАЦИЯ / АДРЕС</div>
-                <input type="text" id="cust-location" class="input-field" placeholder="Location or address" oninput="this.classList.remove('input-error')">
+                <div class="location-field-container">
+                    <input type="text" id="cust-location" class="input-field" placeholder="Location or address" oninput="this.classList.remove('input-error')">
+                    <button class="gps-btn" onclick="getUserLocation()" type="button"><i class="fas fa-location-arrow"></i></button>
+                </div>
             </div>
             
-            <!-- НАВЫЙ СКРОЛЛЕР ВРЕМЕНИ ДЛЯ СМАРТФОНОВ -->
+            <!-- СКРОЛЛЕР ВРЕМЕНИ ДЛЯ СМАРТФОНОВ -->
             <div class="field-wrap" id="wrap-time" style="display: none;">
                 <div class="field-label" id="lbl-time">ВРЕМЯ САМОВЫВОЗА</div>
                 <input type="time" id="cust-time" class="input-field" oninput="this.classList.remove('input-error')">
@@ -345,13 +335,14 @@
                 <input type="text" id="cust-comment" class="input-field" placeholder="...">
             </div>
 
+            <!-- ГЛАВНАЯ КНОПКА ОТПРАВКИ В ТЕЛЕГРАМ ГРУППУ -->
             <button class="confirm-btn" id="btn-submit-order-page" onclick="submitOrderToBot()">
                 <span id="lbl-confirm">ПОДТВЕРДИТЬ ЗАКАЗ</span>
             </button>
         </div>
     </div>
 
-    <!-- КАБИНЕТ -->
+    <!-- ЛИЧНЫЙ КАБИНЕТ -->
     <div id="profile-page">
         <div class="checkout-header">
             <button class="checkout-back" onclick="showMenu()"><i class="fas fa-arrow-left"></i></button>
@@ -372,22 +363,22 @@
         </div>
     </div>
 
-    <!-- BOTTOM NAV -->
+    <!-- НИЖНЯЯ ПАНЕЛЬ -->
     <div class="bottom-nav">
         <button class="nav-item active" onclick="showMenu()" id="nav-home">
             <i class="fas fa-utensils"></i>
-            <span id="lbl-nav-home">Меню</span>
+            <span id="lbl-nav-home">Menu</span>
         </button>
         <button class="nav-item" onclick="showCheckout()" id="nav-cart">
             <div class="nav-cart-wrap">
                 <i class="fas fa-shopping-bag"></i>
                 <div class="cart-badge" id="cart-badge">0</div>
             </div>
-            <span id="lbl-nav-cart">Корзина</span>
+            <span id="lbl-nav-cart">Cart</span>
         </button>
         <button class="nav-item" onclick="showProfile()" id="nav-profile">
             <i class="fas fa-user-circle"></i>
-            <span id="lbl-nav-profile">Кабинет</span>
+            <span id="lbl-nav-profile">Profile</span>
         </button>
     </div>
 
@@ -415,12 +406,6 @@
         coffee:     { ru: "Кофе",             en: "Coffee" },
         tea:        { ru: "Чай",              en: "Tea" },
         sauces:     { ru: "Соусы",            en: "Sauces" }
-    };
-
-    const catEmoji = {
-        salads: '🥗', main: '🍽️', soups: '🍲', snacks: '🥟', kebabs: '🥩', grilled: '🌯',
-        sides: '🍚', bread: '🫓', lemonads: '🍹', desserts: '🍮', drinks: '🥤',
-        juice: '🧃', coffee: '☕', tea: '🫖', sauces: '🫙'
     };
 
     const menuItems = [
@@ -484,7 +469,7 @@
         { id: 'cf2', cat: 'coffee', price: 13, tags: [], ru: { n: 'Эспрессо Лонг', d: '' }, en: { n: 'Espresso Long', d: '' } },
         { id: 'cf3', cat: 'coffee', price: 12, tags: [], ru: { n: 'Американо кофе', d: '' }, en: { n: 'Americano Coffee', d: '' } },
         { id: 'cf4', cat: 'coffee', price: 15, tags: ['hit'], ru: { n: 'Капучино кофе', d: '' }, en: { n: 'Cappuccino Coffee', d: '' } },
-        { id: 'cf5', cat: 'coffee', price: 15, tags: ['hit'], ru: { n: 'Латте кофе', d: '' }, en: { n: 'Latte Coffee', d: '' } },
+        { id: 'cf5', cat: 'coffee', price: 15, tags: ['hit'], ru: { n: 'Латте кофе', d: '' }, en: { n: 'Late Coffee', d: '' } },
         { id: 'cf6', cat: 'coffee', price: 20, tags: [], ru: { n: 'Колд Брю', d: '' }, en: { n: 'Cold Brew', d: '' } },
         { id: 'cf7', cat: 'coffee', price: 12, tags: [], ru: { n: 'Айс Американо', d: '' }, en: { n: 'Iced Americano', d: '' } },
         { id: 't1', cat: 'tea', price: 5, tags: [], ru: { n: 'Чай с мятой', d: '' }, en: { n: 'Mint Tea', d: '' } },
@@ -552,6 +537,21 @@
         }
     }
 
+    // ПОЛУЧЕНИЕ ГЕОЛОКАЦИИ ПО GPS КНОПКЕ
+    function getUserLocation() {
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(function(position) {
+                const lat = position.coords.latitude;
+                const lon = position.coords.longitude;
+                document.getElementById('cust-location').value = `https://maps.google.com/?q=${lat},${lon}`;
+            }, function(error) {
+                alert(currentLang === 'ru' ? 'Не удалось получить координаты автоматически. Введите адрес вручную.' : 'Could not fetch location automatically. Please enter address manually.');
+            });
+        } else {
+            alert(currentLang === 'ru' ? 'Геолокация не поддерживается вашим устройством.' : 'Geolocation is not supported by your device.');
+        }
+    }
+
     function initTelegramUser() {
         const tg = window.Telegram?.WebApp;
         if (tg) {
@@ -579,7 +579,6 @@
             items = items.filter(i => i.tags && i.tags.includes(activeTag));
         }
 
-        const emoji = catEmoji[activeCat] || '🍽️';
         let menuHtml = '';
 
         if (items.length === 0) {
@@ -594,7 +593,6 @@
                 menuHtml += `
                     <div class="menu-item">
                         <div class="item-img-wrap">
-                            <div class="item-img-placeholder">${emoji}</div>
                             <img src="${imgPath}" class="item-img">
                         </div>
                         <div class="item-body">
@@ -630,7 +628,6 @@
         document.getElementById('lbl-comment').innerText   = ru ? 'КОММЕНТАРИЙ' : 'COMMENT';
         document.getElementById('lbl-confirm').innerText   = ru ? 'ПОДТВЕРДИТЬ ЗАКАЗ' : 'CONFIRM ORDER';
         document.getElementById('lbl-work').innerText      = ru ? '🕒 11:00 — 23:00' : '🕒 11:00 AM — 11:00 PM';
-        document.getElementById('lbl-tagline').innerText   = ru ? 'ДОБРО ПОЖАЛОВЬ · يورت · WELCOME' : 'WELCOME · يورت · ДОБРО ПОЖАЛОВЬ';
         document.getElementById('lbl-profile-title').innerText = ru ? 'ЛИЧНЫЙ КАБИНЕТ' : 'PERSONAL PROFILE';
         document.getElementById('lbl-welcome-back').innerText = ru ? 'Добро пожаловать,' : 'Welcome back,';
         document.getElementById('lbl-your-balance').innerText = ru ? 'Ваш баланс бонусов:' : 'Your bonus balance:';
@@ -639,7 +636,6 @@
         document.getElementById('lbl-avail-points').innerText = ru ? 'Доступно:' : 'Available:';
         document.getElementById('lbl-break-discount').innerText = ru ? 'Скидка бонусами:' : 'Bonus Discount:';
 
-        // Перевод табов доставки
         document.getElementById('tab-delivery').innerText = ru ? 'Доставка' : 'Delivery';
         document.getElementById('tab-pickup').innerText   = ru ? 'Самовывоз' : 'Pickup';
 
@@ -778,6 +774,7 @@
         updateCartUI();
     }
 
+    // ОТПРАВКА ДАННЫХ В ТЕЛЕГРАМ БОТ
     function submitOrderToBot() {
         const nameInput = document.getElementById('cust-name');
         const phoneInput = document.getElementById('cust-phone');
@@ -847,7 +844,7 @@
             tg.sendData(JSON.stringify(dataToSend));
             tg.close();
         } else {
-            alert('Заказ сформирован! Сумма: ' + total + ' SAR');
+            alert('Заказ оформлен! Сумма: ' + total + ' SAR');
         }
     }
 
