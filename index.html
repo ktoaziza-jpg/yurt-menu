@@ -33,10 +33,10 @@
             -webkit-font-smoothing: antialiased;
         }
 
-        /* ── ШАПКА: АККУРАТНЫЙ ФОН И КРУПНЫЙ ЛОГОТИП ── */
+        /* ── ШАПКА: АККУРАТНЫЙ ФОН + ОГРОМНЫЙ ЛОГОТИП ЧЕРЕЗ SCALE ── */
         .header {
             background: var(--brand-teal);
-            height: 105px;
+            height: 110px;
             display: flex;
             flex-direction: column;
             justify-content: center;
@@ -69,14 +69,14 @@
         }
         
         .header-logo {
-            height: 55px; /* Фиксированная высота для видимости */
+            height: 50px; /* Базовый контейнер */
+            transform: scale(3.5); /* РАЗДУВАЕМ В 3.5 РАЗА ИЗ-ЗА ПРОЗРАЧНЫХ ПОЛЕЙ */
             width: auto;
-            max-width: 220px;
             object-fit: contain;
             transition: all 0.3s ease;
             pointer-events: none;
             z-index: 101;
-            margin-top: 10px;
+            margin-top: 15px;
         }
         
         .lang-btn {
@@ -104,25 +104,25 @@
             font-weight: 700;
             cursor: pointer;
             border: 1px solid rgba(255,255,255,0.3);
-            visibility: visible; /* Управляется скриптом при выходе */
+            visibility: visible; 
         }
         .header-points i { color: var(--brand-yellow); }
 
         /* Скролл шапки */
-        .header.shrink { height: 65px; }
-        .header.shrink .header-logo { height: 35px; margin-top: 0; }
-        .header.shrink .header-top-row { top: 10px; }
+        .header.shrink { height: 70px; }
+        .header.shrink .header-logo { height: 35px; transform: scale(2.2); margin-top: 5px; }
+        .header.shrink .header-top-row { top: 12px; }
 
         .header-bottom-line {
             height: 2px;
             background: var(--brand-yellow);
             width: 100%;
             position: sticky;
-            top: 105px;
+            top: 110px;
             z-index: 99;
             transition: top 0.3s ease;
         }
-        .header.shrink + .header-bottom-line { top: 65px; }
+        .header.shrink + .header-bottom-line { top: 70px; }
 
         /* ── ТЕГИ И КАТЕГОРИИ ── */
         .tags-container { display: flex; gap: 6px; padding: 16px 16px 4px; overflow-x: auto; background: var(--brand-white); }
@@ -165,10 +165,12 @@
         #checkout-page, #profile-page { display: none; position: absolute; top: 0; left: 0; width: 100%; min-height: 100vh; background: var(--brand-bg); z-index: 150; padding-bottom: 100px; }
         .checkout-header { background: var(--brand-teal); padding: 16px; display: flex; align-items: center; position: sticky; top: 0; z-index: 10; height: 60px; }
         .checkout-back { background: transparent; border: none; color: var(--brand-yellow); font-size: 20px; cursor: pointer; padding: 4px; margin-right: 12px; }
-        .checkout-title { font-family: 'Montserrat', sans-serif; font-size: 18px; font-weight: 700; color: var(--brand-white); letter-spacing: 1px; flex: 1; text-align: center; text-transform: uppercase; }
+        
+        /* УМЕНЬШИЛА ШРИФТ ЗАГОЛОВКОВ В ШАПКЕ */
+        .checkout-title { font-family: 'Montserrat', sans-serif; font-size: 14px; font-weight: 800; color: var(--brand-white); letter-spacing: 1.5px; flex: 1; text-align: center; text-transform: uppercase; }
+        
         .checkout-body { padding: 20px 16px; }
 
-        /* ТВОЯ КОРЗИНА - НЕ ТРОГАЮ */
         .empty-cart-view { display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 80px 20px; width: 100%; color: var(--muted); }
         .empty-cart-view i { font-size: 64px; color: var(--border); margin-bottom: 20px; }
         .empty-cart-view p { font-family: 'Montserrat', sans-serif; font-size: 16px; font-weight: 600; color: var(--muted); }
@@ -362,7 +364,7 @@
                 <div class="avatar-wrap">
                     <img id="user-avatar" src="" alt="User Avatar">
                 </div>
-                <div class="profile-name" id="user-display-name">Abdullah</div>
+                <div class="profile-name" id="user-display-name">User</div>
                 <div class="profile-status" id="lbl-cashback-level">Статус: 5% кэшбэк с заказов</div>
                 
                 <div class="balance-box">
@@ -398,8 +400,8 @@
 <script>
     let currentLang = 'ru';
     let userPoints = 10; 
-    let userName = "Abdullah";
-    let isUserLoggedIn = true; // По умолчанию делаем вид, что мы вошли
+    let userName = "Гость";
+    let isUserLoggedIn = true; 
     let activeCat = 'salads';
     let activeTag = 'all';
     let orderType = 'delivery';
@@ -565,16 +567,17 @@
         }
     }
 
-    // НОВАЯ ЛОГИКА АВТОРИЗАЦИИ С ПРИВЯЗКОЙ К ТГ
+    // ИСПРАВЛЕННАЯ ЛОГИКА ТЕЛЕГРАМ-ПОЛЬЗОВАТЕЛЯ
     function initTelegramUser() {
         const tg = window.Telegram?.WebApp;
         if (tg && tg.initDataUnsafe && tg.initDataUnsafe.user) {
-            userName = tg.initDataUnsafe.user.first_name || "User";
+            userName = tg.initDataUnsafe.user.first_name || (currentLang === 'ru' ? "Гость" : "Guest");
             let photoUrl = tg.initDataUnsafe.user.photo_url;
             document.getElementById('user-avatar').src = photoUrl || `https://ui-avatars.com/api/?name=${userName}&background=f4cc12&color=fff&size=200`;
             isUserLoggedIn = true;
         } else {
-            userName = "Abdullah"; // Дефолт, если открыли в браузере
+            // Если открыто не в ТГ, используем "Гость", а не жестко заданное имя
+            userName = currentLang === 'ru' ? "Гость" : "Guest"; 
             document.getElementById('user-avatar').src = `https://ui-avatars.com/api/?name=${userName}&background=f4cc12&color=fff&size=200`;
             isUserLoggedIn = true; 
         }
@@ -583,7 +586,7 @@
 
     function loginUser() {
         isUserLoggedIn = true;
-        initTelegramUser(); // Заново подтягиваем данные при входе
+        initTelegramUser(); // Заново подтягиваем данные
         updateProfileUI();
     }
 
@@ -601,11 +604,11 @@
         if (isUserLoggedIn) {
             document.getElementById('profile-login-view').style.display = 'none';
             document.getElementById('profile-dashboard-view').style.display = 'block';
-            document.getElementById('header-points-display').style.visibility = 'visible'; // Показываем бонусы в шапке
+            document.getElementById('header-points-display').style.visibility = 'visible';
         } else {
             document.getElementById('profile-login-view').style.display = 'block';
             document.getElementById('profile-dashboard-view').style.display = 'none';
-            document.getElementById('header-points-display').style.visibility = 'hidden'; // Скрываем бонусы, так как не вошел
+            document.getElementById('header-points-display').style.visibility = 'hidden';
         }
     }
 
