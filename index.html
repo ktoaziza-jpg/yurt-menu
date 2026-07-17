@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Yurt Restaurant</title>
-    <!-- Подключаем Telegram WebApp API для вывода реального имени -->
+    <!-- Подключаем Telegram WebApp API -->
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;600;700;800&display=swap" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
@@ -36,7 +36,7 @@
         /* ── ШАПКА ПРИЛИПАЮЩАЯ С АНИМАЦИЕЙ СЖАТИЯ ── */
         .header {
             background: var(--brand-teal);
-            height: 100px;
+            height: 110px;
             display: flex;
             flex-direction: column;
             justify-content: center;
@@ -71,7 +71,7 @@
             transform: scale(4.0);
             pointer-events: none;
             object-fit: contain;
-            margin-top: -10px;
+            margin-top: -5px;
             z-index: 101;
         }
         
@@ -88,7 +88,6 @@
             transition: all 0.2s;
         }
 
-        /* Кнопка баллов в шапке */
         .header-points {
             display: flex;
             align-items: center;
@@ -104,24 +103,28 @@
         }
         .header-points i { color: var(--brand-yellow); }
 
-        /* Класс сжатия шапки */
-        .header.shrink { height: 65px; }
-        .header.shrink .header-logo { transform: scale(2.8); margin-top: 0; }
-        .header.shrink .header-top-row { top: 10px; }
+        .header.shrink { height: 75px; }
+        .header.shrink .header-logo { transform: scale(2.8); margin-top: 5px; }
+        .header.shrink .header-top-row { top: 12px; }
 
-        /* ── ОРНАМЕНТ С РОМБИКАМИ ── */
-        .ornament-strip { background: var(--brand-teal); padding: 5px 0 10px; }
+        /* ── ИДЕАЛЬНОЕ ПОЛОЖЕНИЕ ЛИНИИ И РОМБОВ ── */
+        .ornament-container {
+            background: var(--brand-teal);
+            padding-bottom: 12px;
+        }
         .orn-rule {
             height: 1px;
             background: linear-gradient(90deg, transparent 0%, var(--brand-yellow) 30%, var(--brand-yellow) 70%, transparent 100%);
             opacity: 0.6;
+            margin: 0 auto 6px auto;
+            width: 100%;
         }
-        .orn-gems { display: flex; align-items: center; justify-content: center; gap: 12px; padding: 6px 0; }
+        .orn-gems { display: flex; align-items: center; justify-content: center; gap: 12px; padding: 4px 0; }
         .gem { width: 6px; height: 6px; background: var(--brand-white); transform: rotate(45deg); flex-shrink: 0; }
         .gem.g { background: var(--brand-yellow); }
         .gem.s { width: 4px; height: 4px; opacity: 0.8; }
         
-        .orn-tagline { text-align: center; font-family: 'Montserrat', sans-serif; font-size: 9px; font-weight: 700; letter-spacing: 3px; color: var(--brand-white); opacity: 0.9; margin-top: 4px; }
+        .orn-tagline { text-align: center; font-family: 'Montserrat', sans-serif; font-size: 9px; font-weight: 700; letter-spacing: 3px; color: var(--brand-white); opacity: 0.9; margin-top: 6px; }
 
         /* ── ТЕГИ-ФИЛЬТРЫ ── */
         .tags-container { display: flex; gap: 6px; padding: 12px 16px 4px; overflow-x: auto; background: var(--brand-white); }
@@ -138,15 +141,13 @@
         .cat-pill { padding: 8px 18px; border-radius: 20px; border: 2px solid var(--border); background: transparent; color: var(--muted); font-family: 'Montserrat', sans-serif; font-size: 13px; font-weight: 700; white-space: nowrap; flex-shrink: 0; cursor: pointer; transition: all 0.2s; }
         .cat-pill.active { background: var(--brand-blue); border-color: var(--brand-blue); color: var(--brand-white); }
 
-        /* ── СЕТКА С КАРТИНКАМИ ── */
+        /* ── СЕТКА МЕНЮ (ЧИСТАЯ СТАБИЛЬНАЯ ЗАГРУЗКА КАРТИНОК) ── */
         .menu-container { padding: 20px 16px; }
         .menu-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
         .menu-item { background: var(--brand-white); border-radius: 16px; border: 1px solid var(--border); overflow: hidden; display: flex; flex-direction: column; box-shadow: 0 4px 12px rgba(73, 180, 192, 0.05); }
         
         .item-img-wrap { position: relative; height: 120px; overflow: hidden; background: #eee; }
-        .item-img { width: 100%; height: 100%; object-fit: cover; display: block; opacity: 0; transition: opacity 0.3s ease-in; }
-        .item-img.loaded { opacity: 1; }
-        .item-img-placeholder { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(135deg, var(--brand-teal) 0%, var(--brand-teal-light) 100%); display: flex; align-items: center; justify-content: center; font-size: 42px; color: white; }
+        .item-img { width: 100%; height: 100%; object-fit: cover; display: block; }
         
         .item-body { padding: 12px; display: flex; flex-direction: column; flex: 1; justify-content: space-between; }
         .item-name { font-family: 'Montserrat', sans-serif; font-size: 14px; font-weight: 700; color: var(--brand-blue); line-height: 1.3; margin-bottom: 4px; }
@@ -160,12 +161,12 @@
         .add-btn:active { transform: scale(0.9); }
         .add-btn.in-cart { background: var(--brand-yellow); color: var(--brand-blue); }
 
-        /* ВЫБОР ТИПА ЗАКАЗА */
+        /* ВЫБОР ТИПА ЗАКАЗА ГАРМОНИЧНЫЙ С ДИНАМИЧЕСКИМ ПЕРЕВОДОМ */
         .order-type-tabs { display: flex; background: var(--brand-white); border: 2px solid var(--border); border-radius: 14px; padding: 4px; margin-bottom: 20px; }
-        .type-tab { flex: 1; text-align: center; padding: 12px; border-radius: 10px; border: none; background: transparent; font-family: 'Montserrat', sans-serif; font-size: 12px; font-weight: 700; color: var(--muted); cursor: pointer; transition: all 0.2s; }
+        .type-tab { flex: 1; text-align: center; padding: 12px; border-radius: 10px; border: none; background: transparent; font-family: 'Montserrat', sans-serif; font-size: 12px; font-weight: 800; color: var(--muted); cursor: pointer; transition: all 0.2s; text-transform: uppercase; letter-spacing: 0.5px;}
         .type-tab.active { background: var(--brand-blue); color: var(--brand-white); }
 
-        /* ── СТРАНИЦЫ КОРЗИНЫ И ПРОФИЛЯ ── */
+        /* ── СТРАНИЦЫ ── */
         #checkout-page, #profile-page { display: none; position: absolute; top: 0; left: 0; width: 100%; min-height: 100vh; background: var(--brand-bg); z-index: 150; padding-bottom: 100px; }
         .checkout-header { background: var(--brand-teal); padding: 16px; display: flex; align-items: center; position: sticky; top: 0; z-index: 10; }
         .checkout-back { background: transparent; border: none; color: var(--brand-yellow); font-size: 20px; cursor: pointer; padding: 4px; margin-right: 12px; }
@@ -194,6 +195,14 @@
         .input-field:focus { border-color: var(--brand-teal); }
         .input-field.input-error { border-color: var(--error); }
         
+        /* Стилизация нативного выбора времени */
+        input[type="time"] {
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            appearance: none;
+            min-height: 50px;
+        }
+
         .confirm-btn { width: 100%; background: var(--brand-yellow); border: none; border-radius: 14px; padding: 18px; font-family: 'Montserrat', sans-serif; font-size: 14px; font-weight: 800; letter-spacing: 1px; color: var(--brand-blue); cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px; margin-top: 10px; }
         .confirm-btn:active { transform: scale(0.98); }
 
@@ -233,8 +242,8 @@
         <img src="logo.png" alt="Yurt" class="header-logo">
     </div>
 
-    <!-- ОРНАМЕНТ С РОМБИКАМИ -->
-    <div class="ornament-strip">
+    <!-- УПАКОВАННЫЙ ОРНАМЕНТ С ИДЕАЛЬНЫМИ ОТСТУПАМИ -->
+    <div class="ornament-container">
         <div class="orn-rule"></div>
         <div class="orn-gems">
             <div class="gem s"></div><div class="gem g"></div><div class="gem s"></div><div class="gem"></div><div class="gem g s"></div><div class="gem s"></div><div class="gem g"></div><div class="gem s"></div>
@@ -273,10 +282,10 @@
         </div>
         <div class="checkout-body">
             
-            <!-- Доставка / Самовывоз переключатель -->
+            <!-- Табы Доставка / Самовывоз -->
             <div class="order-type-tabs">
-                <button class="type-tab active" id="tab-delivery" onclick="setOrderType('delivery')">ДОСТАВКА / DELIVERY</button>
-                <button class="type-tab" id="tab-pickup" onclick="setOrderType('pickup')">САМОВЫВОЗ / PICKUP</button>
+                <button class="type-tab active" id="tab-delivery" onclick="setOrderType('delivery')">Доставка</button>
+                <button class="type-tab" id="tab-pickup" onclick="setOrderType('pickup')">Самовывоз</button>
             </div>
 
             <div id="cart-items"></div>
@@ -320,15 +329,15 @@
                 <input type="tel" id="cust-phone" class="input-field" placeholder="+966 50 000 0000" oninput="this.classList.remove('input-error')">
             </div>
 
-            <!-- ТОЛЬКО ЧИСТАЯ ЛОКАЦИЯ И ВРЕМЯ -->
             <div class="field-wrap" id="wrap-location">
                 <div class="field-label" id="lbl-location">ЛОКАЦИЯ / АДРЕС</div>
                 <input type="text" id="cust-location" class="input-field" placeholder="Location or address" oninput="this.classList.remove('input-error')">
             </div>
             
+            <!-- НАВЫЙ СКРОЛЛЕР ВРЕМЕНИ ДЛЯ СМАРТФОНОВ -->
             <div class="field-wrap" id="wrap-time" style="display: none;">
                 <div class="field-label" id="lbl-time">ВРЕМЯ САМОВЫВОЗА</div>
-                <input type="text" id="cust-time" class="input-field" placeholder="E.g., 18:30" oninput="this.classList.remove('input-error')">
+                <input type="time" id="cust-time" class="input-field" oninput="this.classList.remove('input-error')">
             </div>
 
             <div class="field-wrap">
@@ -528,7 +537,6 @@
         renderApp();
     }
 
-    // Переключение типа заказа
     function setOrderType(type) {
         orderType = type;
         document.querySelectorAll('.type-tab').forEach(btn => btn.classList.remove('active'));
@@ -587,7 +595,7 @@
                     <div class="menu-item">
                         <div class="item-img-wrap">
                             <div class="item-img-placeholder">${emoji}</div>
-                            <img src="${imgPath}" class="item-img" onerror="this.style.opacity=0" onload="this.classList.add('loaded')">
+                            <img src="${imgPath}" class="item-img">
                         </div>
                         <div class="item-body">
                             <div>
@@ -618,11 +626,7 @@
         document.getElementById('lbl-name').innerText      = ru ? 'ИМЯ КЛИЕНТА' : 'YOUR NAME';
         document.getElementById('lbl-phone').innerText     = ru ? 'НОМЕР ТЕЛЕФОНА' : 'PHONE NUMBER';
         document.getElementById('lbl-location').innerText  = ru ? 'ЛОКАЦИЯ / АДРЕС' : 'LOCATION / ADDRESS';
-        
-        if (document.getElementById('lbl-time')) {
-            document.getElementById('lbl-time').innerText  = ru ? 'ВРЕМЯ САМОВЫВОЗА' : 'PICKUP TIME';
-        }
-        
+        document.getElementById('lbl-time').innerText      = ru ? 'ВРЕМЯ САМОВЫВОЗА' : 'PICKUP TIME';
         document.getElementById('lbl-comment').innerText   = ru ? 'КОММЕНТАРИЙ' : 'COMMENT';
         document.getElementById('lbl-confirm').innerText   = ru ? 'ПОДТВЕРДИТЬ ЗАКАЗ' : 'CONFIRM ORDER';
         document.getElementById('lbl-work').innerText      = ru ? '🕒 11:00 — 23:00' : '🕒 11:00 AM — 11:00 PM';
@@ -635,14 +639,14 @@
         document.getElementById('lbl-avail-points').innerText = ru ? 'Доступно:' : 'Available:';
         document.getElementById('lbl-break-discount').innerText = ru ? 'Скидка бонусами:' : 'Bonus Discount:';
 
+        // Перевод табов доставки
+        document.getElementById('tab-delivery').innerText = ru ? 'Доставка' : 'Delivery';
+        document.getElementById('tab-pickup').innerText   = ru ? 'Самовывоз' : 'Pickup';
+
         document.getElementById('cust-name').placeholder   = ru ? 'Имя' : 'Name';
         document.getElementById('cust-phone').placeholder  = "+966 50 000 0000";
         document.getElementById('cust-location').placeholder = ru ? 'Локация или адрес' : 'Location or address';
         document.getElementById('cust-comment').placeholder = ru ? 'Комментарий к блюдам...' : 'Cooking notes...';
-
-        if (document.getElementById('cust-time')) {
-            document.getElementById('cust-time').placeholder = ru ? 'Например, 18:30' : 'E.g., 18:30';
-        }
 
         updateCartUI();
     }
@@ -774,7 +778,6 @@
         updateCartUI();
     }
 
-    // ОТПРАВКА СТРОГО В ТЕЛЕГРАМ БОТ
     function submitOrderToBot() {
         const nameInput = document.getElementById('cust-name');
         const phoneInput = document.getElementById('cust-phone');
