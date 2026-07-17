@@ -33,10 +33,10 @@
             -webkit-font-smoothing: antialiased;
         }
 
-        /* ── ШАПКА С КРУПНЫМ АДАПТИВНЫМ ЛОГОТИПОМ ── */
+        /* ── ШАПКА: АККУРАТНЫЙ ФОН И КРУПНЫЙ ЛОГОТИП ── */
         .header {
             background: var(--brand-teal);
-            height: 160px;
+            height: 105px;
             display: flex;
             flex-direction: column;
             justify-content: center;
@@ -45,7 +45,7 @@
             top: 0;
             z-index: 100;
             box-shadow: 0 4px 10px rgba(0,0,0,0.05);
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            transition: all 0.3s ease;
             padding: 0 16px;
         }
         
@@ -55,7 +55,7 @@
             justify-content: space-between;
             align-items: center;
             position: absolute;
-            top: 20px;
+            top: 15px;
             left: 0;
             padding: 0 16px;
             z-index: 102;
@@ -68,16 +68,15 @@
             pointer-events: auto;
         }
         
-        /* Логотип теперь широкий и заметный */
         .header-logo {
-            width: 85%;
-            max-width: 320px;
-            max-height: 100px;
+            height: 55px; /* Фиксированная высота для видимости */
+            width: auto;
+            max-width: 220px;
             object-fit: contain;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            transition: all 0.3s ease;
             pointer-events: none;
             z-index: 101;
-            margin-top: 15px;
+            margin-top: 10px;
         }
         
         .lang-btn {
@@ -105,35 +104,32 @@
             font-weight: 700;
             cursor: pointer;
             border: 1px solid rgba(255,255,255,0.3);
+            visibility: visible; /* Управляется скриптом при выходе */
         }
         .header-points i { color: var(--brand-yellow); }
 
-        /* Логичное сжатие шапки */
-        .header.shrink { height: 85px; }
-        .header.shrink .header-logo { width: 50%; max-height: 45px; margin-top: 5px; }
-        .header.shrink .header-top-row { top: 12px; }
+        /* Скролл шапки */
+        .header.shrink { height: 65px; }
+        .header.shrink .header-logo { height: 35px; margin-top: 0; }
+        .header.shrink .header-top-row { top: 10px; }
 
         .header-bottom-line {
             height: 2px;
             background: var(--brand-yellow);
             width: 100%;
             position: sticky;
-            top: 160px;
+            top: 105px;
             z-index: 99;
-            transition: top 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            transition: top 0.3s ease;
         }
-        .header.shrink + .header-bottom-line { top: 85px; }
+        .header.shrink + .header-bottom-line { top: 65px; }
 
-        /* ── ТЕГИ-ФИЛЬТРЫ ── */
+        /* ── ТЕГИ И КАТЕГОРИИ ── */
         .tags-container { display: flex; gap: 6px; padding: 16px 16px 4px; overflow-x: auto; background: var(--brand-white); }
         .tags-container::-webkit-scrollbar { display: none; }
-        .tag-pill {
-            padding: 6px 12px; border-radius: 12px; background: var(--brand-bg); border: 1px solid transparent;
-            color: var(--ink); font-size: 11px; font-weight: 700; white-space: nowrap; cursor: pointer; transition: all 0.2s;
-        }
+        .tag-pill { padding: 6px 12px; border-radius: 12px; background: var(--brand-bg); border: 1px solid transparent; color: var(--ink); font-size: 11px; font-weight: 700; white-space: nowrap; cursor: pointer; transition: all 0.2s; }
         .tag-pill.active { background: var(--brand-yellow); color: var(--brand-blue); border-color: var(--brand-yellow); }
 
-        /* ── КАТЕГОРИИ ── */
         .cat-scroll { display: flex; gap: 8px; padding: 10px 16px 14px; overflow-x: auto; background: var(--brand-white); border-bottom: 1px solid var(--border); }
         .cat-scroll::-webkit-scrollbar { display: none; }
         .cat-pill { padding: 8px 18px; border-radius: 20px; border: 2px solid var(--border); background: transparent; color: var(--muted); font-family: 'Montserrat', sans-serif; font-size: 13px; font-weight: 700; white-space: nowrap; flex-shrink: 0; cursor: pointer; transition: all 0.2s; }
@@ -143,39 +139,36 @@
         .menu-container { padding: 20px 16px; }
         .menu-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
         .menu-item { background: var(--brand-white); border-radius: 16px; border: 1px solid var(--border); overflow: hidden; display: flex; flex-direction: column; box-shadow: 0 4px 12px rgba(73, 180, 192, 0.05); }
-        
         .item-img-wrap { position: relative; height: 120px; overflow: hidden; background: #eee; }
         .item-img { width: 100%; height: 100%; object-fit: cover; display: block; }
-        
         .item-body { padding: 12px; display: flex; flex-direction: column; flex: 1; justify-content: space-between; }
         .item-name { font-family: 'Montserrat', sans-serif; font-size: 14px; font-weight: 700; color: var(--brand-blue); line-height: 1.3; margin-bottom: 4px; }
         .item-desc { font-family: 'Montserrat', sans-serif; font-size: 11px; font-weight: 500; color: var(--muted); line-height: 1.4; margin-bottom: 10px; }
-        
         .price-row { display: flex; align-items: center; justify-content: space-between; margin-top: auto; }
         .price { font-family: 'Montserrat', sans-serif; font-size: 16px; font-weight: 800; color: var(--ink); }
         .price-sar { font-size: 11px; font-weight: 700; color: var(--brand-teal); margin-left: 2px; }
-
         .add-btn { width: 32px; height: 32px; border-radius: 10px; background: var(--brand-teal-light); border: none; color: var(--brand-white); font-size: 18px; font-weight: 600; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: all 0.15s; line-height: 1; }
         .add-btn:active { transform: scale(0.9); }
         .add-btn.in-cart { background: var(--brand-yellow); color: var(--brand-blue); }
 
-        /* ВЫБОР ТИПА ЗАКАЗА */
+        /* ── ЭЛЕМЕНТЫ ФОРМЫ ── */
         .order-type-tabs { display: flex; background: var(--brand-white); border: 2px solid var(--border); border-radius: 14px; padding: 4px; margin-bottom: 20px; }
         .type-tab { flex: 1; text-align: center; padding: 12px; border-radius: 10px; border: none; background: transparent; font-family: 'Montserrat', sans-serif; font-size: 12px; font-weight: 800; color: var(--muted); cursor: pointer; transition: all 0.2s; text-transform: uppercase; letter-spacing: 0.5px;}
         .type-tab.active { background: var(--brand-blue); color: var(--brand-white); }
-
         .location-field-container { display: flex; gap: 8px; }
         .gps-btn { background: var(--brand-blue); border: none; border-radius: 12px; width: 50px; color: white; font-size: 18px; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: background 0.2s; }
         .gps-btn:active { background: var(--brand-teal); }
+        .confirm-btn { width: 100%; background: var(--brand-yellow); border: none; border-radius: 14px; padding: 18px; font-family: 'Montserrat', sans-serif; font-size: 14px; font-weight: 800; letter-spacing: 1px; color: var(--brand-blue); cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px; margin-top: 10px; }
+        .confirm-btn:active { transform: scale(0.98); }
 
-        /* СТРАНИЦЫ */
+        /* ── СТРАНИЦЫ И КОРЗИНА ── */
         #checkout-page, #profile-page { display: none; position: absolute; top: 0; left: 0; width: 100%; min-height: 100vh; background: var(--brand-bg); z-index: 150; padding-bottom: 100px; }
         .checkout-header { background: var(--brand-teal); padding: 16px; display: flex; align-items: center; position: sticky; top: 0; z-index: 10; height: 60px; }
         .checkout-back { background: transparent; border: none; color: var(--brand-yellow); font-size: 20px; cursor: pointer; padding: 4px; margin-right: 12px; }
         .checkout-title { font-family: 'Montserrat', sans-serif; font-size: 18px; font-weight: 700; color: var(--brand-white); letter-spacing: 1px; flex: 1; text-align: center; text-transform: uppercase; }
         .checkout-body { padding: 20px 16px; }
 
-        /* ИСПРАВЛЕННАЯ ПУСТАЯ КОРЗИНА (ЦЕНТРИРОВАНИЕ) */
+        /* ТВОЯ КОРЗИНА - НЕ ТРОГАЮ */
         .empty-cart-view { display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 80px 20px; width: 100%; color: var(--muted); }
         .empty-cart-view i { font-size: 64px; color: var(--border); margin-bottom: 20px; }
         .empty-cart-view p { font-family: 'Montserrat', sans-serif; font-size: 16px; font-weight: 600; color: var(--muted); }
@@ -186,28 +179,21 @@
         .cart-controls { display: flex; align-items: center; gap: 12px; }
         .qty-btn { width: 32px; height: 32px; border-radius: 10px; border: 2px solid var(--border); background: var(--brand-bg); color: var(--brand-blue); font-size: 18px; font-weight: 700; display: flex; align-items: center; justify-content: center; cursor: pointer; }
         .qty-num { font-weight: 700; font-size: 16px; color: var(--ink); min-width: 20px; text-align: center; }
-
         .total-block { background: var(--brand-blue); border-radius: 16px; padding: 20px; color: var(--brand-white); margin: 20px 0; }
         .total-row { display: flex; justify-content: space-between; margin-bottom: 8px; font-size: 13px; font-weight: 600; opacity: 0.85; }
         .total-row.main-total { margin-bottom: 0; margin-top: 12px; padding-top: 12px; border-top: 1px dashed rgba(255,255,255,0.3); font-size: 16px; font-weight: 700; opacity: 1; }
         .total-row.main-total .total-sum { font-size: 26px; color: var(--brand-yellow); }
-
         .section-divider { display: flex; align-items: center; gap: 12px; margin: 24px 0 16px; }
         .div-line { flex: 1; height: 2px; background: var(--border); }
         .div-label { font-size: 10px; font-weight: 700; letter-spacing: 2px; color: var(--brand-blue); text-transform: uppercase;}
-
         .field-label { font-size: 11px; font-weight: 700; letter-spacing: 1px; color: var(--muted); margin-bottom: 6px; }
         .field-wrap { margin-bottom: 16px; }
         .input-field { width: 100%; background: var(--brand-white); border: 2px solid var(--border); border-radius: 12px; padding: 14px 16px; font-family: 'Montserrat', sans-serif; font-size: 14px; font-weight: 600; color: var(--ink); outline: none; transition: all 0.2s; }
         .input-field:focus { border-color: var(--brand-teal); }
         .input-field.input-error { border-color: var(--error); }
-        
         input[type="time"] { -webkit-appearance: none; -moz-appearance: none; appearance: none; min-height: 50px; }
 
-        .confirm-btn { width: 100%; background: var(--brand-yellow); border: none; border-radius: 14px; padding: 18px; font-family: 'Montserrat', sans-serif; font-size: 14px; font-weight: 800; letter-spacing: 1px; color: var(--brand-blue); cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px; margin-top: 10px; }
-        .confirm-btn:active { transform: scale(0.98); }
-
-        /* ── НОВЫЙ КРАСИВЫЙ ЛИЧНЫЙ КАБИНЕТ ── */
+        /* ── ЛАКОНИЧНЫЙ ЛИЧНЫЙ КАБИНЕТ ── */
         .profile-card { background: var(--brand-white); border-radius: 20px; padding: 30px 20px; text-align: center; box-shadow: 0 8px 25px rgba(73, 180, 192, 0.1); border: 1px solid var(--border); margin-top: 10px; }
         .avatar-wrap { width: 90px; height: 90px; border-radius: 50%; margin: 0 auto 15px; overflow: hidden; border: 3px solid var(--brand-yellow); padding: 3px; background: var(--brand-white); }
         .avatar-wrap img { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; }
@@ -217,6 +203,9 @@
         .balance-label { font-size: 12px; font-weight: 600; opacity: 0.9; margin-bottom: 5px; }
         .balance-val { font-size: 36px; font-weight: 900; color: var(--brand-yellow); }
         .balance-val span { font-size: 18px; font-weight: 700; color: var(--brand-white); margin-left: 4px; }
+        
+        .logout-btn { width: 100%; background: transparent; border: 2px solid var(--border); border-radius: 14px; padding: 14px; font-family: 'Montserrat', sans-serif; font-size: 12px; font-weight: 800; letter-spacing: 1px; color: var(--muted); cursor: pointer; margin-top: 20px; transition: all 0.2s; text-transform: uppercase; }
+        .logout-btn:active { background: var(--border); color: var(--brand-blue); }
 
         /* ── BOTTOM NAV ── */
         .bottom-nav { position: fixed; bottom: 0; left: 0; width: 100%; background: var(--brand-white); border-top: 1px solid var(--border); display: flex; justify-content: space-around; padding: 12px 0 calc(12px + env(safe-area-inset-bottom, 0px)); z-index: 200; box-shadow: 0 -4px 15px rgba(0,0,0,0.03); }
@@ -249,7 +238,6 @@
         </div>
         <img src="logo.png" alt="Yurt" class="header-logo">
     </div>
-    
     <div class="header-bottom-line"></div>
 
     <!-- СТРАНИЦА МЕНЮ -->
@@ -353,7 +341,7 @@
         </div>
     </div>
 
-    <!-- СТРАНИЦА ЛИЧНОГО КАБИНЕТА (ЛОГИКА ИЗ ТЕЛЕГРАМА) -->
+    <!-- СТРАНИЦА ЛИЧНОГО КАБИНЕТА -->
     <div id="profile-page">
         <div class="checkout-header">
             <button class="checkout-back" onclick="showMenu()"><i class="fas fa-arrow-left"></i></button>
@@ -362,7 +350,15 @@
         </div>
         <div class="checkout-body">
             
-            <div class="profile-card">
+            <!-- Состояние: Пользователь НЕ авторизован -->
+            <div id="profile-login-view" style="display: none; text-align: center; padding: 40px 20px;">
+                <i class="fas fa-user-circle" style="font-size: 64px; color: var(--border); margin-bottom: 20px;"></i>
+                <p style="font-family: 'Montserrat', sans-serif; font-size: 14px; font-weight: 600; color: var(--muted); margin-bottom: 20px;" id="lbl-login-prompt">Войдите, чтобы копить бонусы</p>
+                <button class="confirm-btn" onclick="loginUser()"><i class="fab fa-telegram-plane" style="font-size: 18px;"></i> <span id="lbl-login-btn">Войти через Telegram</span></button>
+            </div>
+
+            <!-- Состояние: Пользователь АВТОРИЗОВАН -->
+            <div id="profile-dashboard-view" class="profile-card">
                 <div class="avatar-wrap">
                     <img id="user-avatar" src="" alt="User Avatar">
                 </div>
@@ -373,6 +369,8 @@
                     <div class="balance-label" id="lbl-your-balance">Ваш баланс бонусов</div>
                     <div class="balance-val"><span style="color: var(--brand-yellow); font-size: inherit;" id="user-points-val">10</span> <span>SAR</span></div>
                 </div>
+
+                <button class="logout-btn" onclick="logoutUser()" id="lbl-logout-btn">ВЫЙТИ ИЗ АККАУНТА</button>
             </div>
 
         </div>
@@ -401,6 +399,7 @@
     let currentLang = 'ru';
     let userPoints = 10; 
     let userName = "Abdullah";
+    let isUserLoggedIn = true; // По умолчанию делаем вид, что мы вошли
     let activeCat = 'salads';
     let activeTag = 'all';
     let orderType = 'delivery';
@@ -566,26 +565,30 @@
         }
     }
 
+    // НОВАЯ ЛОГИКА АВТОРИЗАЦИИ С ПРИВЯЗКОЙ К ТГ
     function initTelegramUser() {
         const tg = window.Telegram?.WebApp;
-        if (tg) {
-            tg.ready();
-            tg.expand();
-            if (tg.initDataUnsafe && tg.initDataUnsafe.user) {
-                userName = tg.initDataUnsafe.user.first_name || "User";
-                let photoUrl = tg.initDataUnsafe.user.photo_url;
-                
-                if (photoUrl) {
-                    document.getElementById('user-avatar').src = photoUrl;
-                } else {
-                    document.getElementById('user-avatar').src = `https://ui-avatars.com/api/?name=${userName}&background=f4cc12&color=fff&size=200`;
-                }
-            } else {
-                document.getElementById('user-avatar').src = `https://ui-avatars.com/api/?name=${userName}&background=f4cc12&color=fff&size=200`;
-            }
+        if (tg && tg.initDataUnsafe && tg.initDataUnsafe.user) {
+            userName = tg.initDataUnsafe.user.first_name || "User";
+            let photoUrl = tg.initDataUnsafe.user.photo_url;
+            document.getElementById('user-avatar').src = photoUrl || `https://ui-avatars.com/api/?name=${userName}&background=f4cc12&color=fff&size=200`;
+            isUserLoggedIn = true;
         } else {
+            userName = "Abdullah"; // Дефолт, если открыли в браузере
             document.getElementById('user-avatar').src = `https://ui-avatars.com/api/?name=${userName}&background=f4cc12&color=fff&size=200`;
+            isUserLoggedIn = true; 
         }
+        updateProfileUI();
+    }
+
+    function loginUser() {
+        isUserLoggedIn = true;
+        initTelegramUser(); // Заново подтягиваем данные при входе
+        updateProfileUI();
+    }
+
+    function logoutUser() {
+        isUserLoggedIn = false;
         updateProfileUI();
     }
 
@@ -594,6 +597,16 @@
         document.getElementById('checkout-avail-points').innerText = userPoints;
         document.getElementById('user-display-name').innerText = userName;
         document.getElementById('user-points-val').innerText = userPoints;
+
+        if (isUserLoggedIn) {
+            document.getElementById('profile-login-view').style.display = 'none';
+            document.getElementById('profile-dashboard-view').style.display = 'block';
+            document.getElementById('header-points-display').style.visibility = 'visible'; // Показываем бонусы в шапке
+        } else {
+            document.getElementById('profile-login-view').style.display = 'block';
+            document.getElementById('profile-dashboard-view').style.display = 'none';
+            document.getElementById('header-points-display').style.visibility = 'hidden'; // Скрываем бонусы, так как не вошел
+        }
     }
 
     function renderApp() {
@@ -661,6 +674,9 @@
         document.getElementById('lbl-profile-title').innerText = ru ? 'ЛИЧНЫЙ КАБИНЕТ' : 'PERSONAL PROFILE';
         document.getElementById('lbl-cashback-level').innerText = ru ? 'Статус: 5% кэшбэк с заказов' : 'Status: 5% cashback on orders';
         document.getElementById('lbl-your-balance').innerText = ru ? 'Ваш баланс бонусов' : 'Your Bonus Balance';
+        document.getElementById('lbl-login-prompt').innerText = ru ? 'Войдите, чтобы копить бонусы' : 'Log in to earn points';
+        document.getElementById('lbl-login-btn').innerText = ru ? 'Войти через Telegram' : 'Login via Telegram';
+        document.getElementById('lbl-logout-btn').innerText = ru ? 'ВЫЙТИ ИЗ АККАУНТА' : 'LOG OUT';
 
         document.getElementById('lbl-use-bonuses').innerText = ru ? 'Списать бонусы' : 'Redeem Bonuses';
         document.getElementById('lbl-avail-points').innerText = ru ? 'Доступно:' : 'Available:';
