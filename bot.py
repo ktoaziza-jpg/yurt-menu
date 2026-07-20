@@ -140,19 +140,29 @@ async def handle_webapp_data(message: types.Message):
         delivery_cost = f"{data.get('delivery_cost', 0)} SAR"
         total_price = f"{data.get('total_pay') or data.get('total', 0)} SAR"
         
-        cart_raw = data.get('items') or data.get('cart', {})
+        # cart по id-ключам — для русских названий через MENU_NAMES_RU
+        cart_by_id = data.get('cart', {})
+        # items как list [{name, qty, price}] — запасной вариант
+        items_list = data.get('items', [])
+
         cart_dict = {}
-        if isinstance(cart_raw, list):
-            for item in cart_raw:
+        if cart_by_id and isinstance(cart_by_id, dict):
+            # Приоритет: id-ключи → русские названия через словарь
+            cart_dict = cart_by_id
+        elif items_list and isinstance(items_list, list):
+            # Запасной: берём имена из items
+            for item in items_list:
                 cart_dict[item.get('name', 'Блюдо')] = item.get('qty', 1)
-        else:
-            cart_dict = cart_raw
 
         user_lang = data.get('lang', 'ru')
         
         tg_user = message.from_user
-        username_str = f"@{tg_user.username}" if tg_user.username else "Нет юзернейма"
+        username_str = f"@{tg_user.username}" if tg_user.username else "—"
         tg_profile_link = f"<a href='tg://user?id={tg_user.id}'>{tg_user.full_name}</a>"
+        # username из payload (дополнительная проверка)
+        payload_username = data.get('telegram_username')
+        if not tg_user.username and payload_username:
+            username_str = f"@{payload_username}"
         
         # СОХРАНЯЕМ ЗАКАЗ В БАЗУ ДАННЫХ
         save_order_to_db(tg_user.id, total_price, fulfillment_type, cart_dict)
