@@ -69,8 +69,8 @@
         }
         
         .header-logo {
-            height: 50px; /* Базовый контейнер */
-            transform: scale(3.5); /* РАЗДУВАЕМ В 3.5 РАЗА ИЗ-ЗА ПРОЗРАЧНЫХ ПОЛЕЙ */
+            height: 50px;
+            transform: scale(3.5);
             width: auto;
             object-fit: contain;
             transition: all 0.3s ease;
@@ -108,7 +108,6 @@
         }
         .header-points i { color: var(--brand-yellow); }
 
-        /* Скролл шапки */
         .header.shrink { height: 70px; }
         .header.shrink .header-logo { height: 35px; transform: scale(2.2); margin-top: 5px; }
         .header.shrink .header-top-row { top: 12px; }
@@ -162,13 +161,10 @@
         .confirm-btn:active { transform: scale(0.98); }
 
         /* ── СТРАНИЦЫ И КОРЗИНА ── */
-        #checkout-page, #profile-page { display: none; position: absolute; top: 0; left: 0; width: 100%; min-height: 100vh; background: var(--brand-bg); z-index: 150; padding-bottom: 100px; }
+        #checkout-page, #orders-page, #profile-page { display: none; position: absolute; top: 0; left: 0; width: 100%; min-height: 100vh; background: var(--brand-bg); z-index: 150; padding-bottom: 100px; }
         .checkout-header { background: var(--brand-teal); padding: 16px; display: flex; align-items: center; position: sticky; top: 0; z-index: 10; height: 60px; }
         .checkout-back { background: transparent; border: none; color: var(--brand-yellow); font-size: 20px; cursor: pointer; padding: 4px; margin-right: 12px; }
-        
-        /* УМЕНЬШИЛА ШРИФТ ЗАГОЛОВКОВ В ШАПКЕ */
         .checkout-title { font-family: 'Montserrat', sans-serif; font-size: 14px; font-weight: 800; color: var(--brand-white); letter-spacing: 1.5px; flex: 1; text-align: center; text-transform: uppercase; }
-        
         .checkout-body { padding: 20px 16px; }
 
         .empty-cart-view { display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 80px 20px; width: 100%; color: var(--muted); }
@@ -195,12 +191,13 @@
         .input-field.input-error { border-color: var(--error); }
         input[type="time"] { -webkit-appearance: none; -moz-appearance: none; appearance: none; min-height: 50px; }
 
-        /* ── ЛАКОНИЧНЫЙ ЛИЧНЫЙ КАБИНЕТ ── */
+        /* ── ЛИЧНЫЙ КАБИНЕТ ── */
         .profile-card { background: var(--brand-white); border-radius: 20px; padding: 30px 20px; text-align: center; box-shadow: 0 8px 25px rgba(73, 180, 192, 0.1); border: 1px solid var(--border); margin-top: 10px; }
         .avatar-wrap { width: 90px; height: 90px; border-radius: 50%; margin: 0 auto 15px; overflow: hidden; border: 3px solid var(--brand-yellow); padding: 3px; background: var(--brand-white); }
         .avatar-wrap img { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; }
         .profile-name { font-family: 'Montserrat', sans-serif; font-size: 22px; font-weight: 800; color: var(--brand-blue); margin-bottom: 5px; }
-        .profile-status { font-family: 'Montserrat', sans-serif; font-size: 11px; font-weight: 700; color: var(--brand-teal); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 20px; }
+        .profile-status { font-family: 'Montserrat', sans-serif; font-size: 11px; font-weight: 700; color: var(--brand-teal); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 15px; }
+        .tg-id-pill { display: inline-flex; align-items: center; gap: 6px; background: var(--brand-bg); padding: 6px 14px; border-radius: 20px; font-size: 11px; font-weight: 700; color: var(--muted); margin-bottom: 20px; cursor: pointer; border: 1px solid var(--border); }
         .balance-box { background: var(--brand-teal); border-radius: 16px; padding: 20px; color: var(--brand-white); display: flex; flex-direction: column; align-items: center; }
         .balance-label { font-size: 12px; font-weight: 600; opacity: 0.9; margin-bottom: 5px; }
         .balance-val { font-size: 36px; font-weight: 900; color: var(--brand-yellow); }
@@ -209,10 +206,10 @@
         .logout-btn { width: 100%; background: transparent; border: 2px solid var(--border); border-radius: 14px; padding: 14px; font-family: 'Montserrat', sans-serif; font-size: 12px; font-weight: 800; letter-spacing: 1px; color: var(--muted); cursor: pointer; margin-top: 20px; transition: all 0.2s; text-transform: uppercase; }
         .logout-btn:active { background: var(--border); color: var(--brand-blue); }
 
-        /* ── BOTTOM NAV ── */
+        /* ── BOTTOM NAV (4 ВКЛАДКИ) ── */
         .bottom-nav { position: fixed; bottom: 0; left: 0; width: 100%; background: var(--brand-white); border-top: 1px solid var(--border); display: flex; justify-content: space-around; padding: 12px 0 calc(12px + env(safe-area-inset-bottom, 0px)); z-index: 200; box-shadow: 0 -4px 15px rgba(0,0,0,0.03); }
-        .nav-item { display: flex; flex-direction: column; align-items: center; gap: 4px; background: none; border: none; cursor: pointer; color: var(--muted); font-family: 'Montserrat', sans-serif; font-size: 11px; font-weight: 600; width: 33%; }
-        .nav-item i { font-size: 22px; }
+        .nav-item { display: flex; flex-direction: column; align-items: center; gap: 4px; background: none; border: none; cursor: pointer; color: var(--muted); font-family: 'Montserrat', sans-serif; font-size: 10px; font-weight: 600; width: 25%; }
+        .nav-item i { font-size: 20px; }
         .nav-item.active { color: var(--brand-blue); }
         .nav-cart-wrap { position: relative; }
         .cart-badge { position: absolute; top: -6px; right: -8px; background: var(--brand-yellow); color: var(--brand-blue); font-size: 10px; font-weight: 800; width: 18px; height: 18px; border-radius: 50%; display: none; align-items: center; justify-content: center; border: 2px solid var(--brand-white); }
@@ -343,6 +340,23 @@
         </div>
     </div>
 
+    <!-- СТРАНИЦА МОИ ЗАКАЗЫ -->
+    <div id="orders-page">
+        <div class="checkout-header">
+            <button class="checkout-back" onclick="showMenu()"><i class="fas fa-arrow-left"></i></button>
+            <div class="checkout-title" id="lbl-orders-title">МОИ ЗАКАЗЫ</div>
+            <div style="width:34px;"></div>
+        </div>
+        <div class="checkout-body">
+            <div id="orders-history-list">
+                <div class="empty-cart-view">
+                    <i class="fas fa-receipt" style="font-size: 64px; color: var(--border); margin-bottom: 20px;"></i>
+                    <p id="lbl-no-orders">У вас пока нет активных заказов</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- СТРАНИЦА ЛИЧНОГО КАБИНЕТА -->
     <div id="profile-page">
         <div class="checkout-header">
@@ -352,20 +366,23 @@
         </div>
         <div class="checkout-body">
             
-            <!-- Состояние: Пользователь НЕ авторизован -->
             <div id="profile-login-view" style="display: none; text-align: center; padding: 40px 20px;">
                 <i class="fas fa-user-circle" style="font-size: 64px; color: var(--border); margin-bottom: 20px;"></i>
                 <p style="font-family: 'Montserrat', sans-serif; font-size: 14px; font-weight: 600; color: var(--muted); margin-bottom: 20px;" id="lbl-login-prompt">Войдите, чтобы копить бонусы</p>
                 <button class="confirm-btn" onclick="loginUser()"><i class="fab fa-telegram-plane" style="font-size: 18px;"></i> <span id="lbl-login-btn">Войти через Telegram</span></button>
             </div>
 
-            <!-- Состояние: Пользователь АВТОРИЗОВАН -->
             <div id="profile-dashboard-view" class="profile-card">
                 <div class="avatar-wrap">
                     <img id="user-avatar" src="" alt="User Avatar">
                 </div>
                 <div class="profile-name" id="user-display-name">User</div>
                 <div class="profile-status" id="lbl-cashback-level">Статус: 5% кэшбэк с заказов</div>
+                
+                <div class="tg-id-pill" onclick="copyTgId()">
+                    <i class="fab fa-telegram"></i> ID: <span id="user-tg-id">--</span>
+                    <i class="far fa-copy" style="margin-left: 4px;"></i>
+                </div>
                 
                 <div class="balance-box">
                     <div class="balance-label" id="lbl-your-balance">Ваш баланс бонусов</div>
@@ -378,7 +395,7 @@
         </div>
     </div>
 
-    <!-- НИЖНЕЕ МЕНЮ НАВИГАЦИИ -->
+    <!-- НИЖНЕЕ МЕНЮ НАВИГАЦИИ (4 ВКЛАДКИ) -->
     <div class="bottom-nav">
         <button class="nav-item active" onclick="showMenu()" id="nav-home">
             <i class="fas fa-utensils"></i>
@@ -391,6 +408,10 @@
             </div>
             <span id="lbl-nav-cart">Cart</span>
         </button>
+        <button class="nav-item" onclick="showOrders()" id="nav-orders">
+            <i class="fas fa-receipt"></i>
+            <span id="lbl-nav-orders">Orders</span>
+        </button>
         <button class="nav-item" onclick="showProfile()" id="nav-profile">
             <i class="fas fa-user-circle"></i>
             <span id="lbl-nav-profile">Profile</span>
@@ -401,6 +422,7 @@
     let currentLang = 'ru';
     let userPoints = 10; 
     let userName = "Гость";
+    let userId = "";
     let isUserLoggedIn = true; 
     let activeCat = 'salads';
     let activeTag = 'all';
@@ -567,26 +589,35 @@
         }
     }
 
-    // ИСПРАВЛЕННАЯ ЛОГИКА ТЕЛЕГРАМ-ПОЛЬЗОВАТЕЛЯ
     function initTelegramUser() {
         const tg = window.Telegram?.WebApp;
         if (tg && tg.initDataUnsafe && tg.initDataUnsafe.user) {
-            userName = tg.initDataUnsafe.user.first_name || (currentLang === 'ru' ? "Гость" : "Guest");
-            let photoUrl = tg.initDataUnsafe.user.photo_url;
+            const u = tg.initDataUnsafe.user;
+            userName = u.first_name || (currentLang === 'ru' ? "Гость" : "Guest");
+            userId = u.id || "123456789";
+            let photoUrl = u.photo_url;
             document.getElementById('user-avatar').src = photoUrl || `https://ui-avatars.com/api/?name=${userName}&background=f4cc12&color=fff&size=200`;
+            document.getElementById('cust-name').value = userName;
             isUserLoggedIn = true;
         } else {
-            // Если открыто не в ТГ, используем "Гость", а не жестко заданное имя
             userName = currentLang === 'ru' ? "Гость" : "Guest"; 
+            userId = "Guest_ID";
             document.getElementById('user-avatar').src = `https://ui-avatars.com/api/?name=${userName}&background=f4cc12&color=fff&size=200`;
             isUserLoggedIn = true; 
         }
         updateProfileUI();
     }
 
+    function copyTgId() {
+        if (userId && userId !== "Guest_ID") {
+            navigator.clipboard.writeText(userId);
+            alert(currentLang === 'ru' ? 'ID скопирован в буфер обмена!' : 'ID copied to clipboard!');
+        }
+    }
+
     function loginUser() {
         isUserLoggedIn = true;
-        initTelegramUser(); // Заново подтягиваем данные
+        initTelegramUser();
         updateProfileUI();
     }
 
@@ -599,6 +630,7 @@
         document.getElementById('header-points-val').innerText = userPoints;
         document.getElementById('checkout-avail-points').innerText = userPoints;
         document.getElementById('user-display-name').innerText = userName;
+        document.getElementById('user-tg-id').innerText = userId;
         document.getElementById('user-points-val').innerText = userPoints;
 
         if (isUserLoggedIn) {
@@ -659,30 +691,32 @@
         document.getElementById('menu-grid').innerHTML = menuHtml;
 
         const ru = currentLang === 'ru';
-        document.getElementById('lbl-order').innerText     = ru ? 'ВАШ ЗАКАЗ' : 'YOUR ORDER';
-        document.getElementById('lbl-details').innerText   = ru ? 'ДЕТАЛИ ЗАКАЗА' : 'ORDER DETAILS';
-        document.getElementById('lbl-nav-home').innerText  = ru ? 'Меню' : 'Menu';
-        document.getElementById('lbl-nav-cart').innerText  = ru ? 'Корзина' : 'Cart';
-        document.getElementById('lbl-nav-profile').innerText = ru ? 'Кабинет' : 'Profile';
-        document.getElementById('lbl-break-items').innerText = ru ? 'Блюда:' : 'Items:';
-        document.getElementById('lbl-total-text').innerText = ru ? 'ИТОГО:' : 'TOTAL:';
-        document.getElementById('lbl-name').innerText      = ru ? 'ИМЯ КЛИЕНТА' : 'YOUR NAME';
-        document.getElementById('lbl-phone').innerText     = ru ? 'НОМЕР ТЕЛЕФОНА' : 'PHONE NUMBER';
-        document.getElementById('lbl-location').innerText  = ru ? 'ЛОКАЦИЯ / АДРЕС' : 'LOCATION / ADDRESS';
-        document.getElementById('lbl-time').innerText      = ru ? 'ВРЕМЯ САМОВЫВОЗА' : 'PICKUP TIME';
-        document.getElementById('lbl-comment').innerText   = ru ? 'КОММЕНТАРИЙ' : 'COMMENT';
-        document.getElementById('lbl-confirm').innerText   = ru ? 'ПОДТВЕРДИТЬ ЗАКАЗ' : 'CONFIRM ORDER';
-        document.getElementById('lbl-work').innerText      = ru ? '🕒 11:00 — 23:00' : '🕒 11:00 AM — 11:00 PM';
+        document.getElementById('lbl-order').innerText        = ru ? 'ВАШ ЗАКАЗ' : 'YOUR ORDER';
+        document.getElementById('lbl-orders-title').innerText = ru ? 'МОИ ЗАКАЗЫ' : 'MY ORDERS';
+        document.getElementById('lbl-details').innerText      = ru ? 'ДЕТАЛИ ЗАКАЗА' : 'ORDER DETAILS';
+        document.getElementById('lbl-nav-home').innerText     = ru ? 'Меню' : 'Menu';
+        document.getElementById('lbl-nav-cart').innerText     = ru ? 'Корзина' : 'Cart';
+        document.getElementById('lbl-nav-orders').innerText   = ru ? 'Заказы' : 'Orders';
+        document.getElementById('lbl-nav-profile').innerText  = ru ? 'Кабинет' : 'Profile';
+        document.getElementById('lbl-break-items').innerText  = ru ? 'Блюда:' : 'Items:';
+        document.getElementById('lbl-total-text').innerText   = ru ? 'ИТОГО:' : 'TOTAL:';
+        document.getElementById('lbl-name').innerText         = ru ? 'ИМЯ КЛИЕНТА' : 'YOUR NAME';
+        document.getElementById('lbl-phone').innerText        = ru ? 'НОМЕР ТЕЛЕФОНА' : 'PHONE NUMBER';
+        document.getElementById('lbl-location').innerText     = ru ? 'ЛОКАЦИЯ / АДРЕС' : 'LOCATION / ADDRESS';
+        document.getElementById('lbl-time').innerText         = ru ? 'ВРЕМЯ САМОВЫВОЗА' : 'PICKUP TIME';
+        document.getElementById('lbl-comment').innerText      = ru ? 'КОММЕНТАРИЙ' : 'COMMENT';
+        document.getElementById('lbl-confirm').innerText      = ru ? 'ПОДТВЕРДИТЬ ЗАКАЗ' : 'CONFIRM ORDER';
+        document.getElementById('lbl-work').innerText         = ru ? '🕒 11:00 — 23:00' : '🕒 11:00 AM — 11:00 PM';
         
-        document.getElementById('lbl-profile-title').innerText = ru ? 'ЛИЧНЫЙ КАБИНЕТ' : 'PERSONAL PROFILE';
+        document.getElementById('lbl-profile-title').innerText  = ru ? 'ЛИЧНЫЙ КАБИНЕТ' : 'PERSONAL PROFILE';
         document.getElementById('lbl-cashback-level').innerText = ru ? 'Статус: 5% кэшбэк с заказов' : 'Status: 5% cashback on orders';
-        document.getElementById('lbl-your-balance').innerText = ru ? 'Ваш баланс бонусов' : 'Your Bonus Balance';
-        document.getElementById('lbl-login-prompt').innerText = ru ? 'Войдите, чтобы копить бонусы' : 'Log in to earn points';
-        document.getElementById('lbl-login-btn').innerText = ru ? 'Войти через Telegram' : 'Login via Telegram';
-        document.getElementById('lbl-logout-btn').innerText = ru ? 'ВЫЙТИ ИЗ АККАУНТА' : 'LOG OUT';
+        document.getElementById('lbl-your-balance').innerText   = ru ? 'Ваш баланс бонусов' : 'Your Bonus Balance';
+        document.getElementById('lbl-login-prompt').innerText   = ru ? 'Войдите, чтобы копить бонусы' : 'Log in to earn points';
+        document.getElementById('lbl-login-btn').innerText      = ru ? 'Войти через Telegram' : 'Login via Telegram';
+        document.getElementById('lbl-logout-btn').innerText     = ru ? 'ВЫЙТИ ИЗ АККАУНТА' : 'LOG OUT';
 
-        document.getElementById('lbl-use-bonuses').innerText = ru ? 'Списать бонусы' : 'Redeem Bonuses';
-        document.getElementById('lbl-avail-points').innerText = ru ? 'Доступно:' : 'Available:';
+        document.getElementById('lbl-use-bonuses').innerText    = ru ? 'Списать бонусы' : 'Redeem Bonuses';
+        document.getElementById('lbl-avail-points').innerText   = ru ? 'Доступно:' : 'Available:';
         document.getElementById('lbl-break-discount').innerText = ru ? 'Скидка бонусами:' : 'Bonus Discount:';
 
         document.getElementById('tab-delivery').innerText = ru ? 'Доставка' : 'Delivery';
@@ -753,6 +787,7 @@
     function showMenu() {
         document.getElementById('menu-page').style.display = 'block';
         document.getElementById('checkout-page').style.display = 'none';
+        document.getElementById('orders-page').style.display = 'none';
         document.getElementById('profile-page').style.display = 'none';
         setNavActive('nav-home');
         window.scrollTo(0, 0);
@@ -761,15 +796,26 @@
     function showCheckout() {
         document.getElementById('menu-page').style.display = 'none';
         document.getElementById('checkout-page').style.display = 'block';
+        document.getElementById('orders-page').style.display = 'none';
         document.getElementById('profile-page').style.display = 'none';
         setNavActive('nav-cart');
         window.scrollTo(0, 0);
         renderCheckoutItems();
     }
 
+    function showOrders() {
+        document.getElementById('menu-page').style.display = 'none';
+        document.getElementById('checkout-page').style.display = 'none';
+        document.getElementById('orders-page').style.display = 'block';
+        document.getElementById('profile-page').style.display = 'none';
+        setNavActive('nav-orders');
+        window.scrollTo(0, 0);
+    }
+
     function showProfile() {
         document.getElementById('menu-page').style.display = 'none';
         document.getElementById('checkout-page').style.display = 'none';
+        document.getElementById('orders-page').style.display = 'none';
         document.getElementById('profile-page').style.display = 'block';
         setNavActive('nav-profile');
         window.scrollTo(0, 0);
@@ -882,7 +928,8 @@
             items: orderDetails,
             subtotal: subtotal,
             bonus_spent: bonusDiscount,
-            total_pay: total
+            total_pay: total,
+            lang: currentLang
         };
 
         const tg = window.Telegram?.WebApp;
