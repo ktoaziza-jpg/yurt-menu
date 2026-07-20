@@ -4,10 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Yurt Restaurant</title>
-    <!-- Подключаем Telegram WebApp API -->
-    <script src="https://telegram.org/js/telegram-web-app.js"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;600;700;800&display=swap" rel="stylesheet">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <script src="[https://telegram.org/js/telegram-web-app.js](https://telegram.org/js/telegram-web-app.js)"></script>
+    <link href="[https://fonts.googleapis.com/css2?family=Montserrat:wght@500;600;700;800&display=swap](https://fonts.googleapis.com/css2?family=Montserrat:wght@500;600;700;800&display=swap)" rel="stylesheet">
+    <link href="[https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css](https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css)" rel="stylesheet">
     <style>
         :root {
             --brand-teal: #49b4c0;
@@ -33,7 +32,6 @@
             -webkit-font-smoothing: antialiased;
         }
 
-        /* ── ШАПКА: АККУРАТНЫЙ ФОН + ОГРОМНЫЙ ЛОГОТИП ЧЕРЕЗ SCALE ── */
         .header {
             background: var(--brand-teal);
             height: 110px;
@@ -123,7 +121,6 @@
         }
         .header.shrink + .header-bottom-line { top: 70px; }
 
-        /* ── ТЕГИ И КАТЕГОРИИ ── */
         .tags-container { display: flex; gap: 6px; padding: 16px 16px 4px; overflow-x: auto; background: var(--brand-white); }
         .tags-container::-webkit-scrollbar { display: none; }
         .tag-pill { padding: 6px 12px; border-radius: 12px; background: var(--brand-bg); border: 1px solid transparent; color: var(--ink); font-size: 11px; font-weight: 700; white-space: nowrap; cursor: pointer; transition: all 0.2s; }
@@ -134,7 +131,6 @@
         .cat-pill { padding: 8px 18px; border-radius: 20px; border: 2px solid var(--border); background: transparent; color: var(--muted); font-family: 'Montserrat', sans-serif; font-size: 13px; font-weight: 700; white-space: nowrap; flex-shrink: 0; cursor: pointer; transition: all 0.2s; }
         .cat-pill.active { background: var(--brand-blue); border-color: var(--brand-blue); color: var(--brand-white); }
 
-        /* ── СЕТКА МЕНЮ ── */
         .menu-container { padding: 20px 16px; }
         .menu-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
         .menu-item { background: var(--brand-white); border-radius: 16px; border: 1px solid var(--border); overflow: hidden; display: flex; flex-direction: column; box-shadow: 0 4px 12px rgba(73, 180, 192, 0.05); }
@@ -150,9 +146,8 @@
         .add-btn:active { transform: scale(0.9); }
         .add-btn.in-cart { background: var(--brand-yellow); color: var(--brand-blue); }
 
-        /* ── ЭЛЕМЕНТЫ ФОРМЫ ── */
-        .order-type-tabs { display: flex; background: var(--brand-white); border: 2px solid var(--border); border-radius: 14px; padding: 4px; margin-bottom: 20px; }
-        .type-tab { flex: 1; text-align: center; padding: 12px; border-radius: 10px; border: none; background: transparent; font-family: 'Montserrat', sans-serif; font-size: 12px; font-weight: 800; color: var(--muted); cursor: pointer; transition: all 0.2s; text-transform: uppercase; letter-spacing: 0.5px;}
+        .order-type-tabs, .payment-type-tabs { display: flex; background: var(--brand-white); border: 2px solid var(--border); border-radius: 14px; padding: 4px; margin-bottom: 16px; }
+        .type-tab { flex: 1; text-align: center; padding: 12px; border-radius: 10px; border: none; background: transparent; font-family: 'Montserrat', sans-serif; font-size: 11px; font-weight: 800; color: var(--muted); cursor: pointer; transition: all 0.2s; text-transform: uppercase; letter-spacing: 0.5px;}
         .type-tab.active { background: var(--brand-blue); color: var(--brand-white); }
         .location-field-container { display: flex; gap: 8px; }
         .gps-btn { background: var(--brand-blue); border: none; border-radius: 12px; width: 50px; color: white; font-size: 18px; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: background 0.2s; }
@@ -160,7 +155,6 @@
         .confirm-btn { width: 100%; background: var(--brand-yellow); border: none; border-radius: 14px; padding: 18px; font-family: 'Montserrat', sans-serif; font-size: 14px; font-weight: 800; letter-spacing: 1px; color: var(--brand-blue); cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px; margin-top: 10px; }
         .confirm-btn:active { transform: scale(0.98); }
 
-        /* ── СТРАНИЦЫ И КОРЗИНА ── */
         #checkout-page, #orders-page, #profile-page { display: none; position: absolute; top: 0; left: 0; width: 100%; min-height: 100vh; background: var(--brand-bg); z-index: 150; padding-bottom: 100px; }
         .checkout-header { background: var(--brand-teal); padding: 16px; display: flex; align-items: center; position: sticky; top: 0; z-index: 10; height: 60px; }
         .checkout-back { background: transparent; border: none; color: var(--brand-yellow); font-size: 20px; cursor: pointer; padding: 4px; margin-right: 12px; }
@@ -191,7 +185,6 @@
         .input-field.input-error { border-color: var(--error); }
         input[type="time"] { -webkit-appearance: none; -moz-appearance: none; appearance: none; min-height: 50px; }
 
-        /* ── ЛИЧНЫЙ КАБИНЕТ ── */
         .profile-card { background: var(--brand-white); border-radius: 20px; padding: 30px 20px; text-align: center; box-shadow: 0 8px 25px rgba(73, 180, 192, 0.1); border: 1px solid var(--border); margin-top: 10px; }
         .avatar-wrap { width: 90px; height: 90px; border-radius: 50%; margin: 0 auto 15px; overflow: hidden; border: 3px solid var(--brand-yellow); padding: 3px; background: var(--brand-white); }
         .avatar-wrap img { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; }
@@ -206,7 +199,6 @@
         .logout-btn { width: 100%; background: transparent; border: 2px solid var(--border); border-radius: 14px; padding: 14px; font-family: 'Montserrat', sans-serif; font-size: 12px; font-weight: 800; letter-spacing: 1px; color: var(--muted); cursor: pointer; margin-top: 20px; transition: all 0.2s; text-transform: uppercase; }
         .logout-btn:active { background: var(--border); color: var(--brand-blue); }
 
-        /* ── BOTTOM NAV (4 ВКЛАДКИ) ── */
         .bottom-nav { position: fixed; bottom: 0; left: 0; width: 100%; background: var(--brand-white); border-top: 1px solid var(--border); display: flex; justify-content: space-around; padding: 12px 0 calc(12px + env(safe-area-inset-bottom, 0px)); z-index: 200; box-shadow: 0 -4px 15px rgba(0,0,0,0.03); }
         .nav-item { display: flex; flex-direction: column; align-items: center; gap: 4px; background: none; border: none; cursor: pointer; color: var(--muted); font-family: 'Montserrat', sans-serif; font-size: 10px; font-weight: 600; width: 25%; }
         .nav-item i { font-size: 20px; }
@@ -214,7 +206,6 @@
         .nav-cart-wrap { position: relative; }
         .cart-badge { position: absolute; top: -6px; right: -8px; background: var(--brand-yellow); color: var(--brand-blue); font-size: 10px; font-weight: 800; width: 18px; height: 18px; border-radius: 50%; display: none; align-items: center; justify-content: center; border: 2px solid var(--brand-white); }
 
-        /* ── FOOTER ── */
         .footer { padding: 40px 16px; background: var(--brand-teal); text-align: center; color: var(--brand-white); margin-top: 40px; }
         .footer-logo { height: 30px; margin-bottom: 30px; object-fit: contain; transform: scale(5.0); display: block; margin-left: auto; margin-right: auto; }
         .footer p { font-size: 13px; font-weight: 600; color: rgba(255, 255, 255, 0.9); margin: 6px 0; }
@@ -329,6 +320,15 @@
                 <input type="time" id="cust-time" class="input-field" oninput="this.classList.remove('input-error')">
             </div>
 
+            <!-- ВЫБОР ОПЛАТЫ -->
+            <div class="field-wrap">
+                <div class="field-label" id="lbl-payment">СПОСОБ ОПЛАТЫ</div>
+                <div class="payment-type-tabs">
+                    <button class="type-tab active" id="pay-cash" onclick="setPaymentMethod('cash')" type="button">💵 Cash / Наличные</button>
+                    <button class="type-tab" id="pay-card" onclick="setPaymentMethod('card')" type="button">💳 Card / Карта</button>
+                </div>
+            </div>
+
             <div class="field-wrap">
                 <div class="field-label" id="lbl-comment">КОММЕНТАРИЙ</div>
                 <input type="text" id="cust-comment" class="input-field" placeholder="...">
@@ -366,14 +366,12 @@
         </div>
         <div class="checkout-body">
             
-            <!-- ГОСТЕВОЙ РЕЖИМ (ПО УМОЛЧАНИЮ) -->
             <div id="profile-login-view" style="display: block; text-align: center; padding: 40px 20px;">
                 <i class="fas fa-user-circle" style="font-size: 64px; color: var(--border); margin-bottom: 20px;"></i>
                 <p style="font-family: 'Montserrat', sans-serif; font-size: 14px; font-weight: 600; color: var(--muted); margin-bottom: 20px;" id="lbl-login-prompt">Войдите, чтобы копить бонусы</p>
                 <button class="confirm-btn" onclick="loginUser()"><i class="fab fa-telegram-plane" style="font-size: 18px;"></i> <span id="lbl-login-btn">Войти через Telegram</span></button>
             </div>
 
-            <!-- АВТОРИЗОВАННЫЙ РЕЖИМ (СМУТНО/РЕАЛЬНЫЕ ДАННЫЕ) -->
             <div id="profile-dashboard-view" class="profile-card" style="display: none;">
                 <div class="avatar-wrap">
                     <img id="user-avatar" src="" alt="User Avatar">
@@ -386,7 +384,6 @@
                     <i class="far fa-copy" style="margin-left: 4px;"></i>
                 </div>
                 
-                <!-- Статистика -->
                 <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:16px 0;">
                     <div style="background:var(--brand-bg);border-radius:12px;padding:14px;text-align:center;border:1px solid var(--border);">
                         <div style="font-size:11px;font-weight:700;color:var(--muted);letter-spacing:1px;margin-bottom:6px;" id="lbl-prof-orders-count">ЗАКАЗОВ</div>
@@ -409,7 +406,7 @@
         </div>
     </div>
 
-    <!-- НИЖНЕЕ МЕНЮ НАВИГАЦИИ (4 ВКЛАДКИ) -->
+    <!-- НИЖНЕЕ МЕНЮ НАВИГАЦИИ -->
     <div class="bottom-nav">
         <button class="nav-item active" onclick="showMenu()" id="nav-home">
             <i class="fas fa-utensils"></i>
@@ -439,9 +436,9 @@
     let userName = "";
     let userId = "";
     let isUserLoggedIn = false;
+    let paymentMethod = 'cash';
 
-    // ── ВСТАВЬ СВОЙ IP СЕРВЕРА (без слеша в конце) ──
-    const SERVER_URL = "https://evil-ideas-stare.loca.lt";
+    const SERVER_URL = "[https://evil-ideas-stare.loca.lt](https://evil-ideas-stare.loca.lt)";
     let activeCat = 'salads';
     let activeTag = 'all';
     let orderType = 'delivery';
@@ -580,7 +577,7 @@
 
     function setOrderType(type) {
         orderType = type;
-        document.querySelectorAll('.type-tab').forEach(btn => btn.classList.remove('active'));
+        document.querySelectorAll('.order-type-tabs .type-tab').forEach(btn => btn.classList.remove('active'));
         
         if (type === 'delivery') {
             document.getElementById('tab-delivery').classList.add('active');
@@ -593,12 +590,22 @@
         }
     }
 
+    function setPaymentMethod(method) {
+        paymentMethod = method;
+        document.querySelectorAll('.payment-type-tabs .type-tab').forEach(btn => btn.classList.remove('active'));
+        if (method === 'cash') {
+            document.getElementById('pay-cash').classList.add('active');
+        } else {
+            document.getElementById('pay-card').classList.add('active');
+        }
+    }
+
     function getUserLocation() {
         if (navigator.geolocation) {
             navigator.geolocation.getCurrentPosition(function(position) {
                 const lat = position.coords.latitude;
                 const lon = position.coords.longitude;
-                document.getElementById('cust-location').value = `https://maps.google.com/?q=${lat},${lon}`;
+                document.getElementById('cust-location').value = `[https://maps.google.com/?q=$](https://maps.google.com/?q=$){lat},${lon}`;
             }, function(error) {
                 alert(currentLang === 'ru' ? 'Не удалось получить координаты автоматически. Введите адрес вручную.' : 'Could not fetch location automatically. Please enter address manually.');
             });
@@ -607,28 +614,31 @@
         }
     }
 
-    // РЕАЛЬНАЯ АВТОРИЗАЦИЯ
     function initTelegramUser() {
+        const urlParams = new URLSearchParams(window.location.search);
+        const langParam = urlParams.get('lang');
+        if (langParam === 'en' || langParam === 'ru') {
+            currentLang = langParam;
+            document.getElementById('btn-lang').innerText = currentLang === 'ru' ? 'EN' : 'RU';
+        }
+
         const tg = window.Telegram?.WebApp;
         if (tg) { tg.ready(); tg.expand(); }
 
         const u = tg?.initDataUnsafe?.user;
 
         if (u) {
-            // ✅ Реальный пользователь Telegram — авторизация автоматическая
             userId    = String(u.id);
             userName  = u.first_name || "User";
             const photoUrl = u.photo_url;
 
             document.getElementById('user-avatar').src = photoUrl ||
-                `https://ui-avatars.com/api/?name=${encodeURIComponent(userName)}&background=49b4c0&color=fff&bold=true&size=200`;
+                `[https://ui-avatars.com/api/?name=$](https://ui-avatars.com/api/?name=$){encodeURIComponent(userName)}&background=49b4c0&color=fff&bold=true&size=200`;
             document.getElementById('cust-name').value = userName;
             isUserLoggedIn = true;
 
-            // Загружаем баллы и историю с сервера
             fetchUserData(userId);
         } else {
-            // Открыто в браузере (не в Telegram)
             isUserLoggedIn = false;
             updateProfileUI();
         }
@@ -646,7 +656,6 @@
                 userOrdersCount = data.orders_count || 0;
             }
         } catch (e) {
-            // Сервер недоступен — баллы остаются 0, всё остальное работает
             console.log('Server unavailable, points set to 0');
         }
         updateProfileUI();
@@ -659,7 +668,16 @@
         }
     }
 
-    function loginUser() { initTelegramUser(); }
+    function loginUser() {
+        const tg = window.Telegram?.WebApp;
+        if (tg && tg.initDataUnsafe?.user) {
+            initTelegramUser();
+        } else {
+            alert(currentLang === 'ru' 
+                ? 'Для входа откройте веб-приложение через Telegram бота @yurt_saudi_bot' 
+                : 'To log in, please open the WebApp inside Telegram bot @yurt_saudi_bot');
+        }
+    }
 
     function logoutUser() {
         isUserLoggedIn = false;
@@ -668,15 +686,12 @@
     }
 
     function updateProfileUI() {
-        // Хедер — имя пользователя
         const hdrEl = document.getElementById('header-points-val');
         if (hdrEl) hdrEl.innerText = isUserLoggedIn ? userName : '';
 
-        // Корзина — доступные баллы
         const availEl = document.getElementById('checkout-avail-points');
         if (availEl) availEl.innerText = userPoints;
 
-        // Профиль
         const nameEl = document.getElementById('user-display-name');
         if (nameEl) nameEl.innerText = userName || 'User';
 
@@ -686,7 +701,6 @@
         const pointsEl = document.getElementById('user-points-val');
         if (pointsEl) pointsEl.innerText = userPoints;
 
-        // Кол-во заказов в профиле
         const ordersCountEl = document.getElementById('user-orders-count');
         if (ordersCountEl) ordersCountEl.innerText = userOrdersCount;
 
@@ -757,6 +771,7 @@
         const ru = currentLang === 'ru';
         document.getElementById('lbl-order').innerText        = ru ? 'ВАШ ЗАКАЗ' : 'YOUR ORDER';
         document.getElementById('lbl-orders-title').innerText = ru ? 'МОИ ЗАКАЗЫ' : 'MY ORDERS';
+        document.getElementById('lbl-no-orders').innerText   = ru ? 'У вас пока нет активных заказов' : 'You have no active orders yet';
         document.getElementById('lbl-details').innerText      = ru ? 'ДЕТАЛИ ЗАКАЗА' : 'ORDER DETAILS';
         document.getElementById('lbl-nav-home').innerText     = ru ? 'Меню' : 'Menu';
         document.getElementById('lbl-nav-cart').innerText     = ru ? 'Корзина' : 'Cart';
@@ -768,6 +783,7 @@
         document.getElementById('lbl-phone').innerText        = ru ? 'НОМЕР ТЕЛЕФОНА' : 'PHONE NUMBER';
         document.getElementById('lbl-location').innerText     = ru ? 'ЛОКАЦИЯ / АДРЕС' : 'LOCATION / ADDRESS';
         document.getElementById('lbl-time').innerText         = ru ? 'ВРЕМЯ САМОВЫВОЗА' : 'PICKUP TIME';
+        document.getElementById('lbl-payment').innerText      = ru ? 'СПОСОБ ОПЛАТЫ' : 'PAYMENT METHOD';
         document.getElementById('lbl-comment').innerText      = ru ? 'КОММЕНТАРИЙ' : 'COMMENT';
         document.getElementById('lbl-confirm').innerText      = ru ? 'ПОДТВЕРДИТЬ ЗАКАЗ' : 'CONFIRM ORDER';
         document.getElementById('lbl-work').innerText         = ru ? '🕒 11:00 — 23:00' : '🕒 11:00 AM — 11:00 PM';
@@ -991,24 +1007,24 @@
 
         let total = subtotal - bonusDiscount;
 
-        // cart по id — бот читает русские названия через MENU_NAMES_RU
         const cartByIds = {};
         for (let id in cart) { cartByIds[id] = cart[id]; }
 
         const dataToSend = {
-            order_type:    orderType,
-            customer_name: name,
-            phone_number:  phone,
-            location:      orderType === 'delivery' ? location : null,
-            pickup_time:   orderType === 'pickup'   ? time     : null,
-            comment:       comment || '',
-            items:         orderDetails,
-            cart:          cartByIds,
-            subtotal:      subtotal,
-            bonus_spent:   bonusDiscount,
-            total_pay:     total,
-            lang:          currentLang,
-            telegram_id:   userId   || null,
+            order_type:     orderType,
+            payment_method: paymentMethod,
+            customer_name:  name,
+            phone_number:   phone,
+            location:       orderType === 'delivery' ? location : null,
+            pickup_time:    orderType === 'pickup'   ? time     : null,
+            comment:        comment || '',
+            items:          orderDetails,
+            cart:           cartByIds,
+            subtotal:       subtotal,
+            bonus_spent:    bonusDiscount,
+            total_pay:      total,
+            lang:           currentLang,
+            telegram_id:    userId   || null,
             telegram_username: window.Telegram?.WebApp?.initDataUnsafe?.user?.username || null
         };
 
