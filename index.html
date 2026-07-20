@@ -104,7 +104,7 @@
             font-weight: 700;
             cursor: pointer;
             border: 1px solid rgba(255,255,255,0.3);
-            visibility: visible; 
+            visibility: hidden; 
         }
         .header-points i { color: var(--brand-yellow); }
 
@@ -231,7 +231,7 @@
             </div>
             <div class="header-right">
                 <div class="header-points" id="header-points-display" onclick="showProfile()">
-                    <i class="fas fa-star"></i> <span id="header-points-val">10</span> SAR
+                    <i class="fas fa-star"></i> <span id="header-points-val">0</span> SAR
                 </div>
             </div>
         </div>
@@ -277,10 +277,10 @@
 
             <div id="cart-items"></div>
 
-            <div class="cart-item" id="bonus-spend-row" style="display: flex; justify-content: space-between; align-items: center; border: 2px dashed var(--brand-teal); margin-top: 15px;">
+            <div class="cart-item" id="bonus-spend-row" style="display: none; justify-content: space-between; align-items: center; border: 2px dashed var(--brand-teal); margin-top: 15px;">
                 <div>
                     <div class="cart-item-name" id="lbl-use-bonuses">Списать бонусы</div>
-                    <div class="cart-item-price"><span id="lbl-avail-points">Доступно:</span> <span id="checkout-avail-points">10</span> SAR</div>
+                    <div class="cart-item-price"><span id="lbl-avail-points">Доступно:</span> <span id="checkout-avail-points">0</span> SAR</div>
                 </div>
                 <input type="checkbox" id="use-bonus-checkbox" onchange="updateCartUI()" style="transform: scale(1.6); margin-right: 10px; accent-color: var(--brand-teal);">
             </div>
@@ -366,13 +366,15 @@
         </div>
         <div class="checkout-body">
             
-            <div id="profile-login-view" style="display: none; text-align: center; padding: 40px 20px;">
+            <!-- ГОСТЕВОЙ РЕЖИМ (ПО УМОЛЧАНИЮ) -->
+            <div id="profile-login-view" style="display: block; text-align: center; padding: 40px 20px;">
                 <i class="fas fa-user-circle" style="font-size: 64px; color: var(--border); margin-bottom: 20px;"></i>
                 <p style="font-family: 'Montserrat', sans-serif; font-size: 14px; font-weight: 600; color: var(--muted); margin-bottom: 20px;" id="lbl-login-prompt">Войдите, чтобы копить бонусы</p>
                 <button class="confirm-btn" onclick="loginUser()"><i class="fab fa-telegram-plane" style="font-size: 18px;"></i> <span id="lbl-login-btn">Войти через Telegram</span></button>
             </div>
 
-            <div id="profile-dashboard-view" class="profile-card">
+            <!-- АВТОРИЗОВАННЫЙ РЕЖИМ (СМУТНО/РЕАЛЬНЫЕ ДАННЫЕ) -->
+            <div id="profile-dashboard-view" class="profile-card" style="display: none;">
                 <div class="avatar-wrap">
                     <img id="user-avatar" src="" alt="User Avatar">
                 </div>
@@ -386,7 +388,7 @@
                 
                 <div class="balance-box">
                     <div class="balance-label" id="lbl-your-balance">Ваш баланс бонусов</div>
-                    <div class="balance-val"><span style="color: var(--brand-yellow); font-size: inherit;" id="user-points-val">10</span> <span>SAR</span></div>
+                    <div class="balance-val"><span style="color: var(--brand-yellow); font-size: inherit;" id="user-points-val">0</span> <span>SAR</span></div>
                 </div>
 
                 <button class="logout-btn" onclick="logoutUser()" id="lbl-logout-btn">ВЫЙТИ ИЗ АККАУНТА</button>
@@ -420,10 +422,10 @@
 
 <script>
     let currentLang = 'ru';
-    let userPoints = 10; 
-    let userName = "Гость";
+    let userPoints = 0; 
+    let userName = "";
     let userId = "";
-    let isUserLoggedIn = true; 
+    let isUserLoggedIn = false; // ПО УМОЛЧАНИЮ ГОСТЬ!
     let activeCat = 'salads';
     let activeTag = 'all';
     let orderType = 'delivery';
@@ -589,59 +591,84 @@
         }
     }
 
+    // РЕАЛЬНАЯ АВТОРИЗАЦИЯ
     function initTelegramUser() {
         const tg = window.Telegram?.WebApp;
         if (tg && tg.initDataUnsafe && tg.initDataUnsafe.user) {
             const u = tg.initDataUnsafe.user;
-            userName = u.first_name || (currentLang === 'ru' ? "Гость" : "Guest");
-            userId = u.id || "123456789";
+            userName = u.first_name || (currentLang === 'ru' ? "Пользователь" : "User");
+            userId = u.id ? String(u.id) : "";
             let photoUrl = u.photo_url;
-            document.getElementById('user-avatar').src = photoUrl || `https://ui-avatars.com/api/?name=${userName}&background=f4cc12&color=fff&size=200`;
+            
+            // Загружаем реальные данные
+            document.getElementById('user-avatar').src = photoUrl || `https://ui-avatars.com/api/?name=${encodeURIComponent(userName)}&background=f4cc12&color=1c6db5&size=200`;
             document.getElementById('cust-name').value = userName;
+            
+            // Локальный пример бонусов для конкретного юзера (или 15 бонусов при первом входе)
+            userPoints = 15; 
             isUserLoggedIn = true;
         } else {
-            userName = currentLang === 'ru' ? "Гость" : "Guest"; 
-            userId = "Guest_ID";
-            document.getElementById('user-avatar').src = `https://ui-avatars.com/api/?name=${userName}&background=f4cc12&color=fff&size=200`;
-            isUserLoggedIn = true; 
+            // Если зашел вне Telegram
+            isUserLoggedIn = false;
         }
         updateProfileUI();
     }
 
     function copyTgId() {
-        if (userId && userId !== "Guest_ID") {
+        if (userId && userId !== "") {
             navigator.clipboard.writeText(userId);
             alert(currentLang === 'ru' ? 'ID скопирован в буфер обмена!' : 'ID copied to clipboard!');
         }
     }
 
     function loginUser() {
-        isUserLoggedIn = true;
+        // При клике пытаемся авторизоваться через Telegram WebApp
         initTelegramUser();
-        updateProfileUI();
+        if (!isUserLoggedIn) {
+            // Если открыть демо вне Телеграма — сделаем аккуратный вход
+            userName = "Пользователь";
+            userId = "777888999";
+            userPoints = 10;
+            document.getElementById('user-avatar').src = `https://ui-avatars.com/api/?name=${encodeURIComponent(userName)}&background=f4cc12&color=1c6db5&size=200`;
+            document.getElementById('cust-name').value = userName;
+            isUserLoggedIn = true;
+            updateProfileUI();
+        }
     }
 
     function logoutUser() {
         isUserLoggedIn = false;
+        userId = "";
+        userName = "";
+        userPoints = 0;
         updateProfileUI();
     }
 
     function updateProfileUI() {
         document.getElementById('header-points-val').innerText = userPoints;
         document.getElementById('checkout-avail-points').innerText = userPoints;
-        document.getElementById('user-display-name').innerText = userName;
-        document.getElementById('user-tg-id').innerText = userId;
+        document.getElementById('user-display-name').innerText = userName || "User";
+        document.getElementById('user-tg-id').innerText = userId || "--";
         document.getElementById('user-points-val').innerText = userPoints;
 
         if (isUserLoggedIn) {
             document.getElementById('profile-login-view').style.display = 'none';
             document.getElementById('profile-dashboard-view').style.display = 'block';
             document.getElementById('header-points-display').style.visibility = 'visible';
+            if(document.getElementById('bonus-spend-row')) {
+                document.getElementById('bonus-spend-row').style.display = 'flex';
+            }
         } else {
             document.getElementById('profile-login-view').style.display = 'block';
             document.getElementById('profile-dashboard-view').style.display = 'none';
             document.getElementById('header-points-display').style.visibility = 'hidden';
+            if(document.getElementById('bonus-spend-row')) {
+                document.getElementById('bonus-spend-row').style.display = 'none';
+            }
+            const useBonusCheckbox = document.getElementById('use-bonus-checkbox');
+            if(useBonusCheckbox) useBonusCheckbox.checked = false;
         }
+        updateCartUI();
     }
 
     function renderApp() {
@@ -762,7 +789,7 @@
         let bonusDiscount = 0;
         const useBonusCheckbox = document.getElementById('use-bonus-checkbox');
         
-        if (useBonusCheckbox && useBonusCheckbox.checked) {
+        if (isUserLoggedIn && useBonusCheckbox && useBonusCheckbox.checked) {
             bonusDiscount = Math.min(userPoints, subtotalPrice);
             document.getElementById('row-bonus-discount').style.display = 'flex';
             document.getElementById('cart-bonus-discount').innerText = bonusDiscount;
@@ -844,8 +871,13 @@
         }
 
         document.getElementById('btn-submit-order-page').style.display = 'flex';
-        document.getElementById('bonus-spend-row').style.display = 'flex';
-        document.getElementById('checkout-avail-points').innerText = userPoints;
+        
+        if (isUserLoggedIn) {
+            document.getElementById('bonus-spend-row').style.display = 'flex';
+            document.getElementById('checkout-avail-points').innerText = userPoints;
+        } else {
+            document.getElementById('bonus-spend-row').style.display = 'none';
+        }
         
         let html = '';
         for (let id in cart) {
@@ -912,7 +944,7 @@
 
         let bonusDiscount = 0;
         const useBonusCheckbox = document.getElementById('use-bonus-checkbox');
-        if (useBonusCheckbox && useBonusCheckbox.checked) {
+        if (isUserLoggedIn && useBonusCheckbox && useBonusCheckbox.checked) {
             bonusDiscount = Math.min(userPoints, subtotal);
         }
 
