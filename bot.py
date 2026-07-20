@@ -97,7 +97,7 @@ async def start_cmd(message: types.Message):
 @dp.callback_query(F.data.startswith("lang_"))
 async def process_language(callback: types.CallbackQuery):
     lang_code = callback.data.split("_")[1] 
-    webapp_url_with_lang = f"{BASE_WEBAPP_URL}?lang={lang_code}&v=71"
+    webapp_url_with_lang = f"{BASE_WEBAPP_URL}?lang={lang_code}&v=72"
     
     btn_text = "🍽 Open Menu" if lang_code == 'en' else "🍽 Открыть меню"
     keyboard = ReplyKeyboardMarkup(
