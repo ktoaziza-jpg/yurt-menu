@@ -11,9 +11,9 @@ from aiogram.types import WebAppInfo, InlineKeyboardMarkup, InlineKeyboardButton
 # ─── НАСТРОЙКИ ────────────────────────────────────────────────────────────────
 TOKEN           = "8015421149:AAEyptmat5YGt61SruwlkNBRJYhOREhZ2Ok"
 ORDERS_GROUP_ID = -1004407668447
-BASE_WEBAPP_URL = "https://ktoaziza-jpg.github.io/yurt-menu/"
-MANAGER_SUPPORT_URL   = "https://t.me/+966500000000"
-RESTAURANT_MAPS_URL   = "https://maps.google.com/?q=24.461623,39.611146"
+BASE_WEBAPP_URL = "[https://ktoaziza-jpg.github.io/yurt-menu/](https://ktoaziza-jpg.github.io/yurt-menu/)"
+MANAGER_SUPPORT_URL   = "[https://t.me/+966500000000](https://t.me/+966500000000)"
+RESTAURANT_MAPS_URL   = "[https://maps.google.com/?q=24.461623,39.611146](https://maps.google.com/?q=24.461623,39.611146)"
 RESTAURANT_ADDRESS    = "📍 As Safiyyah Museum and Park, 4th floor"
 API_PORT        = 8080          # порт API-сервера
 CASHBACK_PCT    = 0.05          # 5% кэшбэк с каждого заказа
@@ -61,7 +61,6 @@ def get_conn():
 def init_db():
     conn = get_conn()
     c = conn.cursor()
-    # Таблица заказов
     c.execute("""
         CREATE TABLE IF NOT EXISTS orders (
             id               INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -74,7 +73,6 @@ def init_db():
             items_json       TEXT
         )
     """)
-    # Таблица пользователей — баллы и история
     c.execute("""
         CREATE TABLE IF NOT EXISTS users (
             telegram_id   INTEGER PRIMARY KEY,
@@ -91,7 +89,6 @@ def init_db():
     logging.info("БД инициализирована.")
 
 def upsert_user(telegram_id: int, username: str, full_name: str):
-    """Создаём или обновляем запись пользователя."""
     now = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     conn = get_conn()
     c = conn.cursor()
@@ -108,17 +105,14 @@ def upsert_user(telegram_id: int, username: str, full_name: str):
 
 def add_points_and_order(telegram_id: int, total_price: float, fulfillment_type: str, items_json: str,
                           username: str, full_name: str):
-    """Сохраняем заказ + начисляем кэшбэк."""
     earned = round(total_price * CASHBACK_PCT, 2)
     now    = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     conn   = get_conn()
     c      = conn.cursor()
-    # Сохраняем заказ
     c.execute("""
         INSERT INTO orders (user_id, username, full_name, timestamp, total_price, fulfillment_type, items_json)
         VALUES (?, ?, ?, ?, ?, ?, ?)
     """, (telegram_id, username, full_name, now, total_price, fulfillment_type, items_json))
-    # Обновляем пользователя
     c.execute("""
         INSERT INTO users (telegram_id, username, full_name, points, orders_count, first_seen, last_seen)
         VALUES (?, ?, ?, ?, 1, ?, ?)
@@ -146,7 +140,6 @@ def get_user_data(telegram_id: int):
 
 # ─── REST API (aiohttp) ────────────────────────────────────────────────────────
 async def api_get_user(request: web.Request):
-    """GET /api/user/{telegram_id}  — данные профиля"""
     try:
         tg_id = int(request.match_info['telegram_id'])
     except (KeyError, ValueError):
@@ -156,12 +149,10 @@ async def api_get_user(request: web.Request):
     return web.json_response(data)
 
 async def api_health(request: web.Request):
-    """GET /api/health  — проверка что сервер живой"""
     return web.json_response({"status": "ok", "time": datetime.now().isoformat()})
 
 def make_api_app():
     app = web.Application()
-    # CORS — разрешаем запросы с GitHub Pages
     async def cors_middleware(app, handler):
         async def middleware(request):
             if request.method == 'OPTIONS':
@@ -181,7 +172,6 @@ def make_api_app():
 # ─── TELEGRAM HANDLERS ────────────────────────────────────────────────────────
 @dp.message(CommandStart())
 async def start_cmd(message: types.Message):
-    # Сразу регистрируем пользователя
     u = message.from_user
     upsert_user(u.id, u.username or "", u.full_name)
 
@@ -198,7 +188,7 @@ async def start_cmd(message: types.Message):
 @dp.callback_query(F.data.startswith("lang_"))
 async def process_language(callback: types.CallbackQuery):
     lang_code = callback.data.split("_")[1]
-    url = f"{BASE_WEBAPP_URL}?lang={lang_code}&v=80"
+    url = f"{BASE_WEBAPP_URL}?lang={lang_code}&v=81"
 
     btn_text = "🍽 Open Menu" if lang_code == 'en' else "🍽 Открыть меню"
     keyboard = ReplyKeyboardMarkup(
@@ -235,7 +225,7 @@ async def handle_webapp_data(message: types.Message):
         customer_time  = data.get('pickup_time')   or data.get('time',   'Как можно скорее')
         customer_comment = (data.get('comment') or '').strip()
         fulfillment    = data.get('order_type') or data.get('fulfillment', 'delivery')
-        payment        = data.get('payment', 'cash')
+        payment_method = data.get('payment_method', 'cash')
         user_lang      = data.get('lang', 'ru')
 
         subtotal_raw   = data.get('subtotal', 0)
@@ -247,10 +237,10 @@ async def handle_webapp_data(message: types.Message):
         try:    total_val    = float(str(total_raw).replace(' SAR',''))
         except: total_val    = 0.0
 
-        # ── Корзина (приоритет: id-ключи → имена через словарь) ────────────
+        # ── Корзина ─────────────────────────────────────────────────────────
         cart_by_id  = data.get('cart', {})
         items_list  = data.get('items', [])
-        display_cart = {}   # {название: qty}
+        display_cart = {}
 
         if cart_by_id and isinstance(cart_by_id, dict):
             for iid, qty in cart_by_id.items():
@@ -260,7 +250,7 @@ async def handle_webapp_data(message: types.Message):
             for item in items_list:
                 display_cart[item.get('name','Блюдо')] = item.get('qty', 1)
 
-        # ── Сохраняем в БД + начисляем баллы ───────────────────────────────
+        # ── БД и Баллы ──────────────────────────────────────────────────────
         items_for_db = cart_by_id if cart_by_id else {i.get('name',''): i.get('qty',1) for i in items_list}
         earned_points = add_points_and_order(
             tg_id, total_val, fulfillment,
@@ -268,7 +258,7 @@ async def handle_webapp_data(message: types.Message):
             tg_user.username or "", full_name
         )
 
-        # ── Формируем сообщение в группу ───────────────────────────────────
+        # ── Сообщение менеджерам ───────────────────────────────────────────
         total_qty = sum(display_cart.values())
         items_text = "".join(f"• {nm} × {qty}\n" for nm, qty in display_cart.items())
 
@@ -278,10 +268,10 @@ async def handle_webapp_data(message: types.Message):
         load_warn = "⚠️ <b>ВЫСОКАЯ НАГРУЗКА КУХНИ!</b>\n" if (total_qty > 5 or heavy) else ""
 
         if fulfillment == 'pickup':
-            pay_label  = "💵 Наличными на кассе" if payment == "cash" else "💳 Картой (Терминал)"
+            pay_label  = "💵 Наличными на кассе" if payment_method == "cash" else "💳 Картой (Терминал)"
             fulf_label = "🛍️ САМОВЫВОЗ"
         else:
-            pay_label  = "💵 Наличными курьеру" if payment == "cash" else "💳 Картой курьеру"
+            pay_label  = "💵 Наличными курьеру" if payment_method == "cash" else "💳 Картой курьеру"
             fulf_label = "🛵 ДОСТАВКА"
 
         comment_block = f"💬 <b>Комментарий:</b> <u>{customer_comment}</u>\n\n" if customer_comment else ""
@@ -319,7 +309,7 @@ async def handle_webapp_data(message: types.Message):
             reply_markup=InlineKeyboardMarkup(inline_keyboard=btns)
         )
 
-        # ── Подтверждение клиенту ───────────────────────────────────────────
+        # ── Ответ клиенту ───────────────────────────────────────────────────
         if user_lang == 'en':
             ok_text = (
                 f"✨ <b>Thank you, {customer_name}!</b>\n\n"
@@ -358,7 +348,6 @@ async def handle_status(callback: types.CallbackQuery):
     manager     = callback.from_user.first_name
     cur_text    = callback.message.text or ""
 
-    # Сохраняем кнопку карты если была
     maps_btn = None
     if callback.message.reply_markup:
         for row in callback.message.reply_markup.inline_keyboard:
@@ -451,14 +440,12 @@ async def show_stats(message: types.Message):
         total_sum = total_sum or 0
         avg       = total_sum / count
 
-        # Последний заказ
         last_str = "—"
         if last_ts:
             diff = now - datetime.strptime(last_ts, "%Y-%m-%d %H:%M:%S")
             m    = int(diff.total_seconds() // 60)
             last_str = f"{m} мин назад" if m < 60 else f"{m//60} ч {m%60} мин назад"
 
-        # Топ блюд
         if period == "day":
             c.execute("SELECT items_json FROM orders WHERE timestamp LIKE ?", (filt,))
         else:
@@ -475,7 +462,6 @@ async def show_stats(message: types.Message):
         top = sorted(dish_counts.items(), key=lambda x: x[1], reverse=True)[:3]
         top_text = "".join(f"{i+1}. {nm} — {qty} шт\n" for i,(nm,qty) in enumerate(top)) or "Нет данных\n"
 
-        # Топ клиентов
         c.execute("""
             SELECT full_name, COUNT(*) as cnt, SUM(total_price) as rev
             FROM orders WHERE """ + ("timestamp LIKE ?" if period=="day" else "timestamp >= ?") + """
@@ -507,7 +493,6 @@ async def main():
                         format="%(asctime)s [%(levelname)s] %(message)s")
     init_db()
 
-    # Запускаем API-сервер параллельно с ботом
     api_app    = make_api_app()
     runner     = web.AppRunner(api_app)
     await runner.setup()
