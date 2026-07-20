@@ -351,7 +351,7 @@
             <div id="orders-history-list">
                 <div class="empty-cart-view">
                     <i class="fas fa-receipt" style="font-size: 64px; color: var(--border); margin-bottom: 20px;"></i>
-                    <p id="lbl-no-orders">У вас пока нет активных заказов</p>
+                    <p id="lbl-no-orders" style="font-family: 'Montserrat', sans-serif; font-size: 14px; font-weight: 600; color: var(--muted);">У вас пока нет активных заказов</p>
                 </div>
             </div>
         </div>
@@ -366,11 +366,13 @@
         </div>
         <div class="checkout-body">
             
-            <!-- ГОСТЕВОЙ РЕЖИМ (ПО УМОЛЧАНИЮ) -->
-            <div id="profile-login-view" style="display: block; text-align: center; padding: 40px 20px;">
-                <i class="fas fa-user-circle" style="font-size: 64px; color: var(--border); margin-bottom: 20px;"></i>
-                <p style="font-family: 'Montserrat', sans-serif; font-size: 14px; font-weight: 600; color: var(--muted); margin-bottom: 20px;" id="lbl-login-prompt">Войдите, чтобы копить бонусы</p>
-                <button class="confirm-btn" onclick="loginUser()"><i class="fab fa-telegram-plane" style="font-size: 18px;"></i> <span id="lbl-login-btn">Войти через Telegram</span></button>
+            <!-- ГОСТЕВОЙ РЕЖИМ — только если открыто вне Telegram -->
+            <div id="profile-login-view" style="display: block; text-align: center; padding: 60px 20px;">
+                <div style="width:80px;height:80px;border-radius:50%;background:var(--brand-bg);border:2px dashed var(--border);display:flex;align-items:center;justify-content:center;margin:0 auto 20px;">
+                    <i class="fab fa-telegram-plane" style="font-size: 36px; color: var(--brand-teal);"></i>
+                </div>
+                <p style="font-family: 'Montserrat', sans-serif; font-size: 16px; font-weight: 800; color: var(--ink); margin-bottom: 10px;" id="lbl-login-prompt">Откройте в Telegram</p>
+                <p style="font-family: 'Montserrat', sans-serif; font-size: 13px; font-weight: 500; color: var(--muted); line-height: 1.6;" id="lbl-login-btn">Личный кабинет доступен только через Telegram — авторизация происходит автоматически</p>
             </div>
 
             <!-- АВТОРИЗОВАННЫЙ РЕЖИМ (СМУТНО/РЕАЛЬНЫЕ ДАННЫЕ) -->
@@ -600,15 +602,13 @@
             userId = u.id ? String(u.id) : "";
             let photoUrl = u.photo_url;
             
-            // Загружаем реальные данные
-            document.getElementById('user-avatar').src = photoUrl || `https://ui-avatars.com/api/?name=${encodeURIComponent(userName)}&background=f4cc12&color=1c6db5&size=200`;
+            // Реальные данные из Telegram
+            document.getElementById('user-avatar').src = photoUrl || `https://ui-avatars.com/api/?name=${encodeURIComponent(userName)}&background=49b4c0&color=fff&bold=true&size=200`;
             document.getElementById('cust-name').value = userName;
-            
-            // Локальный пример бонусов для конкретного юзера (или 15 бонусов при первом входе)
-            userPoints = 15; 
+            userPoints = 0; // загружается с сервера когда подключим API
             isUserLoggedIn = true;
         } else {
-            // Если зашел вне Telegram
+            // Открыто вне Telegram (браузер/preview)
             isUserLoggedIn = false;
         }
         updateProfileUI();
@@ -617,23 +617,13 @@
     function copyTgId() {
         if (userId && userId !== "") {
             navigator.clipboard.writeText(userId);
-            alert(currentLang === 'ru' ? 'ID скопирован в буфер обмена!' : 'ID copied to clipboard!');
+            alert(currentLang === 'ru' ? 'ID скопирован!' : 'ID copied!');
         }
     }
 
     function loginUser() {
-        // При клике пытаемся авторизоваться через Telegram WebApp
+        // Авторизация только через Telegram — кнопка не нужна
         initTelegramUser();
-        if (!isUserLoggedIn) {
-            // Если открыть демо вне Телеграма — сделаем аккуратный вход
-            userName = "Пользователь";
-            userId = "777888999";
-            userPoints = 10;
-            document.getElementById('user-avatar').src = `https://ui-avatars.com/api/?name=${encodeURIComponent(userName)}&background=f4cc12&color=1c6db5&size=200`;
-            document.getElementById('cust-name').value = userName;
-            isUserLoggedIn = true;
-            updateProfileUI();
-        }
     }
 
     function logoutUser() {
@@ -645,7 +635,7 @@
     }
 
     function updateProfileUI() {
-        document.getElementById('header-points-val').innerText = userPoints;
+        document.getElementById('header-points-val').innerText = isUserLoggedIn ? userName : '';
         document.getElementById('checkout-avail-points').innerText = userPoints;
         document.getElementById('user-display-name').innerText = userName || "User";
         document.getElementById('user-tg-id').innerText = userId || "--";
@@ -720,6 +710,8 @@
         const ru = currentLang === 'ru';
         document.getElementById('lbl-order').innerText        = ru ? 'ВАШ ЗАКАЗ' : 'YOUR ORDER';
         document.getElementById('lbl-orders-title').innerText = ru ? 'МОИ ЗАКАЗЫ' : 'MY ORDERS';
+        const noOrdersEl = document.getElementById('lbl-no-orders');
+        if (noOrdersEl) noOrdersEl.innerText = ru ? 'У вас пока нет активных заказов' : 'You have no orders yet';
         document.getElementById('lbl-details').innerText      = ru ? 'ДЕТАЛИ ЗАКАЗА' : 'ORDER DETAILS';
         document.getElementById('lbl-nav-home').innerText     = ru ? 'Меню' : 'Menu';
         document.getElementById('lbl-nav-cart').innerText     = ru ? 'Корзина' : 'Cart';
@@ -738,8 +730,8 @@
         document.getElementById('lbl-profile-title').innerText  = ru ? 'ЛИЧНЫЙ КАБИНЕТ' : 'PERSONAL PROFILE';
         document.getElementById('lbl-cashback-level').innerText = ru ? 'Статус: 5% кэшбэк с заказов' : 'Status: 5% cashback on orders';
         document.getElementById('lbl-your-balance').innerText   = ru ? 'Ваш баланс бонусов' : 'Your Bonus Balance';
-        document.getElementById('lbl-login-prompt').innerText   = ru ? 'Войдите, чтобы копить бонусы' : 'Log in to earn points';
-        document.getElementById('lbl-login-btn').innerText      = ru ? 'Войти через Telegram' : 'Login via Telegram';
+        document.getElementById('lbl-login-prompt').innerText   = ru ? 'Откройте в Telegram' : 'Open in Telegram';
+        document.getElementById('lbl-login-btn').innerText      = ru ? 'Личный кабинет доступен только через Telegram — авторизация происходит автоматически' : 'Your account is available only via Telegram — authorization happens automatically';
         document.getElementById('lbl-logout-btn').innerText     = ru ? 'ВЫЙТИ ИЗ АККАУНТА' : 'LOG OUT';
 
         document.getElementById('lbl-use-bonuses').innerText    = ru ? 'Списать бонусы' : 'Redeem Bonuses';
@@ -950,6 +942,10 @@
 
         let total = subtotal - bonusDiscount;
 
+        // Собираем cart как {id: qty} — бот использует это для русских названий
+        const cartByIds = {};
+        for (let id in cart) { cartByIds[id] = cart[id]; }
+
         const dataToSend = {
             order_type: orderType,
             customer_name: name,
@@ -957,11 +953,14 @@
             location: orderType === 'delivery' ? location : null,
             pickup_time: orderType === 'pickup' ? time : null,
             comment: comment,
-            items: orderDetails,
+            items: orderDetails,   // [{name, qty, price}] — для красивого отображения
+            cart: cartByIds,       // {id: qty} — бот читает русские названия по id
             subtotal: subtotal,
             bonus_spent: bonusDiscount,
             total_pay: total,
-            lang: currentLang
+            lang: currentLang,
+            telegram_id: userId || null,
+            telegram_username: window.Telegram?.WebApp?.initDataUnsafe?.user?.username || null
         };
 
         const tg = window.Telegram?.WebApp;
