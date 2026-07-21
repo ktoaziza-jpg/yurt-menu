@@ -290,6 +290,10 @@
                     <span id="lbl-break-items">Блюда:</span>
                     <span><span id="cart-subtotal">0</span> SAR</span>
                 </div>
+                <div class="total-row" id="row-delivery-fee" style="display: flex; color: var(--muted);">
+                    <span id="lbl-delivery-fee">🛵 Доставка:</span>
+                    <span id="cart-delivery-fee">15 SAR</span>
+                </div>
                 <div class="total-row" id="row-bonus-discount" style="display: none; color: var(--brand-yellow);">
                     <span id="lbl-break-discount">Скидка бонусами:</span>
                     <span>-<span id="cart-bonus-discount">0</span> SAR</span>
@@ -644,6 +648,7 @@
             document.getElementById('wrap-location').style.display = 'none';
             document.getElementById('wrap-time').style.display = 'block';
         }
+        updateCartUI(); // пересчитываем с/без доставки
     }
 
     function getUserLocation() {
@@ -669,8 +674,8 @@
 
         if (u) {
             // ✅ Реальный пользователь Telegram — авторизация автоматическая
-            userId    = String(u.id);
-            userName  = u.first_name || "User";
+            userId   = String(u.id);
+            userName = u.first_name || "User";
             const photoUrl = u.photo_url;
 
             document.getElementById('user-avatar').src = photoUrl ||
@@ -678,10 +683,18 @@
             document.getElementById('cust-name').value = userName;
             isUserLoggedIn = true;
 
-            // Загружаем баллы и историю с сервера
+            // Показываем dashboard немедленно — не ждём сервер
+            // (баллы обновятся как только придёт ответ)
+            document.getElementById('profile-login-view').style.display  = 'none';
+            document.getElementById('profile-dashboard-view').style.display = 'block';
+            document.getElementById('header-points-display').style.visibility = 'visible';
+            document.getElementById('user-display-name').innerText = userName;
+            document.getElementById('user-tg-id').innerText = userId;
+
+            // Потом загружаем баллы с сервера
             fetchUserData(userId);
         } else {
-            // Открыто в браузере (не в Telegram)
+            // Открыто в браузере (не в Telegram) — показываем кнопку входа
             isUserLoggedIn = false;
             updateProfileUI();
         }
@@ -827,6 +840,8 @@
         
         document.getElementById('lbl-profile-title').innerText  = ru ? 'ЛИЧНЫЙ КАБИНЕТ' : 'PERSONAL PROFILE';
         document.getElementById('lbl-cashback-level').innerText = ru ? 'Статус: 5% кэшбэк с заказов' : 'Status: 5% cashback on orders';
+        const deliveryLblEl = document.getElementById('lbl-delivery-fee');
+        if (deliveryLblEl) deliveryLblEl.innerText = ru ? '🛵 Доставка:' : '🛵 Delivery:';
         // Кнопки оплаты
         const payCashLbl = document.getElementById('lbl-pay-cash');
         const payCardLbl = document.getElementById('lbl-pay-card');
@@ -899,7 +914,23 @@
             document.getElementById('row-bonus-discount').style.display = 'none';
         }
 
-        let finalTotal = subtotalPrice > 0 ? (subtotalPrice - bonusDiscount) : 0;
+        const DELIVERY_FEE = 15;
+        const deliveryFee = (orderType === 'delivery' && subtotalPrice > 0) ? DELIVERY_FEE : 0;
+
+        // Показываем/скрываем строку доставки
+        const deliveryRow = document.getElementById('row-delivery-fee');
+        const deliveryFeeEl = document.getElementById('cart-delivery-fee');
+        const deliveryLbl = document.getElementById('lbl-delivery-fee');
+        if (deliveryRow) {
+            if (orderType === 'delivery' && subtotalPrice > 0) {
+                deliveryRow.style.display = 'flex';
+                if (deliveryFeeEl) deliveryFeeEl.innerText = DELIVERY_FEE + ' SAR';
+            } else {
+                deliveryRow.style.display = 'none';
+            }
+        }
+
+        let finalTotal = subtotalPrice > 0 ? (subtotalPrice + deliveryFee - bonusDiscount) : 0;
 
         const badge = document.getElementById('cart-badge');
         if (totalItems > 0) {
@@ -1051,7 +1082,9 @@
             bonusDiscount = Math.min(userPoints, subtotal);
         }
 
-        let total = subtotal - bonusDiscount;
+        const DELIVERY_FEE = 15;
+        const deliveryFee = orderType === 'delivery' ? DELIVERY_FEE : 0;
+        let total = subtotal + deliveryFee - bonusDiscount;
 
         // cart по id — бот читает русские названия через MENU_NAMES_RU
         const cartByIds = {};
@@ -1067,6 +1100,7 @@
             items:         orderDetails,
             cart:          cartByIds,
             subtotal:      subtotal,
+            delivery_fee:  deliveryFee,
             bonus_spent:   bonusDiscount,
             total_pay:     total,
             payment:       selectedPayment,
