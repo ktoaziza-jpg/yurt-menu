@@ -162,20 +162,24 @@ async def api_health(request: web.Request):
 def make_api_app():
     app = web.Application()
     # CORS — разрешаем запросы с GitHub Pages
-    async def cors_middleware(app, handler):
-        async def middleware(request):
-            if request.method == 'OPTIONS':
-                resp = web.Response()
-            else:
+    @web.middleware
+    async def cors_middleware(request, handler):
+        if request.method == 'OPTIONS':
+            resp = web.Response(status=200)
+        else:
+            try:
                 resp = await handler(request)
-            resp.headers['Access-Control-Allow-Origin']  = '*'
-            resp.headers['Access-Control-Allow-Methods'] = 'GET, POST, OPTIONS'
-            resp.headers['Access-Control-Allow-Headers'] = 'Content-Type'
-            return resp
-        return middleware
+            except web.HTTPException as ex:
+                resp = ex
+        resp.headers['Access-Control-Allow-Origin']  = '*'
+        resp.headers['Access-Control-Allow-Methods'] = 'GET, POST, OPTIONS'
+        resp.headers['Access-Control-Allow-Headers'] = 'Content-Type, Accept'
+        return resp
     app.middlewares.append(cors_middleware)
-    app.router.add_get('/api/health',            api_health)
-    app.router.add_get('/api/user/{telegram_id}', api_get_user)
+    app.router.add_get('/api/health',              api_health)
+    app.router.add_get('/api/user/{telegram_id}',  api_get_user)
+    app.router.add_options('/api/user/{telegram_id}', lambda r: web.Response(status=200))
+    app.router.add_options('/api/health',             lambda r: web.Response(status=200))
     return app
 
 # ─── TELEGRAM HANDLERS ────────────────────────────────────────────────────────
@@ -495,7 +499,7 @@ async def show_stats(message: types.Message):
             f"🏆 <b>Топ блюд:</b>\n{top_text}\n"
             f"👥 <b>Активные клиенты:</b>\n{clients_text}"
         )
-        await message.reply(report, parse_mode="HTML")ы
+        await message.reply(report, parse_mode="HTML")
 
     except Exception as e:
         logging.error(f"Ошибка статистики: {e}", exc_info=True)
