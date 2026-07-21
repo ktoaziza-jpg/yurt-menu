@@ -334,6 +334,35 @@
                 <input type="text" id="cust-comment" class="input-field" placeholder="...">
             </div>
 
+            <!-- ВЫБОР СПОСОБА ОПЛАТЫ -->
+            <div class="field-wrap" id="wrap-payment">
+                <div class="field-label" id="lbl-payment">СПОСОБ ОПЛАТЫ</div>
+                <div style="display:flex;gap:10px;margin-top:2px;">
+                    <button id="pay-btn-cash" onclick="selectPayment('cash')" type="button" style="
+                        flex:1; padding:12px 8px; border-radius:12px;
+                        border:2px solid var(--brand-teal); background:var(--brand-teal);
+                        color:white; font-family:'Montserrat',sans-serif;
+                        font-size:12px; font-weight:700; cursor:pointer;
+                        display:flex; align-items:center; justify-content:center; gap:6px;
+                        transition: all 0.15s;
+                    ">
+                        <i class="fas fa-money-bill-wave"></i>
+                        <span id="lbl-pay-cash">Наличные</span>
+                    </button>
+                    <button id="pay-btn-card" onclick="selectPayment('card')" type="button" style="
+                        flex:1; padding:12px 8px; border-radius:12px;
+                        border:2px solid var(--border); background:white;
+                        color:var(--muted); font-family:'Montserrat',sans-serif;
+                        font-size:12px; font-weight:700; cursor:pointer;
+                        display:flex; align-items:center; justify-content:center; gap:6px;
+                        transition: all 0.15s;
+                    ">
+                        <i class="fas fa-credit-card"></i>
+                        <span id="lbl-pay-card">Карта / Mada</span>
+                    </button>
+                </div>
+            </div>
+
             <button class="confirm-btn" id="btn-submit-order-page" onclick="submitOrderToBot()">
                 <span id="lbl-confirm">ПОДТВЕРДИТЬ ЗАКАЗ</span>
             </button>
@@ -441,10 +470,34 @@
     let isUserLoggedIn = false;
 
     // ── ВСТАВЬ СВОЙ IP СЕРВЕРА (без слеша в конце) ──
-    const SERVER_URL = "http://YOUR_SERVER_IP:8080";
+    const SERVER_URL = "https://evil-ideas-stare.loca.lt";
     let activeCat = 'salads';
     let activeTag = 'all';
     let orderType = 'delivery';
+    let selectedPayment = 'cash'; // наличные по умолчанию
+
+    function selectPayment(method) {
+        selectedPayment = method;
+        const ru = currentLang === 'ru';
+        const cashBtn = document.getElementById('pay-btn-cash');
+        const cardBtn = document.getElementById('pay-btn-card');
+        if (!cashBtn || !cardBtn) return;
+        if (method === 'cash') {
+            cashBtn.style.background    = 'var(--brand-teal)';
+            cashBtn.style.borderColor   = 'var(--brand-teal)';
+            cashBtn.style.color         = 'white';
+            cardBtn.style.background    = 'white';
+            cardBtn.style.borderColor   = 'var(--border)';
+            cardBtn.style.color         = 'var(--muted)';
+        } else {
+            cardBtn.style.background    = 'var(--brand-teal)';
+            cardBtn.style.borderColor   = 'var(--brand-teal)';
+            cardBtn.style.color         = 'white';
+            cashBtn.style.background    = 'white';
+            cashBtn.style.borderColor   = 'var(--border)';
+            cashBtn.style.color         = 'var(--muted)';
+        }
+    }
 
     const categories = {
         salads:     { ru: "Салаты",          en: "Salads" },
@@ -774,6 +827,14 @@
         
         document.getElementById('lbl-profile-title').innerText  = ru ? 'ЛИЧНЫЙ КАБИНЕТ' : 'PERSONAL PROFILE';
         document.getElementById('lbl-cashback-level').innerText = ru ? 'Статус: 5% кэшбэк с заказов' : 'Status: 5% cashback on orders';
+        // Кнопки оплаты
+        const payCashLbl = document.getElementById('lbl-pay-cash');
+        const payCardLbl = document.getElementById('lbl-pay-card');
+        const payLbl     = document.getElementById('lbl-payment');
+        if (payCashLbl) payCashLbl.innerText = ru ? 'Наличные' : 'Cash';
+        if (payCardLbl) payCardLbl.innerText = ru ? 'Карта / Mada' : 'Card / Mada';
+        if (payLbl)     payLbl.innerText     = ru ? 'СПОСОБ ОПЛАТЫ' : 'PAYMENT METHOD';
+        selectPayment(selectedPayment); // сбрасываем стили при смене языка
         const profOrdersEl = document.getElementById('lbl-prof-orders-count');
         if (profOrdersEl) profOrdersEl.innerText = ru ? 'ЗАКАЗОВ' : 'ORDERS';
         const profCashbackEl = document.getElementById('lbl-prof-cashback');
@@ -862,6 +923,7 @@
     }
 
     function showCheckout() {
+        selectedPayment = 'cash'; // сбрасываем выбор при каждом открытии
         document.getElementById('menu-page').style.display = 'none';
         document.getElementById('checkout-page').style.display = 'block';
         document.getElementById('orders-page').style.display = 'none';
@@ -1007,6 +1069,7 @@
             subtotal:      subtotal,
             bonus_spent:   bonusDiscount,
             total_pay:     total,
+            payment:       selectedPayment,
             lang:          currentLang,
             telegram_id:   userId   || null,
             telegram_username: window.Telegram?.WebApp?.initDataUnsafe?.user?.username || null
