@@ -411,7 +411,7 @@
                 <div class="avatar-wrap">
                     <img id="user-avatar" src="" alt="User Avatar">
                 </div>
-                <div class="profile-name" id="user-display-name">User</div>
+                <div class="profile-name" id="user-display-name"></div>
                 <div class="profile-status" id="lbl-cashback-level">Статус: 5% кэшбэк с заказов</div>
                 
                 <div class="tg-id-pill" onclick="copyTgId()">
@@ -436,7 +436,7 @@
                     <div class="balance-val"><span style="color: var(--brand-yellow); font-size: inherit;" id="user-points-val">0</span> <span>SAR</span></div>
                 </div>
 
-                <button class="logout-btn" onclick="logoutUser()" id="lbl-logout-btn">ВЫЙТИ ИЗ АККАУНТА</button>
+
             </div>
 
         </div>
@@ -668,8 +668,6 @@
     // РЕАЛЬНАЯ АВТОРИЗАЦИЯ
     function initTelegramUser() {
         const tg = window.Telegram?.WebApp;
-        if (tg) { tg.ready(); tg.expand(); }
-
         const u = tg?.initDataUnsafe?.user;
 
         if (u) {
@@ -860,7 +858,7 @@
         document.getElementById('lbl-your-balance').innerText   = ru ? 'Ваш баланс бонусов' : 'Your Bonus Balance';
         document.getElementById('lbl-login-prompt').innerText   = ru ? 'Войдите, чтобы копить бонусы' : 'Log in to earn points';
         document.getElementById('lbl-login-btn').innerText      = ru ? 'Войти через Telegram' : 'Login via Telegram';
-        document.getElementById('lbl-logout-btn').innerText     = ru ? 'ВЫЙТИ ИЗ АККАУНТА' : 'LOG OUT';
+        // logout убран
 
         document.getElementById('lbl-use-bonuses').innerText    = ru ? 'Списать бонусы' : 'Redeem Bonuses';
         document.getElementById('lbl-avail-points').innerText   = ru ? 'Доступно:' : 'Available:';
@@ -1122,8 +1120,17 @@
     }
 
     window.addEventListener('DOMContentLoaded', () => {
-        initTelegramUser();
         renderApp();
+
+        const tg = window.Telegram?.WebApp;
+        if (tg) {
+            tg.ready();
+            tg.expand();
+            // Даём Telegram 300мс передать initDataUnsafe
+            setTimeout(() => { initTelegramUser(); }, 300);
+        } else {
+            initTelegramUser();
+        }
     });
 </script>
 </body>
