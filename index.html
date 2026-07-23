@@ -413,7 +413,7 @@
                 </div>
                 <div class="profile-name" id="user-display-name">User</div>
                 <div class="profile-status" id="lbl-cashback-level">5% кэшбэк с каждого заказа</div>
-                <div style="font-size:12px;color:var(--muted);margin-top:4px;font-weight:500;" id="lbl-cashback-desc">Баллы начисляются автоматически</div>
+                <div style="font-size:12px;color:var(--muted);margin-top:4px;font-weight:500;font-family:'Montserrat',sans-serif;" id="lbl-cashback-desc">Баллы начисляются автоматически</div>
                 
                 <div class="tg-id-pill" onclick="copyTgId()">
                     <i class="fab fa-telegram"></i> ID: <span id="user-tg-id">--</span>
@@ -695,9 +695,9 @@
             // Потом загружаем баллы с сервера
             fetchUserData(userId);
         } else {
-            // Открыто вне Telegram — показываем профиль гостя
+            // Открыто вне Telegram — показываем профиль гостя с 0 баллами
             userName = currentLang === 'ru' ? 'Гость' : 'Guest';
-            userId   = '';
+            userId = '';
             userPoints = 0;
             userOrdersCount = 0;
             const avatarEl = document.getElementById('user-avatar');
@@ -752,7 +752,7 @@
 
         // Профиль
         const nameEl = document.getElementById('user-display-name');
-        if (nameEl) nameEl.innerText = userName || (currentLang === 'ru' ? 'Гость' : 'Guest');
+        if (nameEl) nameEl.innerText = userName || 'User';
 
         const idEl = document.getElementById('user-tg-id');
         if (idEl) idEl.innerText = userId || '--';
@@ -768,7 +768,7 @@
         const checkbox = document.getElementById('use-bonus-checkbox');
 
         // Dashboard всегда виден — имя из Telegram или "Гость"
-        document.getElementById('profile-login-view').style.display  = 'none';
+        document.getElementById('profile-login-view').style.display = 'none';
         document.getElementById('profile-dashboard-view').style.display = 'block';
         document.getElementById('header-points-display').style.visibility = 'visible';
         if (bonusRow) bonusRow.style.display = userPoints > 0 ? 'flex' : 'none';
@@ -841,14 +841,7 @@
         document.getElementById('lbl-work').innerText         = ru ? '🕒 11:00 — 23:00' : '🕒 11:00 AM — 11:00 PM';
         
         document.getElementById('lbl-profile-title').innerText  = ru ? 'ЛИЧНЫЙ КАБИНЕТ' : 'PERSONAL PROFILE';
-        document.getElementById('lbl-cashback-level').innerText = ru ? '5% кэшбэк с каждого заказа' : '5% cashback on every order';
-        const cashDescEl = document.getElementById('lbl-cashback-desc');
-        if (cashDescEl) cashDescEl.innerText = ru ? 'Баллы начисляются автоматически' : 'Points are added automatically';
-        // Обновляем имя гостя при смене языка
-        if (!isUserLoggedIn) {
-            const nameEl2 = document.getElementById('user-display-name');
-            if (nameEl2) nameEl2.innerText = ru ? 'Гость' : 'Guest';
-        }
+        document.getElementById('lbl-cashback-level').innerText = ru ? 'Статус: 5% кэшбэк с заказов' : 'Status: 5% cashback on orders';
         const deliveryLblEl = document.getElementById('lbl-delivery-fee');
         if (deliveryLblEl) deliveryLblEl.innerText = ru ? '🛵 Доставка:' : '🛵 Delivery:';
         // Кнопки оплаты
@@ -1133,4 +1126,4 @@
     });
 </script>
 </body>
-</html>ы
+</html>
