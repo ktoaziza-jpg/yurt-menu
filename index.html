@@ -412,8 +412,7 @@
                     <img id="user-avatar" src="" alt="User Avatar">
                 </div>
                 <div class="profile-name" id="user-display-name">User</div>
-                <div class="profile-status" id="lbl-cashback-level">5% кэшбэк с каждого заказа</div>
-                <div style="font-size:12px;color:var(--muted);margin-top:4px;font-weight:500;font-family:'Montserrat',sans-serif;" id="lbl-cashback-desc">Баллы начисляются автоматически</div>
+                <div class="profile-status" id="lbl-cashback-level">Статус: 5% кэшбэк с заказов</div>
                 
                 <div class="tg-id-pill" onclick="copyTgId()">
                     <i class="fab fa-telegram"></i> ID: <span id="user-tg-id">--</span>
@@ -695,14 +694,16 @@
             // Потом загружаем баллы с сервера
             fetchUserData(userId);
         } else {
-            // Открыто вне Telegram — показываем профиль гостя с 0 баллами
+            // Открыто вне Telegram — показываем профиль гостя
             userName = currentLang === 'ru' ? 'Гость' : 'Guest';
-            userId = '';
+            userId   = '';
             userPoints = 0;
             userOrdersCount = 0;
             const avatarEl = document.getElementById('user-avatar');
             if (avatarEl) avatarEl.src =
                 'https://ui-avatars.com/api/?name=G&background=c8dde3&color=1a4a56&bold=true&size=200';
+            const nameEl0 = document.getElementById('user-display-name');
+            if (nameEl0) nameEl0.innerText = userName;
             isUserLoggedIn = false;
             updateProfileUI();
         }
@@ -767,7 +768,7 @@
         const bonusRow = document.getElementById('bonus-spend-row');
         const checkbox = document.getElementById('use-bonus-checkbox');
 
-        // Dashboard всегда виден — имя из Telegram или "Гость"
+        // Dashboard всегда виден — и гостю и авторизованному
         document.getElementById('profile-login-view').style.display = 'none';
         document.getElementById('profile-dashboard-view').style.display = 'block';
         document.getElementById('header-points-display').style.visibility = 'visible';
