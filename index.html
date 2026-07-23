@@ -400,19 +400,20 @@
         <div class="checkout-body">
             
             <!-- ГОСТЕВОЙ РЕЖИМ (ПО УМОЛЧАНИЮ) -->
-            <div id="profile-login-view" style="display: block; text-align: center; padding: 40px 20px;">
+            <div id="profile-login-view" style="display: none; text-align: center; padding: 40px 20px;">
                 <i class="fas fa-user-circle" style="font-size: 64px; color: var(--border); margin-bottom: 20px;"></i>
                 <p style="font-family: 'Montserrat', sans-serif; font-size: 14px; font-weight: 600; color: var(--muted); margin-bottom: 20px;" id="lbl-login-prompt">Войдите, чтобы копить бонусы</p>
                 <button class="confirm-btn" onclick="loginUser()"><i class="fab fa-telegram-plane" style="font-size: 18px;"></i> <span id="lbl-login-btn">Войти через Telegram</span></button>
             </div>
 
             <!-- АВТОРИЗОВАННЫЙ РЕЖИМ (СМУТНО/РЕАЛЬНЫЕ ДАННЫЕ) -->
-            <div id="profile-dashboard-view" class="profile-card" style="display: none;">
+            <div id="profile-dashboard-view" class="profile-card" style="display: block;">
                 <div class="avatar-wrap">
                     <img id="user-avatar" src="" alt="User Avatar">
                 </div>
                 <div class="profile-name" id="user-display-name">User</div>
-                <div class="profile-status" id="lbl-cashback-level">Статус: 5% кэшбэк с заказов</div>
+                <div class="profile-status" id="lbl-cashback-level">5% кэшбэк с каждого заказа</div>
+                <div style="font-size:12px;color:var(--muted);margin-top:4px;font-weight:500;" id="lbl-cashback-desc">Баллы начисляются автоматически</div>
                 
                 <div class="tg-id-pill" onclick="copyTgId()">
                     <i class="fab fa-telegram"></i> ID: <span id="user-tg-id">--</span>
@@ -694,7 +695,14 @@
             // Потом загружаем баллы с сервера
             fetchUserData(userId);
         } else {
-            // Открыто в браузере (не в Telegram) — показываем кнопку входа
+            // Открыто вне Telegram — показываем профиль гостя
+            userName = currentLang === 'ru' ? 'Гость' : 'Guest';
+            userId   = '';
+            userPoints = 0;
+            userOrdersCount = 0;
+            const avatarEl = document.getElementById('user-avatar');
+            if (avatarEl) avatarEl.src =
+                'https://ui-avatars.com/api/?name=G&background=c8dde3&color=1a4a56&bold=true&size=200';
             isUserLoggedIn = false;
             updateProfileUI();
         }
@@ -744,7 +752,7 @@
 
         // Профиль
         const nameEl = document.getElementById('user-display-name');
-        if (nameEl) nameEl.innerText = userName || 'User';
+        if (nameEl) nameEl.innerText = userName || (currentLang === 'ru' ? 'Гость' : 'Guest');
 
         const idEl = document.getElementById('user-tg-id');
         if (idEl) idEl.innerText = userId || '--';
@@ -759,18 +767,12 @@
         const bonusRow = document.getElementById('bonus-spend-row');
         const checkbox = document.getElementById('use-bonus-checkbox');
 
-        if (isUserLoggedIn) {
-            document.getElementById('profile-login-view').style.display = 'none';
-            document.getElementById('profile-dashboard-view').style.display = 'block';
-            document.getElementById('header-points-display').style.visibility = 'visible';
-            if (bonusRow) bonusRow.style.display = userPoints > 0 ? 'flex' : 'none';
-        } else {
-            document.getElementById('profile-login-view').style.display = 'block';
-            document.getElementById('profile-dashboard-view').style.display = 'none';
-            document.getElementById('header-points-display').style.visibility = 'hidden';
-            if (bonusRow) bonusRow.style.display = 'none';
-            if (checkbox) checkbox.checked = false;
-        }
+        // Dashboard всегда виден — имя из Telegram или "Гость"
+        document.getElementById('profile-login-view').style.display  = 'none';
+        document.getElementById('profile-dashboard-view').style.display = 'block';
+        document.getElementById('header-points-display').style.visibility = 'visible';
+        if (bonusRow) bonusRow.style.display = userPoints > 0 ? 'flex' : 'none';
+        if (!isUserLoggedIn && checkbox) checkbox.checked = false;
         updateCartUI();
     }
 
@@ -839,7 +841,14 @@
         document.getElementById('lbl-work').innerText         = ru ? '🕒 11:00 — 23:00' : '🕒 11:00 AM — 11:00 PM';
         
         document.getElementById('lbl-profile-title').innerText  = ru ? 'ЛИЧНЫЙ КАБИНЕТ' : 'PERSONAL PROFILE';
-        document.getElementById('lbl-cashback-level').innerText = ru ? 'Статус: 5% кэшбэк с заказов' : 'Status: 5% cashback on orders';
+        document.getElementById('lbl-cashback-level').innerText = ru ? '5% кэшбэк с каждого заказа' : '5% cashback on every order';
+        const cashDescEl = document.getElementById('lbl-cashback-desc');
+        if (cashDescEl) cashDescEl.innerText = ru ? 'Баллы начисляются автоматически' : 'Points are added automatically';
+        // Обновляем имя гостя при смене языка
+        if (!isUserLoggedIn) {
+            const nameEl2 = document.getElementById('user-display-name');
+            if (nameEl2) nameEl2.innerText = ru ? 'Гость' : 'Guest';
+        }
         const deliveryLblEl = document.getElementById('lbl-delivery-fee');
         if (deliveryLblEl) deliveryLblEl.innerText = ru ? '🛵 Доставка:' : '🛵 Delivery:';
         // Кнопки оплаты
