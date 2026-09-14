@@ -408,10 +408,6 @@
 
             <!-- АВТОРИЗОВАННЫЙ РЕЖИМ (СМУТНО/РЕАЛЬНЫЕ ДАННЫЕ) -->
             <div id="profile-dashboard-view" class="profile-card" style="display: block;">
-                <!-- DEBUG — удалить после теста -->
-                <div id="debug-block" style="background:#fff3cd;border:1px solid #ffc107;border-radius:8px;padding:10px;margin-bottom:12px;font-size:11px;font-family:monospace;word-break:break-all;">
-                    Загрузка...
-                </div>
                 <div class="avatar-wrap">
                     <img id="user-avatar" src="" alt="User Avatar">
                 </div>
@@ -747,7 +743,7 @@
     function updateProfileUI() {
         // Хедер — имя пользователя
         const hdrEl = document.getElementById('header-points-val');
-        if (hdrEl) hdrEl.innerText = isUserLoggedIn ? userName : '';
+        if (hdrEl) hdrEl.innerText = isUserLoggedIn ? ('⭐ ' + userPoints + ' SAR') : '';
 
         // Корзина — доступные баллы
         const availEl = document.getElementById('checkout-avail-points');
