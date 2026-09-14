@@ -743,7 +743,7 @@
     function updateProfileUI() {
         // Хедер — имя пользователя
         const hdrEl = document.getElementById('header-points-val');
-        if (hdrEl) hdrEl.innerText = isUserLoggedIn ? ('⭐ ' + userPoints + ' SAR') : '';
+        if (hdrEl) hdrEl.innerText = isUserLoggedIn ? userName : '';
 
         // Корзина — доступные баллы
         const availEl = document.getElementById('checkout-avail-points');
