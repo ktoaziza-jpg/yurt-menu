@@ -670,6 +670,8 @@
         const tg = window.Telegram?.WebApp;
         const u = tg?.initDataUnsafe?.user;
 
+        console.log('TG WebApp:', !!tg, '| initData:', tg?.initData ? 'present' : 'empty', '| user:', u ? u.first_name : 'null');
+
         if (u) {
             // ✅ Реальный пользователь Telegram — авторизация автоматическая
             userId   = String(u.id);
@@ -1126,8 +1128,10 @@
         if (tg) {
             tg.ready();
             tg.expand();
-            // Даём Telegram 300мс передать initDataUnsafe
-            setTimeout(() => { initTelegramUser(); }, 300);
+            // Пробуем сразу, потом через 500мс и 1500мс — на случай медленных телефонов
+            initTelegramUser();
+            setTimeout(() => { if (!isUserLoggedIn) initTelegramUser(); }, 500);
+            setTimeout(() => { if (!isUserLoggedIn) initTelegramUser(); }, 1500);
         } else {
             initTelegramUser();
         }
