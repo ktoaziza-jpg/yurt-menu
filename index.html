@@ -1034,7 +1034,7 @@
         updateCartUI();
     }
 
-    function submitOrderToBot() {
+    async function submitOrderToBot() {
         const nameInput = document.getElementById('cust-name');
         const phoneInput = document.getElementById('cust-phone');
         const locationInput = document.getElementById('cust-location');
@@ -1111,11 +1111,30 @@
         };
 
         const tg = window.Telegram?.WebApp;
-        if (tg) {
-            tg.sendData(JSON.stringify(dataToSend));
-            tg.close();
-        } else {
-            alert('Заказ сформирован! Сумма: ' + total + ' SAR');
+        const btn = document.getElementById('btn-submit-order-page');
+        if (btn) { btn.disabled = true; btn.innerText = currentLang === 'ru' ? 'Отправляем...' : 'Sending...'; }
+
+        try {
+            const res = await fetch(SERVER_URL + '/api/order', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(dataToSend)
+            });
+            if (res.ok) {
+                if (tg) tg.close();
+            } else {
+                if (tg && tg.sendData) { tg.sendData(JSON.stringify(dataToSend)); tg.close(); }
+                else {
+                    alert(currentLang === 'ru' ? 'Ошибка отправки. Попробуйте ещё раз.' : 'Send error. Please try again.');
+                    if (btn) { btn.disabled = false; btn.innerText = currentLang === 'ru' ? 'ПОДТВЕРДИТЬ ЗАКАЗ' : 'CONFIRM ORDER'; }
+                }
+            }
+        } catch(e) {
+            if (tg && tg.sendData) { tg.sendData(JSON.stringify(dataToSend)); tg.close(); }
+            else {
+                alert(currentLang === 'ru' ? 'Ошибка сети. Попробуйте ещё раз.' : 'Network error. Please try again.');
+                if (btn) { btn.disabled = false; btn.innerText = currentLang === 'ru' ? 'ПОДТВЕРДИТЬ ЗАКАЗ' : 'CONFIRM ORDER'; }
+            }
         }
     }
 
@@ -1127,7 +1146,9 @@
             tg.ready();
             tg.expand();
             // Даём Telegram 300мс передать initDataUnsafe
-            setTimeout(() => { initTelegramUser(); }, 300);
+            initTelegramUser();
+            setTimeout(() => { if (!isUserLoggedIn) initTelegramUser(); }, 500);
+            setTimeout(() => { if (!isUserLoggedIn) initTelegramUser(); }, 1500);
         } else {
             initTelegramUser();
         }
